@@ -1,0 +1,59 @@
+import React from "react";
+import styled from "styled-components";
+
+import { Container } from "../../components";
+import Menu from "./Menu.jsx";
+import HeaderTop from "./HeaderTop.jsx";
+import HeaderBottom from "./HeaderBottom.jsx";
+
+import { useBreakpoint } from "../../hooks";
+
+const StyledHeader = styled.div`
+	padding: 0 0 30px 0;
+	border-bottom: 1px solid #e9e9e9;
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		padding: 0;
+		border: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		&:after {
+			content: "";
+			display: block;
+			height: 100%;
+			width: 100%;
+			left: 0;
+			top: 0;
+			position: absolute;
+			z-index: 4;
+			background: #ffffff;
+			border-bottom: 1px solid #e9e9e9;
+		}
+	}
+`;
+const StyledBody = styled.div`
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		display: flex;
+		align-items: center;
+	}
+`;
+
+const Header = () => {
+	const largeDevices = useBreakpoint("min-width", 991.98);
+
+	return (
+		<StyledHeader>
+			{largeDevices && <Menu />}
+			<Container>
+				<StyledBody>
+					{!largeDevices && <Menu />}
+					<HeaderTop />
+					<HeaderBottom />
+				</StyledBody>
+			</Container>
+		</StyledHeader>
+	);
+};
+
+export default Header;

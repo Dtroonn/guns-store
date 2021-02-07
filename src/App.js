@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Route } from "react-router-dom";
+import styled from "styled-components";
+
+import { Crm, Guns } from "./pages";
+import { Header, Footer } from "./components";
+
+const AppWrapper = styled.div`
+  width: 100%;
+  overflow: hidden;
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppWrapper>
+      <Header />
+      <main>
+        <Route exact path="/" component={Guns} />
+        <Route exact path="/crm" component={Crm} />
+      </main>
+      <Footer />
+    </AppWrapper>
   );
 }
 
