@@ -33,6 +33,12 @@ const StyledFlex = styled.div`
 			css`
 				align-items: ${alignSD};
 			`}
+
+		${({ flexSD }) =>
+			flexSD &&
+			css`
+				flex: ${flexSD};
+			`}
 	}
 
 	${({ relative }) =>
