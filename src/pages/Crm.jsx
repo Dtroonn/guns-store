@@ -10,7 +10,7 @@ const Crm = () => {
 		const response = await axios.post("http://localhost:5555/guns", {
 			name: data.name,
 			price: { current: data.price },
-			base64EncodedImage: "lalki",
+			base64EncodedImage,
 			count: data.count,
 			categories: [data.category],
 		});

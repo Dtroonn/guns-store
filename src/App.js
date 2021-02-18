@@ -8,6 +8,9 @@ import { Header, Footer } from "./components";
 const AppWrapper = styled.div`
   width: 100%;
   overflow: hidden;
+  @media ${({ theme }) => theme.media.mediumDevices} {
+    padding: 156px 0 0 0;
+  }
 `;
 
 function App() {

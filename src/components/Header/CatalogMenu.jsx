@@ -204,7 +204,6 @@ const CatalogMenu = (props) => {
 	React.useEffect(() => {
 		if (largeDevices) {
 			const handleOutsideClick = (event) => {
-				console.log("lalka");
 				const path =
 					event.path || (event.composedPath && event.composedPath());
 				if (!path.includes(CatalogMenuRef.current)) {

@@ -11,13 +11,16 @@ import { useBreakpoint } from "../../hooks";
 const StyledHeader = styled.div`
 	padding: 0 0 30px 0;
 	border-bottom: 1px solid #e9e9e9;
+	margin: 0 0 70px 0;
 	@media ${({ theme }) => theme.media.mediumDevices} {
+		margin: 0;
 		padding: 0;
 		border: none;
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
+		z-index: 10;
 		&:after {
 			content: "";
 			display: block;
