@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 import { Radio } from "../components/forms";
-import { useBreakpoint } from "../hooks";
+import { useBreakpoint, useOutsideClick } from "../hooks";
 
 const StyledSelectBlock = styled.div`
 	position: relative;
@@ -164,28 +164,12 @@ const StyledCross = styled.div`
 
 const SelectBlock = ({ title, items, selectedValue }) => {
 	const largeDevices = useBreakpoint("min-width", 991.98);
-	const SelectBodyRef = React.useRef(null);
-	const SelectHeaderRef = React.useRef(null);
+	const selectBodyRef = React.useRef(null);
+	const selectHeaderRef = React.useRef(null);
+	const [lalka, setLalka] = React.useState(0);
 	const [isSelectOpen, setIsSelectOpen] = React.useState(false);
 
-	React.useEffect(() => {
-		const handleOutsideClick = (event) => {
-			const path =
-				event.path || (event.composedPath && event.composedPath());
-			if (
-				!path.includes(SelectBodyRef.current) &&
-				!path.includes(SelectHeaderRef.current)
-			) {
-				setIsSelectOpen(false);
-			}
-		};
-		document.body.addEventListener("click", handleOutsideClick);
-
-		return () => {
-			document.body.removeEventListener("click", handleOutsideClick);
-		};
-	}, []);
-
+	useOutsideClick([selectHeaderRef, selectBodyRef], setIsSelectOpen, false);
 	const toggleisSelectOpen = (e) => {
 		setIsSelectOpen((isSelectOpen) => !isSelectOpen);
 		if (!largeDevices) {
@@ -199,7 +183,7 @@ const SelectBlock = ({ title, items, selectedValue }) => {
 
 	return (
 		<StyledSelectBlock>
-			<StyledHeader ref={SelectHeaderRef} onClick={toggleisSelectOpen}>
+			<StyledHeader ref={selectHeaderRef} onClick={toggleisSelectOpen}>
 				<StyledTitle>
 					{title}
 					<span>возрастанию цены</span>
@@ -207,7 +191,7 @@ const SelectBlock = ({ title, items, selectedValue }) => {
 				<StyledArrow active={isSelectOpen} />
 			</StyledHeader>
 			<StyledBodyWrapper isSelectOpen={isSelectOpen}>
-				<StyledBody ref={SelectBodyRef} isSelectOpen={isSelectOpen}>
+				<StyledBody ref={selectBodyRef} isSelectOpen={isSelectOpen}>
 					{!largeDevices && (
 						<StyledHeaderMd>
 							<StyledHeaderTitleMd>

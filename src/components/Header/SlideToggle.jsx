@@ -3,8 +3,13 @@ import styled, { css } from "styled-components";
 
 const StyledContainer = styled.div`
 	overflow: hidden;
-	transition: all 1s ease 0s;
+	transition-property: all;
+	transition-duration: ${({ duration }) => duration || "0.4s"};
+	transition-timing-function: ${({ transitionFunction }) =>
+		transitionFunction || "ease"};
 	height: 0;
+	margin: ${({ margin }) => margin || "0"};
+	padding: ${({ padding }) => padding || "0"};
 	${({ active }) =>
 		active &&
 		css`
@@ -12,7 +17,7 @@ const StyledContainer = styled.div`
 		`};
 `;
 
-const SlideToggle = ({ children, active }) => {
+const SlideToggle = ({ active, ...props }) => {
 	const containerRef = React.useRef(null);
 	const childElemOfffsetHeight =
 		containerRef.current && containerRef.current.firstChild.offsetHeight;
@@ -21,8 +26,9 @@ const SlideToggle = ({ children, active }) => {
 			ref={containerRef}
 			active={active}
 			height={active ? childElemOfffsetHeight : 0}
+			{...props}
 		>
-			{children}
+			{props.children}
 		</StyledContainer>
 	);
 };

@@ -11,6 +11,9 @@ const StyledIconMenu = styled.div`
 
 const Line = styled.span`
 	transition: all 0.4s ease 0s;
+	transition-property: all;
+	transition-duration: ${({ duration }) => duration || "0.4s"};
+	transition-timing-function: ease;
 	top: 5px;
 	left: 0px;
 	position: absolute;
@@ -40,12 +43,12 @@ const Line = styled.span`
 		`}
 `;
 
-const IconMenu = ({ active }) => {
+const IconMenu = (props) => {
 	return (
 		<StyledIconMenu>
-			<Line active={active} />
-			<Line active={active} />
-			<Line active={active} />
+			<Line {...props} />
+			<Line {...props} />
+			<Line {...props} />
 		</StyledIconMenu>
 	);
 };

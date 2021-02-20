@@ -6,7 +6,7 @@ import IconMenu from "./IconMenu.jsx";
 import { Button } from "../forms";
 import SlideToggle from "./SlideToggle.jsx";
 
-import { useBreakpoint } from "../../hooks";
+import { useBreakpoint, useOutsideClick } from "../../hooks";
 
 const StyledCatalogMenu = styled.div`
 	position: relative;
@@ -29,24 +29,30 @@ const StyledTitle = styled.div`
 		text-transform: uppercase;
 	}
 `;
-const StyledList = styled.ul`
+const StyledMenuWrapper = styled.div`
 	background: #ffffff;
 	z-index: 50;
 	min-width: 312px;
 	border-radius: 6px;
 	top: 55px;
 	left: 0;
+	transition: all 0.4s ease 0s;
+	box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
+	position: absolute;
+	transform: scale(0);
+	padding: 15px;
+	${({ isMenuOpen }) =>
+		isMenuOpen &&
+		css`
+			transform: scale(1);
+		`}
+`;
+const StyledList = styled.ul`
 	@media ${({ theme }) => theme.mediaFM.largeDevices} {
-		box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
-		position: absolute;
-		display: block;
-		transform: scale(0);
-		padding: 15px;
 		${({ isMenuOpen }) =>
 			isMenuOpen &&
 			css`
-				transition: all 0.4s ease 0s;
-				transform: scale(1);
+				opacity: 0; ;
 			`}
 	}
 `;
@@ -201,22 +207,11 @@ const CatalogMenu = (props) => {
 	const CatalogMenuRef = React.useRef(null);
 	const largeDevices = useBreakpoint("min-width", 991.98);
 
-	React.useEffect(() => {
-		if (largeDevices) {
-			const handleOutsideClick = (event) => {
-				const path =
-					event.path || (event.composedPath && event.composedPath());
-				if (!path.includes(CatalogMenuRef.current)) {
-					setIsMenuOpen(false);
-				}
-			};
-			document.body.addEventListener("click", handleOutsideClick);
-
-			return () => {
-				document.body.removeEventListener("click", handleOutsideClick);
-			};
-		}
-	}, []);
+	useOutsideClick(
+		largeDevices ? [CatalogMenuRef] : null,
+		setIsMenuOpen,
+		false
+	);
 
 	return (
 		<StyledCatalogMenu ref={CatalogMenuRef} {...props}>
@@ -224,9 +219,9 @@ const CatalogMenu = (props) => {
 				<Button
 					onClick={toggleIsMenuOpen}
 					background={isMenuOpen ? "#FF8C21" : ""}
-					animate={isMenuOpen ? "all 0.4s ease 0s" : ""}
+					animate="all 0.4s ease 0s"
 				>
-					<IconMenu />
+					<IconMenu active={isMenuOpen} />
 					<StyledTitle>Каталог товаров</StyledTitle>
 				</Button>
 			)}
@@ -237,9 +232,16 @@ const CatalogMenu = (props) => {
 				</StyledHeaderMobile>
 			)}
 			{largeDevices ? (
-				<MenuList isMenuOpen={isMenuOpen} />
+				<StyledMenuWrapper isMenuOpen={isMenuOpen}>
+					<MenuList isMenuOpen={!isMenuOpen} />
+				</StyledMenuWrapper>
 			) : (
-				<SlideToggle active={isMenuOpen}>
+				<SlideToggle
+					margin="0 -1000px"
+					padding="0 1000px"
+					duration="1s"
+					active={isMenuOpen}
+				>
 					<MenuList />
 				</SlideToggle>
 			)}
