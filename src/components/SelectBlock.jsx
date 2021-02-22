@@ -6,6 +6,7 @@ import { useBreakpoint, useOutsideClick } from "../hooks";
 
 const StyledSelectBlock = styled.div`
 	position: relative;
+	margin: ${({ margin }) => margin || "0"};
 `;
 
 const StyledHeader = styled.div`
@@ -63,24 +64,34 @@ const StyledBody = styled.div`
 	box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
 	border-radius: 6px;
 	min-width: 377px;
-	transform: scale(0);
 	transition: all 0.4s ease 0s;
 	@media ${({ theme }) => theme.media.mediumDevices} {
 		padding: 0;
 		min-width: auto;
 		flex: 0 1 392px;
+		transform: scale(0);
+		${({ isSelectOpen }) =>
+			isSelectOpen &&
+			css`
+				transform: scale(1);
+			`}
 	}
-	${({ isSelectOpen }) =>
-		isSelectOpen &&
-		css`
-			transform: scale(1);
-		`}
 `;
 
 const StyledBodyWrapper = styled.div`
 	top: -20px;
 	left: -19px;
 	position: absolute;
+	z-index: 2;
+	@media ${({ theme }) => theme.mediaFM.largeDevices} {
+		transform: scale(0);
+		transition: all 0.4s ease 0s;
+		${({ isSelectOpen }) =>
+			isSelectOpen &&
+			css`
+				transform: scale(1);
+			`}
+	}
 	@media ${({ theme }) => theme.media.mediumDevices} {
 		position: fixed;
 		background: rgba(0, 0, 0, 0.7);
@@ -162,7 +173,7 @@ const StyledCross = styled.div`
 	}
 `;
 
-const SelectBlock = ({ title, items, selectedValue }) => {
+const SelectBlock = ({ title, items, selectedValue, ...props }) => {
 	const largeDevices = useBreakpoint("min-width", 991.98);
 	const selectBodyRef = React.useRef(null);
 	const selectHeaderRef = React.useRef(null);
@@ -182,7 +193,7 @@ const SelectBlock = ({ title, items, selectedValue }) => {
 	};
 
 	return (
-		<StyledSelectBlock>
+		<StyledSelectBlock {...props}>
 			<StyledHeader ref={selectHeaderRef} onClick={toggleisSelectOpen}>
 				<StyledTitle>
 					{title}

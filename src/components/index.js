@@ -5,3 +5,6 @@ export { default as Container } from "./Container.jsx";
 export { default as Socials } from "./Socials.jsx";
 export { default as Title } from "./Title.jsx";
 export { default as SelectBlock } from "./SelectBlock.jsx";
+export { default as Product } from "./Product.jsx";
+export { default as AdaptiveImage } from "./AdaptiveImage.jsx";
+export { default as FlexColumn } from "./FlexColumn.jsx";

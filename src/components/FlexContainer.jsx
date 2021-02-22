@@ -4,7 +4,9 @@ import styled, { css } from "styled-components";
 const StyledFlex = styled.div`
 	display: flex;
 	font-size: 0;
-	flex-direction: ${(props) => props.direction || "row"};
+	height: ${({ height }) => height || "auto"};
+	flex-wrap: ${({ wrap }) => wrap || "nowrap"};
+	flex-direction: ${({ direction }) => direction || "row"};
 	align-items: ${(props) => props.align || "stretch"};
 	justify-content: ${(props) => props.justify || "stretch"};
 	flex: ${({ flex }) => flex || "0 1 auto"};

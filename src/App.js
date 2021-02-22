@@ -2,7 +2,7 @@ import React from "react";
 import { Route } from "react-router-dom";
 import styled from "styled-components";
 
-import { Crm, Guns } from "./pages";
+import { Crm, Products } from "./pages";
 import { Header, Footer } from "./components";
 
 const AppWrapper = styled.div`
@@ -11,6 +11,12 @@ const AppWrapper = styled.div`
   @media ${({ theme }) => theme.media.mediumDevices} {
     padding: 156px 0 0 0;
   }
+  @media ${({ theme }) => theme.media.smallDevices} {
+    padding: 102px 0 0 0;
+  }
+  @media ${({ theme }) => theme.media.extraSmallDevices} {
+    padding: 92px 0 0 0;
+  }
 `;
 
 function App() {
@@ -18,7 +24,7 @@ function App() {
     <AppWrapper>
       <Header />
       <main>
-        <Route exact path="/" component={Guns} />
+        <Route exact path="/" component={Products} />
         <Route exact path="/crm" component={Crm} />
       </main>
       <Footer />
