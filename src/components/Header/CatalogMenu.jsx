@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import IconMenu from "./IconMenu.jsx";
+import { MenuIcon } from "../../components/icons";
 import { Button } from "../forms";
 import SlideToggle from "./SlideToggle.jsx";
 
@@ -221,7 +221,7 @@ const CatalogMenu = (props) => {
 					background={isMenuOpen ? "#FF8C21" : ""}
 					animate="all 0.4s ease 0s"
 				>
-					<IconMenu active={isMenuOpen} />
+					<MenuIcon active={isMenuOpen} />
 					<StyledTitle>Каталог товаров</StyledTitle>
 				</Button>
 			)}

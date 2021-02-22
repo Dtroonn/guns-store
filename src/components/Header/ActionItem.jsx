@@ -15,20 +15,6 @@ const StyledIcon = styled.div`
 			width: 100%;
 		}
 	}
-	${({ active }) =>
-		active &&
-		css`
-			path {
-				&:first-child {
-					fill-opacity: 1;
-					fill: #ffa621;
-				}
-				&:last-child {
-					transition: all 0.4s ease 0s;
-					fill: #ffa621;
-				}
-			}
-		`}
 `;
 
 const StyledTitle = styled.div`
@@ -57,7 +43,7 @@ const Favorites = ({ icon, title, count, to, ...props }) => {
 	return (
 		<FlexContainer align="center" {...props}>
 			<Button to={to} as={Link} hv="true" outline="true" padding="0">
-				<StyledIcon>{icon}</StyledIcon>
+				<StyledIcon>{props.children}</StyledIcon>
 				{count && <StyledCountItems>{count}</StyledCountItems>}
 			</Button>
 			<StyledTitle>{title}</StyledTitle>

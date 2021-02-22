@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { NavLink } from "react-router-dom";
 
-import IconMenu from "./IconMenu.jsx";
+import { MenuIcon } from "../../components/icons";
 import Search from "./Search.jsx";
 import Authentication from "./Authentication.jsx";
 import InfoBlock from "./InfoBlock.jsx";
@@ -135,7 +135,7 @@ const Menu = ({ margin }) => {
 		<StyledMenu>
 			{!largeDevices && (
 				<Button relative padding="0" onClick={toggleIsActiveIconMenu}>
-					<IconMenu active={isActiveIconMenu} />
+					<MenuIcon active={isActiveIconMenu} />
 				</Button>
 			)}
 			<StyledWrapper active={isActiveIconMenu}>
