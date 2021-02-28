@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Title, FlexContainer, AdaptiveImage } from "../components";
+import { Title, FlexContainer } from "../components";
 import { FavouriteIcon, CartIcon } from "../components/icons";
 import { Button } from "../components/forms";
 
@@ -82,12 +82,13 @@ const StyledOldPrice = styled.div`
 	margin: 0 0 8px 0;
 `;
 
-const StyledImage = styled.div`
+const StyledImageWrapper = styled.div`
 	max-width: 100%;
-	margin: 0 0 40px 0;
-	img {
-		width: 100%;
-	}
+	margin: 0 0 20px 0;
+`;
+
+const StyledImage = styled.img`
+	width: 100%;
 `;
 
 const Product = ({ title, price }) => {
@@ -95,11 +96,9 @@ const Product = ({ title, price }) => {
 		<StyledProduct>
 			<FlexContainer height="100%" direction="column">
 				<StyledTop>
-					<AdaptiveImage
-						src={GunPng}
-						padding="0 0 110% 0"
-						margin="0 0 20px 0"
-					/>
+					<StyledImageWrapper>
+						<StyledImage src={GunPng} alt="" />
+					</StyledImageWrapper>
 					<StyledTags>
 						<StyledTag>скидка</StyledTag>
 					</StyledTags>

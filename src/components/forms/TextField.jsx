@@ -12,6 +12,8 @@ const StyledInput = styled.input`
 	padding: 0 16px;
 	line-height: 44px;
 	background: transparent;
+	font-weight: ${({ fontWeight }) => fontWeight || "400"};
+	text-align: ${({ textAlign }) => textAlign || "left"};
 	&:placeholder {
 		color: rgba(0, 0, 0, 0.2);
 	}
@@ -33,8 +35,8 @@ const StyledInput = styled.input`
 		`}
 `;
 
-const TextField = (props) => {
-	return <StyledInput {...props} />;
+const TextField = ({ reference, ...props }) => {
+	return <StyledInput ref={reference} {...props} />;
 };
 
 export default TextField;

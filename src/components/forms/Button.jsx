@@ -13,16 +13,17 @@ const StyledButton = styled.button`
 	color: #ffffff;
 	font-weight: 500;
 	font-size: 16px;
-	@media ${({ theme }) => theme.media.smallDevices} {
-		height: ${({ heightSD }) => heightSD || "38px"};
-		min-width: ${({ minWidthSD }) => minWidthSD || "38px"};
-	}
 	${({ outline }) =>
 		outline &&
 		css`
 			background: transparent;
 			border: 1px solid #e9e9e9;
-			color: #000;
+			color: rgba(0, 0, 0, 0.6);
+			${({ dark }) =>
+				dark &&
+				css`
+					border: 1px solid rgba(0, 0, 0, 0.4);
+				`}
 		`}
 	${({ outline, hv }) =>
 		outline &&
@@ -46,10 +47,16 @@ const StyledButton = styled.button`
 			position: relative;
 			z-index: 50;
 		`}
+
+	${({ fw }) =>
+		fw &&
+		css`
+			width: 100%;
+		`}
 `;
 
-const Button = (props) => {
-	return <StyledButton {...props} />;
-};
+const Button = React.forwardRef((props, ref) => {
+	return <StyledButton ref={ref} {...props} />;
+});
 
 export default Button;

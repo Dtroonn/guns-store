@@ -97,9 +97,10 @@ h6 {
 
 const theme = {
 	media: {
-		extraSmallDevices: "(max-width: 479.98px)",
+		extraSmallDevices: "(max-width: 575.98px)",
 		smallDevices: "(max-width: 767.98px)",
 		mediumDevices: "(max-width: 991.98px)",
+		trololo: "(max-width: 550px)",
 		largeDevices: "(max-width: 1236px)",
 	},
 	mediaFM: {

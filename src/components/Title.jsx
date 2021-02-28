@@ -10,21 +10,54 @@ const StyledTitle = styled.div`
 	color: #000;
 	line-height: 36px;
 	margin: ${({ margin }) => margin || "0"};
+	@media ${({ theme }) => theme.media.largeDevices} {
+		${({ small, extraSmall }) =>
+			!small &&
+			!extraSmall &&
+			css`
+				font-size: 28px;
+				line-height: 34px;
+			`}
+	}
 	@media ${({ theme }) => theme.media.mediumDevices} {
-		font-size: 24px;
-		line-height: 34px;
+		${({ small, extraSmall }) =>
+			!small &&
+			!extraSmall &&
+			css`
+				font-size: 24px;
+			`}
+		${({ marginMD }) =>
+			marginMD &&
+			css`
+				margin: ${marginMD};
+			`}
 	}
 	@media ${({ theme }) => theme.media.smallDevices} {
-		font-size: 20px;
-		line-height: 30px;
+		${({ small, extraSmall }) =>
+			!small &&
+			!extraSmall &&
+			css`
+				font-size: 20px;
+				line-height: 30px;
+			`}
 	}
 	${({ small }) =>
 		small &&
 		css`
-			line-height: 19px;
+			line-height: 24px;
 			font-size: 16px;
 			text-transform: none;
 			letter-spacing: 0;
+		`}
+	${({ extraSmall }) =>
+		extraSmall &&
+		css`
+			font-size: 14px;
+			line-height: 17px;
+			@media ${({ theme }) => theme.media.mediumDevices} {
+				font-size: 16px;
+				line-height: 19px;
+			}
 		`}
 `;
 

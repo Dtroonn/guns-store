@@ -11,11 +11,23 @@ const StyledFlex = styled.div`
 	justify-content: ${(props) => props.justify || "stretch"};
 	flex: ${({ flex }) => flex || "0 1 auto"};
 	margin: ${({ margin }) => margin || "0"};
+	${({ relative }) =>
+		relative &&
+		css`
+			position: relative;
+			z-index: ${relative};
+		`}
 	@media ${({ theme }) => theme.media.mediumDevices} {
 		margin: ${({ marginMD, margin }) => marginMD || margin || "0"};
 		flex: ${({ flexMD, flex }) => flexMD || flex || "0 1 auto"};
 		justify-content: ${({ justifyMD, justify }) =>
 			justifyMD || justify || "stretch"};
+
+		${({ directionMD }) =>
+			directionMD &&
+			css`
+				flex-direction: ${directionMD};
+			`}
 	}
 	@media ${({ theme }) => theme.media.smallDevices} {
 		${({ marginSD }) =>
@@ -39,16 +51,28 @@ const StyledFlex = styled.div`
 		${({ flexSD }) =>
 			flexSD &&
 			css`
-				flex: ${flexSD};awdaw
+				flex: ${flexSD};
 			`}
 	}
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		${({ directionESD }) =>
+			directionESD &&
+			css`
+				flex-direction: ${directionESD};
+			`}
 
-	${({ relative }) =>
-		relative &&
-		css`
-			position: relative;
-			z-index: ${relative};
-		`}
+		${({ alignESD }) =>
+			alignESD &&
+			css`
+				align-items: ${alignESD};
+			`}
+
+		${({ justifyESD }) =>
+			justifyESD &&
+			css`
+				justify-content: ${justifyESD};
+			`}
+	}
 `;
 
 const FlexContainer = (props) => {

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { MenuIcon } from "../../components/icons";
 import { Button } from "../forms";
-import SlideToggle from "./SlideToggle.jsx";
+import { SlideToggle } from "../../components";
 
 import { useBreakpoint, useOutsideClick } from "../../hooks";
 
