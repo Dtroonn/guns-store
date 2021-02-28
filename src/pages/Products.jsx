@@ -9,10 +9,25 @@ import {
 	SelectBlock,
 	Product,
 	Filterbar,
+	Attention,
 } from "../components";
 import { useBreakpoint } from "../hooks";
 
-const StyledProducts = styled.div``;
+const StyledProducts = styled.div`
+	margin: 0 0 76px 0;
+	@media ${({ theme }) => theme.media.largeDevices} {
+		margin: 0 0 66px 0;
+	}
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		margin: 0 0 50px 0;
+	}
+	@media ${({ theme }) => theme.media.smallDevices} {
+		margin: 0 0 40px 0;
+	}
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		margin: 0 0 30px 0;
+	}
+`;
 
 const StyledProductsCount = styled.span`
 	color: rgba(0, 0, 0, 0.2);
@@ -100,6 +115,7 @@ const Products = () => {
 					</FlexContainer>
 				</Container>
 			</StyledProducts>
+			<Attention />
 		</div>
 	);
 };
