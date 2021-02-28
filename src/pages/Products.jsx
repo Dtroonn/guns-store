@@ -74,7 +74,7 @@ const Products = () => {
 								<StyledProductsCount>862</StyledProductsCount>
 							</Title>
 						) : (
-							<FlexContainerColumn margin="0 0 20px 0">
+							<FlexContainerColumn marginESD="0 0 20px 0">
 								<Filterbar />
 							</FlexContainerColumn>
 						)}

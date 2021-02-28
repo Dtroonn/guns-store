@@ -4,12 +4,22 @@ import styled, { css } from "styled-components";
 const StyledSvg = styled.svg`
 	width: 14px;
 	height: 9px;
+	margin: ${({ margin }) => margin || "0"};
+	transition-property: all;
+	transition-duration: ${({ duration }) => duration || "0.4s"};
+	transition-timing-function: ease;
+	transform: rotate(${({ rotateStart }) => rotateStart || "0"});
 	${({ small }) =>
 		small &&
 		css`
 			width: 10px;
 			height: 6px;
 		`}
+	${({ active }) =>
+		active &&
+		css`
+			transform: rotate(${({ rotateEnd }) => rotateEnd || "-180deg"});
+		`};
 `;
 
 const Arrow = (props) => {

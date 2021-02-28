@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 import { Radio } from "../components/forms";
+import { ArrowIcon, CrossIcon } from "../components/icons";
 import { useBreakpoint, useOutsideClick } from "../hooks";
 
 const StyledSelectBlock = styled.div`
@@ -11,51 +12,23 @@ const StyledSelectBlock = styled.div`
 
 const StyledHeader = styled.div`
 	position: relative;
-	padding: 0 24px 0 0;
 	cursor: pointer;
 	z-index: 3;
+	display: flex;
+	align-items: center;
 `;
 
 const StyledTitle = styled.div`
 	font-weight: 500;
 	font-size: 16px;
+	margin: 0 14px 0 0;
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		font-size: 14px;
+	}
 	span {
 		color: #ffa621;
 		margin: 0 0 0 10px;
 	}
-`;
-
-const StyledArrow = styled.div`
-	position: absolute;
-	width: 15px;
-	height: 15px;
-	display: flex;
-	top: 1.4px;
-	right: 0;
-	transition: all 0.4s ease 0s;
-	&:after,
-	&:before {
-		content: "";
-		display: block;
-		height: 2.2px;
-		width: 8px;
-		position: absolute;
-		background: #000;
-		border-radius: 1.5px;
-		top: 6px;
-	}
-	&:after {
-		transform: rotate(135deg);
-		left: 4px;
-	}
-	&:before {
-		transform: rotate(45deg);
-	}
-	${({ active }) =>
-		active &&
-		css`
-			transform: rotate(-180deg);
-		`}
 `;
 
 const StyledBody = styled.div`
@@ -137,40 +110,17 @@ const StyledListItem = styled.li`
 `;
 
 const StyledHeaderMd = styled.div`
-	position: relative;
 	padding: 30px 24px;
 	border-bottom: 1px solid #e9e9e9;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 `;
 const StyledHeaderTitleMd = styled.div`
 	font-size: 18px;
 	font-weight: 700;
 	letter-spacing: 0.02em;
 	text-transform: uppercase;
-`;
-
-const StyledCross = styled.div`
-	position: absolute;
-	width: 12px;
-	height: 12px;
-	display: flex;
-	top: 37px;
-	right: 40px;
-	&:after,
-	&:before {
-		content: "";
-		display: block;
-		height: 2px;
-		width: 16px;
-		position: absolute;
-		background: rgba(0, 0, 0, 0.3);
-		top: 0;
-	}
-	&:after {
-		transform: rotate(45deg);
-	}
-	&:before {
-		transform: rotate(-45deg);
-	}
 `;
 
 const SelectBlock = ({ title, items, selectedValue, ...props }) => {
@@ -181,6 +131,7 @@ const SelectBlock = ({ title, items, selectedValue, ...props }) => {
 	const [isSelectOpen, setIsSelectOpen] = React.useState(false);
 
 	useOutsideClick([selectHeaderRef, selectBodyRef], setIsSelectOpen, false);
+
 	const toggleisSelectOpen = (e) => {
 		setIsSelectOpen((isSelectOpen) => !isSelectOpen);
 		if (!largeDevices) {
@@ -199,7 +150,7 @@ const SelectBlock = ({ title, items, selectedValue, ...props }) => {
 					{title}
 					<span>возрастанию цены</span>
 				</StyledTitle>
-				<StyledArrow active={isSelectOpen} />
+				<ArrowIcon small active={isSelectOpen} />
 			</StyledHeader>
 			<StyledBodyWrapper isSelectOpen={isSelectOpen}>
 				<StyledBody ref={selectBodyRef} isSelectOpen={isSelectOpen}>
@@ -208,7 +159,7 @@ const SelectBlock = ({ title, items, selectedValue, ...props }) => {
 							<StyledHeaderTitleMd>
 								Сортировать по:
 							</StyledHeaderTitleMd>
-							<StyledCross onClick={toggleisSelectOpen} />
+							<CrossIcon onClick={toggleisSelectOpen} />
 						</StyledHeaderMd>
 					)}
 					<StyledList isHidden={!isSelectOpen}>

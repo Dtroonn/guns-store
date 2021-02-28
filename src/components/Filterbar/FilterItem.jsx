@@ -45,16 +45,6 @@ const StyledFilterItem = styled.div`
 
 const StyledHeader = styled.div``;
 
-const IconWrapper = styled.div`
-	margin: -10px 0 0 0;
-	transition: all 0.4s ease 0s;
-	${({ active }) =>
-		active &&
-		css`
-			transform: rotate(-180deg);
-		`}
-`;
-
 const StyledList = styled.ul``;
 
 const StyledListItem = styled.li`
@@ -91,9 +81,7 @@ const FilterItem = ({ title, isLargeDevices }) => {
 						{title}
 					</Title>
 					{!isLargeDevices && (
-						<IconWrapper active={isOpenMD}>
-							<ArrowIcon />
-						</IconWrapper>
+						<ArrowIcon margin="-10px 0 0 0" active={isOpenMD} />
 					)}
 				</FlexContainer>
 			</StyledHeader>

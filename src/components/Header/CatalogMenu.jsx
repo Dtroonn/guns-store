@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { MenuIcon } from "../../components/icons";
+import { MenuIcon, ArrowIcon } from "../../components/icons";
 import { Button } from "../forms";
 import { SlideToggle } from "../../components";
 
@@ -120,36 +120,6 @@ const StyledHeaderMobile = styled.div`
 		padding: 18px 0;
 	}
 `;
-const StyledMobileArrow = styled.div`
-	position: relative;
-	height: 14px;
-	width: 9px;
-	top: 2px;
-	transition: all 1s ease 0s;
-	&:after,
-	&:before {
-		content: "";
-		display: block;
-		height: 3px;
-		width: 11px;
-		position: absolute;
-		background: #000;
-		border-radius: 1.5px;
-	}
-	&:after {
-		top: 0;
-		transform: rotate(45deg);
-	}
-	&:before {
-		top: 6px;
-		transform: rotate(-45deg);
-	}
-	${({ active }) =>
-		active &&
-		css`
-			transform: rotate(90deg);
-		`}
-`;
 
 const MenuList = (props) => {
 	return (
@@ -228,7 +198,12 @@ const CatalogMenu = (props) => {
 			{!largeDevices && (
 				<StyledHeaderMobile onClick={toggleIsMenuOpen}>
 					<StyledTitle>Каталог</StyledTitle>
-					<StyledMobileArrow active={isMenuOpen} />
+					<ArrowIcon
+						rotateStart="-90deg"
+						active={isMenuOpen}
+						rotateEnd="0"
+						duration="1s"
+					/>
 				</StyledHeaderMobile>
 			)}
 			{largeDevices ? (
