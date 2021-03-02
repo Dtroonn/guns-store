@@ -11,3 +11,4 @@ export { default as FlexContainerColumn } from "./FlexContainerColumn.jsx";
 export { default as Filterbar } from "./Filterbar/index.js";
 export { default as SlideToggle } from "./SlideToggle.jsx";
 export { default as Attention } from "./Attention.jsx";
+export { default as Pagination } from "./Pagination.jsx";

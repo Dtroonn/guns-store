@@ -10,6 +10,7 @@ import {
 	Product,
 	Filterbar,
 	Attention,
+	Pagination,
 } from "../components";
 import { useBreakpoint } from "../hooks";
 
@@ -29,6 +30,10 @@ const StyledProducts = styled.div`
 	}
 `;
 
+const StyledBody = styled.div`
+	flex: 1 1 auto;
+`;
+
 const StyledProductsCount = styled.span`
 	color: rgba(0, 0, 0, 0.2);
 	letter-spacing: 0;
@@ -41,11 +46,16 @@ const StyledProductsCount = styled.span`
 	}
 `;
 
-const StyledFilterBlock = styled.div`
-	width: 288px;
-	flex: 0 0 288px;
-	height: 639px;
-	margin: 0 24px 0 0;
+const StyledWatchedProductsCount = styled.div`
+	font-size: 16px;
+	color: rgba(0, 0, 0, 0.4);
+	margin: 0 0 0 40px;
+	text-align: right;
+	line-height: 19px;
+	@media ${({ theme }) => theme.media.smallDevices} {
+		margin: 17px 0 0 0;
+		text-align: center;
+	}
 `;
 
 const Products = () => {
@@ -90,28 +100,38 @@ const Products = () => {
 								<Filterbar />
 							</FlexContainerColumn>
 						)}
-
-						<FlexContainer
-							wrap="wrap"
-							flex="1 1 auto"
-							margin="0 -12px "
-							justifyESD="center"
-						>
-							{Array(9)
-								.fill(0)
-								.map((item, index) => (
-									<FlexContainerColumn
-										key={index}
-										flex="0 0 33.333%"
-										flexMD="0 0 50%"
-										flexESD="0 0 288px"
-										padding="0 12px"
-										margin="0 0 24px 0"
-									>
-										<Product title="Glock 17 СХ Retay" />
-									</FlexContainerColumn>
-								))}
-						</FlexContainer>
+						<StyledBody>
+							<FlexContainer
+								wrap="wrap"
+								margin="0 -12px "
+								justifyESD="center"
+							>
+								{Array(9)
+									.fill(0)
+									.map((item, index) => (
+										<FlexContainerColumn
+											key={index}
+											flex="0 0 33.333%"
+											flexMD="0 0 50%"
+											flexESD="0 0 288px"
+											padding="0 12px"
+											margin="0 0 24px 0"
+										>
+											<Product title="Glock 17 СХ Retay" />
+										</FlexContainerColumn>
+									))}
+							</FlexContainer>
+							<FlexContainer
+								justify="space-between"
+								align="center"
+								directionSD="column"
+							>
+								<Pagination />
+								<StyledWatchedProductsCount>
+									Вы посмотрели 28 из 862 товаров
+								</StyledWatchedProductsCount>
+							</FlexContainer>
+						</StyledBody>
 					</FlexContainer>
 				</Container>
 			</StyledProducts>
