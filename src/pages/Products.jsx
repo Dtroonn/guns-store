@@ -113,7 +113,7 @@ const Products = () => {
 											key={index}
 											flex="0 0 33.333%"
 											flexMD="0 0 50%"
-											flexESD="0 0 288px"
+											flexESD="0 0 100%"
 											padding="0 12px"
 											margin="0 0 24px 0"
 										>

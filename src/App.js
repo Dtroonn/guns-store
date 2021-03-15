@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { Crm, Products } from "./pages";
 import { Header, Footer } from "./components";
 
+//import Footer from "./components/Footer/Footer.jsx";
+
 const AppWrapper = styled.div`
   width: 100%;
   overflow: hidden;
