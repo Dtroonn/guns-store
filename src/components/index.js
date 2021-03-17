@@ -1,13 +1,11 @@
 export { default as Header } from "./Header";
 export { default as Footer } from "./Footer/index.js";
-export { default as FlexContainer } from "./FlexContainer.jsx";
 export { default as Container } from "./Container.jsx";
 export { default as Socials } from "./Socials.jsx";
 export { default as Title } from "./Title.jsx";
 export { default as SelectBlock } from "./SelectBlock.jsx";
 export { default as Product } from "./Product.jsx";
 export { default as AdaptiveImage } from "./AdaptiveImage.jsx";
-export { default as FlexContainerColumn } from "./FlexContainerColumn.jsx";
 export { default as Filterbar } from "./Filterbar/index.js";
 export { default as SlideToggle } from "./SlideToggle.jsx";
 export { default as Attention } from "./Attention.jsx";

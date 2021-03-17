@@ -1,6 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
+const AdaptiveImage = ({ src, ...props }) => {
+	return (
+		<StyledImageWrapper {...props}>
+			<StyledImage src={src} />
+		</StyledImageWrapper>
+	);
+};
+
 const StyledImageWrapper = styled.div`
 	position: relative;
 	height: ${({ height }) => height || "auto"};
@@ -17,13 +25,5 @@ const StyledImage = styled.img`
 	top: 0;
 	left: 0;
 `;
-
-const AdaptiveImage = ({ src, ...props }) => {
-	return (
-		<StyledImageWrapper {...props}>
-			<StyledImage src={src} />
-		</StyledImageWrapper>
-	);
-};
 
 export default AdaptiveImage;

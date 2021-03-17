@@ -1,6 +1,16 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+const IconMenu = (props) => {
+	return (
+		<StyledIconMenu>
+			<Line {...props} />
+			<Line {...props} />
+			<Line {...props} />
+		</StyledIconMenu>
+	);
+};
+
 const StyledIconMenu = styled.div`
 	display: block;
 	position: relative;
@@ -42,15 +52,5 @@ const Line = styled.span`
 			}
 		`}
 `;
-
-const IconMenu = (props) => {
-	return (
-		<StyledIconMenu>
-			<Line {...props} />
-			<Line {...props} />
-			<Line {...props} />
-		</StyledIconMenu>
-	);
-};
 
 export default IconMenu;

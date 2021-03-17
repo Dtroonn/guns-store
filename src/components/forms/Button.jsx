@@ -1,6 +1,10 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+const Button = React.forwardRef((props, ref) => {
+	return <StyledButton ref={ref} {...props} />;
+});
+
 const StyledButton = styled.button`
 	display: inline-flex;
 	align-items: center;
@@ -54,9 +58,5 @@ const StyledButton = styled.button`
 			width: 100%;
 		`}
 `;
-
-const Button = React.forwardRef((props, ref) => {
-	return <StyledButton ref={ref} {...props} />;
-});
 
 export default Button;

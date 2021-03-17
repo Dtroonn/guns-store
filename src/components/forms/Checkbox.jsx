@@ -3,6 +3,21 @@ import styled from "styled-components";
 
 import checkMark from "../../assets/icons/checkMark.svg";
 
+const Checkbox = React.forwardRef((props, ref) => {
+	return (
+		<StyledBody>
+			<StyledCheckbox
+				checked={props.checked}
+				id={props.value}
+				name={props.name}
+				value={props.value}
+				type="checkbox"
+			/>
+			<StyledLabel htmlFor={props.value}>{props.label}</StyledLabel>
+		</StyledBody>
+	);
+});
+
 const StyledBody = styled.div`
 	display: flex;
 	align-items: center;
@@ -16,10 +31,10 @@ const StyledCheckbox = styled.input`
 			color: #000;
 			&:after {
 				background: #ffa621;
-				border: 0;
+				border-color #ffa621;
 			}
 			&:before {
-				display: block;
+				opacity: 1;
 			}
 		}
 	}
@@ -31,6 +46,15 @@ const StyledLabel = styled.label`
 	padding: 0 0 0 36px;
 	cursor: pointer;
 	color: rgba(0, 0, 0, 0.6);
+	transition: color 0.4s ease 0s;
+	@media ${({ theme }) => theme.mediaFM.largeDevices} {
+		&:hover {
+			color: #ffa621;
+			&:after {
+				border-color: #ffa621;
+			}
+		}
+	}
 	&:after {
 		content: "";
 		background: #fff;
@@ -42,6 +66,7 @@ const StyledLabel = styled.label`
 		height: 20px;
 		position: absolute;
 		z-index: 1;
+		transition: all 0.4s ease 0s;
 	}
 	&:before {
 		content: "";
@@ -52,25 +77,9 @@ const StyledLabel = styled.label`
 		height: 10px;
 		position: absolute;
 		z-index: 2;
-		display: none;
+		transition: all 0.4s ease 0s;
+		opacity: 0;
 	}
 `;
-
-const Checkbox = ({ label, name, value, checked }) => {
-	return (
-		<StyledBody>
-			<StyledCheckbox
-				checked={checked}
-				id={value}
-				name={name}
-				value={value}
-				type="checkbox"
-			/>
-			<StyledLabel htmlFor={value}>
-				{label} <img src={checkMark} alt="" />
-			</StyledLabel>
-		</StyledBody>
-	);
-};
 
 export default Checkbox;

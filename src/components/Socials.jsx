@@ -1,12 +1,33 @@
 import React from "react";
 import styled from "styled-components";
 
-import { FlexContainer } from "../components";
-
 import telegram from "../assets/icons/socials/telegram.svg";
 import vk from "../assets/icons/socials/vk.svg";
 import youtube from "../assets/icons/socials/youtube.svg";
 import instagram from "../assets/icons/socials/instagram.svg";
+
+const Socials = (props) => {
+	return (
+		<StyledSocials>
+			<StyledItem target="_blank" href="https://web.telegram.org">
+				<StyledIcon src={telegram} />
+			</StyledItem>
+			<StyledItem target="_blank" href="https://vk.com">
+				<StyledIcon src={vk} />
+			</StyledItem>
+			<StyledItem target="_blank" href="https://youtube.com">
+				<StyledIcon src={youtube} />
+			</StyledItem>
+			<StyledItem target="_blank" href="https://instagram.com">
+				<StyledIcon src={instagram} />
+			</StyledItem>
+		</StyledSocials>
+	);
+};
+
+const StyledSocials = styled.div`
+	display: flex;
+`;
 
 const StyledItem = styled.a`
 	display: flex;
@@ -28,24 +49,5 @@ const StyledItem = styled.a`
 	}
 `;
 const StyledIcon = styled.img``;
-
-const Socials = (props) => {
-	return (
-		<FlexContainer>
-			<StyledItem target="_blank" href="https://web.telegram.org">
-				<StyledIcon src={telegram} />
-			</StyledItem>
-			<StyledItem target="_blank" href="https://vk.com">
-				<StyledIcon src={vk} />
-			</StyledItem>
-			<StyledItem target="_blank" href="https://youtube.com">
-				<StyledIcon src={youtube} />
-			</StyledItem>
-			<StyledItem target="_blank" href="https://instagram.com">
-				<StyledIcon src={instagram} />
-			</StyledItem>
-		</FlexContainer>
-	);
-};
 
 export default Socials;

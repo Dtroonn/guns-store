@@ -5,15 +5,139 @@ import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.css";
 
 import FilterItem from "./FilterItem.jsx";
-import {
-	Container,
-	FlexContainer,
-	FlexContainerColumn,
-	Title,
-} from "../../components";
+import { Container, Title } from "../../components";
 import { TextField, Button } from "../forms";
 import { CrossIcon, FilterIcon } from "../icons";
 import { useBreakpoint, useOutsideClick } from "../../hooks";
+
+const Filterbar = ({ ...styles }) => {
+	const nouisliderRef = React.useRef(null);
+	const formRef = React.useRef(null);
+	const buttonRef = React.useRef(null);
+	const isLargeDevices = useBreakpoint("min-width", 991.98);
+	const [isFilterbarOpenMD, setIsFilterbarOpenMD] = React.useState(false);
+	const { register, handleSubmit, setValue, getValues } = useForm();
+
+	const toggleIsFilterbarOpenMD = (e) => {
+		setIsFilterbarOpenMD((isFilterbarOpenMD) => !isFilterbarOpenMD);
+		document.body.classList.toggle("lock");
+	};
+
+	useOutsideClick(isLargeDevices ? null : [formRef, buttonRef], () => {
+		setIsFilterbarOpenMD(false);
+		document.body.classList.remove("lock");
+	});
+
+	const onUpdateSlider = (values) => {
+		setValue("lowerPriceValue", values[0]);
+		setValue("upperPriceValue", values[1]);
+	};
+
+	const onPriceChange = (e) => {
+		if (e.target.name === "lowerPriceValue") {
+			nouisliderRef.current.noUiSlider.set([
+				e.target.value,
+				getValues("upperPriceValue"),
+			]);
+		} else {
+			nouisliderRef.current.noUiSlider.set([
+				getValues("lowerPriceValue"),
+				e.target.value,
+			]);
+		}
+	};
+
+	return (
+		<StyledFilterbar {...styles}>
+			{!isLargeDevices && (
+				<StyledHeaderMD>
+					<Button
+						ref={buttonRef}
+						onClick={toggleIsFilterbarOpenMD}
+						outline
+					>
+						<FilterIcon />
+					</Button>
+					<StyledTitleMd>Фильтры</StyledTitleMd>
+				</StyledHeaderMD>
+			)}
+			<StyledBody isFilterbarOpenMD={isFilterbarOpenMD}>
+				<StyledForm ref={formRef} isFilterbarOpenMD={isFilterbarOpenMD}>
+					<Container>
+						{!isLargeDevices && (
+							<StyledFormHeaderMD>
+								<Title>Фильтр</Title>
+								<CrossIcon onClick={toggleIsFilterbarOpenMD} />
+							</StyledFormHeaderMD>
+						)}
+						<StyledFormBody>
+							<StyledPricing>
+								<Title extraSmall>Цена, руб.</Title>
+								<StyledPricingInputs>
+									<StyledPricingInput>
+										<TextField
+											fontWeight="500"
+											textAlign="center"
+											largeFont
+											onChange={onPriceChange}
+											name="lowerPriceValue"
+											ref={register}
+											notAdaptive
+										/>
+									</StyledPricingInput>
+									<StyledPricingInput>
+										<TextField
+											fontWeight="500"
+											textAlign="center"
+											onChange={onPriceChange}
+											name="upperPriceValue"
+											ref={register}
+											notAdaptive
+										/>
+									</StyledPricingInput>
+								</StyledPricingInputs>
+								<StyledNouisliderWrapper>
+									<StyledNouislider
+										connect
+										range={{ min: 0, max: 250000 }}
+										start={[1000, 250000]}
+										step={1}
+										onUpdate={onUpdateSlider}
+										instanceRef={nouisliderRef}
+										format={{
+											to: function (value) {
+												return parseInt(value);
+											},
+											from: function (value) {
+												return parseInt(value);
+											},
+										}}
+									/>
+								</StyledNouisliderWrapper>
+							</StyledPricing>
+							<StyledItems>
+								<FilterItem
+									isLargeDevices={isLargeDevices}
+									title="Бренд"
+								/>
+							</StyledItems>
+							<StyledButtons>
+								<StyledButtonsColumn>
+									<Button fw>Применить фильтры</Button>
+								</StyledButtonsColumn>
+								<StyledButtonsColumn>
+									<Button outline dark fw>
+										Очистить фильтры
+									</Button>
+								</StyledButtonsColumn>
+							</StyledButtons>
+						</StyledFormBody>
+					</Container>
+				</StyledForm>
+			</StyledBody>
+		</StyledFilterbar>
+	);
+};
 
 const StyledNouisliderWrapper = styled.div`
 	@media ${({ theme }) => theme.media.mediumDevices} {
@@ -58,6 +182,11 @@ const StyledNouislider = styled(Nouislider)`
 `;
 
 const StyledFilterbar = styled.div``;
+
+const StyledHeaderMD = styled.div`
+	display: flex;
+	align-items: center;
+`;
 
 const StyledBody = styled.div`
 	@media ${({ theme }) => theme.media.mediumDevices} {
@@ -116,7 +245,53 @@ const StyledPricing = styled.div`
 	}
 `;
 
+const StyledPricingInputs = styled.div`
+	display: flex;
+	margin: 17px -12px 23px -12px;
+`;
+
+const StyledPricingInput = styled.div`
+	flex: 1 1 auto;
+	padding: 0 12px;
+`;
+
 const StyledItems = styled.div``;
+
+const StyledButtons = styled.div`
+	display: flex;
+	flex-direction: column;
+	margin: 40px 0 0 0;
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		flex-direction: row;
+		margin: 30px 0 0 0;
+	}
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		flex-direction: column;
+	}
+`;
+
+const StyledButtonsColumn = styled.div`
+	flex: 1 1 auto;
+	&:first-child {
+		margin: 0 0 20px 0;
+		@media ${({ theme }) => theme.media.mediumDevices} {
+			margin: 0 0 0 24px;
+			order: 2;
+		}
+		@media ${({ theme }) => theme.media.extraSmallDevices} {
+			margin: 0 0 16px 0;
+			order: 1;
+		}
+	}
+	&:last-child {
+		@media ${({ theme }) => theme.media.mediumDevices} {
+			order: 1;
+		}
+		@media ${({ theme }) => theme.media.extraSmallDevices} {
+			order: 2;
+		}
+	}
+`;
 
 const StyledTitleMd = styled.div`
 	font-weight: 500;
@@ -124,7 +299,7 @@ const StyledTitleMd = styled.div`
 	margin: 0 0 0 12px;
 `;
 
-const StyledHeaderMD = styled.div`
+const StyledFormHeaderMD = styled.div`
 	padding: 30px 0;
 	margin: 0 0 20px 0;
 	position: relative;
@@ -144,153 +319,5 @@ const StyledHeaderMD = styled.div`
 		height: 1px;
 	}
 `;
-
-const Filterbar = ({ ...styles }) => {
-	const nouisliderRef = React.useRef(null);
-	const formRef = React.useRef(null);
-	const buttonRef = React.useRef(null);
-	const isLargeDevices = useBreakpoint("min-width", 991.98);
-	const [isFilterbarOpenMD, setIsFilterbarOpenMD] = React.useState(false);
-	const { register, handleSubmit, setValue, getValues } = useForm();
-
-	const toggleIsFilterbarOpenMD = (e) => {
-		setIsFilterbarOpenMD((isFilterbarOpenMD) => !isFilterbarOpenMD);
-		document.body.classList.toggle("lock");
-	};
-
-	useOutsideClick(
-		isLargeDevices ? null : [formRef, buttonRef],
-		setIsFilterbarOpenMD,
-		false
-	);
-
-	const onUpdateSlider = (values) => {
-		setValue("lowerPriceValue", values[0]);
-		setValue("upperPriceValue", values[1]);
-	};
-
-	const onPriceChange = (e) => {
-		if (e.target.name === "lowerPriceValue") {
-			nouisliderRef.current.noUiSlider.set([
-				e.target.value,
-				getValues("upperPriceValue"),
-			]);
-		} else {
-			nouisliderRef.current.noUiSlider.set([
-				getValues("lowerPriceValue"),
-				e.target.value,
-			]);
-		}
-	};
-
-	return (
-		<StyledFilterbar {...styles}>
-			{!isLargeDevices && (
-				<FlexContainer align="center">
-					<Button
-						ref={buttonRef}
-						onClick={toggleIsFilterbarOpenMD}
-						outline
-					>
-						<FilterIcon />
-					</Button>
-					<StyledTitleMd>Фильтры</StyledTitleMd>
-				</FlexContainer>
-			)}
-			<StyledBody isFilterbarOpenMD={isFilterbarOpenMD}>
-				<StyledForm ref={formRef} isFilterbarOpenMD={isFilterbarOpenMD}>
-					<Container>
-						{!isLargeDevices && (
-							<StyledHeaderMD>
-								<Title>Фильтр</Title>
-								<CrossIcon onClick={toggleIsFilterbarOpenMD} />
-							</StyledHeaderMD>
-						)}
-						<StyledFormBody>
-							<StyledPricing>
-								<Title extraSmall>Цена, руб.</Title>
-								<FlexContainer margin="17px 0 23px 0;">
-									<FlexContainerColumn
-										flex="1 1 auto"
-										margin="0 24px 0 0"
-									>
-										<TextField
-											fontWeight="500"
-											textAlign="center"
-											largeFont
-											onChange={onPriceChange}
-											name="lowerPriceValue"
-											reference={register}
-										/>
-									</FlexContainerColumn>
-									<FlexContainerColumn flex="1 1 auto">
-										<TextField
-											fontWeight="500"
-											textAlign="center"
-											onChange={onPriceChange}
-											name="upperPriceValue"
-											reference={register}
-										/>
-									</FlexContainerColumn>
-								</FlexContainer>
-								<StyledNouisliderWrapper>
-									<StyledNouislider
-										connect
-										range={{ min: 0, max: 250000 }}
-										start={[1000, 250000]}
-										step={1}
-										onUpdate={onUpdateSlider}
-										instanceRef={nouisliderRef}
-										format={{
-											to: function (value) {
-												return parseInt(value);
-											},
-											from: function (value) {
-												return parseInt(value);
-											},
-										}}
-									/>
-								</StyledNouisliderWrapper>
-							</StyledPricing>
-							<StyledItems>
-								<FilterItem
-									isLargeDevices={isLargeDevices}
-									title="Бренд"
-								/>
-							</StyledItems>
-							<FlexContainer
-								direction="column"
-								directionMD="row"
-								directionESD="column"
-								margin="40px 0 0 0"
-								marginMD="30px 0 0 0"
-							>
-								<FlexContainerColumn
-									flex="1 1 auto"
-									margin="0 0 20px 0"
-									marginMD="0 0 0 24px"
-									marginESD="0 0 16px 0"
-									orderMD="2"
-									orderESD="1"
-								>
-									<Button fw>Применить фильтры</Button>
-								</FlexContainerColumn>
-								<FlexContainerColumn
-									flex="1 1 auto"
-									orderMD="1"
-									orderESD="2"
-								>
-									<Button outline dark fw>
-										Очистить фильтры
-									</Button>
-								</FlexContainerColumn>
-							</FlexContainer>
-						</StyledFormBody>
-					</Container>
-				</StyledForm>
-			</StyledBody>
-		</StyledFilterbar>
-	);
-};
 
 export default Filterbar;

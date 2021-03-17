@@ -177,10 +177,8 @@ const CatalogMenu = (props) => {
 	const CatalogMenuRef = React.useRef(null);
 	const largeDevices = useBreakpoint("min-width", 991.98);
 
-	useOutsideClick(
-		largeDevices ? [CatalogMenuRef] : null,
-		setIsMenuOpen,
-		false
+	useOutsideClick(largeDevices ? [CatalogMenuRef] : null, () =>
+		setIsMenuOpen(false)
 	);
 
 	return (

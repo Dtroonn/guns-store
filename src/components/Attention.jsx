@@ -2,7 +2,37 @@ import React from "react";
 import styled from "styled-components";
 
 import backgroundJpg from "../assets/background.jpg";
-import { FlexContainer, Container, AdaptiveImage } from "../components";
+import { Container, AdaptiveImage } from "../components";
+
+const Attention = () => {
+	return (
+		<StyledAttention>
+			<Container>
+				<StyledBody>
+					<StyledContent>
+						<StyledTitle>
+							Наша продукция
+							<br />
+							<span>не является оружием</span>
+						</StyledTitle>
+						<StyledText>
+							Может приобретаться без специальных разрешений и
+							лицензий. Все товары имеют паспорта и
+							соответствующие документы.
+						</StyledText>
+					</StyledContent>
+					<StyledImageWrapper>
+						<AdaptiveImage
+							height="100%"
+							width="100%"
+							src={backgroundJpg}
+						/>
+					</StyledImageWrapper>
+				</StyledBody>
+			</Container>
+		</StyledAttention>
+	);
+};
 
 const StyledAttention = styled.div``;
 
@@ -17,6 +47,16 @@ const StyledBody = styled.div`
 	}
 	@media ${({ theme }) => theme.media.smallDevices} {
 		padding: 30px 0;
+	}
+`;
+
+const StyledContent = styled.div`
+	position: relative;
+	z-index: 1;
+	display: flex;
+	justify-content: space-between;
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		flex-direction: column;
 	}
 `;
 
@@ -61,39 +101,5 @@ const StyledText = styled.div`
 		max-width: 520px;
 	}
 `;
-
-const Attention = () => {
-	return (
-		<StyledAttention>
-			<Container>
-				<StyledBody>
-					<FlexContainer
-						relative="1"
-						justify="space-between"
-						directionMD="column"
-					>
-						<StyledTitle>
-							Наша продукция
-							<br />
-							<span>не является оружием</span>
-						</StyledTitle>
-						<StyledText>
-							Может приобретаться без специальных разрешений и
-							лицензий. Все товары имеют паспорта и
-							соответствующие документы.
-						</StyledText>
-					</FlexContainer>
-					<StyledImageWrapper>
-						<AdaptiveImage
-							height="100%"
-							width="100%"
-							src={backgroundJpg}
-						/>
-					</StyledImageWrapper>
-				</StyledBody>
-			</Container>
-		</StyledAttention>
-	);
-};
 
 export default Attention;

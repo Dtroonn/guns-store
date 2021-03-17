@@ -1,6 +1,6 @@
 import React from "react";
 
-const useOutsideClick = (elementsRefs, setState, stateValue) => {
+const useOutsideClick = (elementsRefs, callback) => {
 	React.useEffect(() => {
 		if (elementsRefs) {
 			const handleOutsideClick = (event) => {
@@ -10,7 +10,7 @@ const useOutsideClick = (elementsRefs, setState, stateValue) => {
 					path.includes(elemRef.current)
 				);
 				if (!isIncludes) {
-					setState(stateValue);
+					callback();
 				}
 			};
 			document.body.addEventListener("click", handleOutsideClick);

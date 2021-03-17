@@ -1,22 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-const StyledContainer = styled.div`
-	overflow: hidden;
-	transition-property: all;
-	transition-duration: ${({ duration }) => duration || "0.4s"};
-	transition-timing-function: ${({ transitionFunction }) =>
-		transitionFunction || "ease"};
-	height: 0;
-	margin: ${({ margin }) => margin || "0"};
-	padding: ${({ padding }) => padding || "0"};
-	${({ active }) =>
-		active &&
-		css`
-			height: ${({ height }) => `${height}px`};
-		`};
-`;
-
 const SlideToggle = ({ active, ...props }) => {
 	const containerRef = React.useRef(null);
 	const childElemOfffsetHeight =
@@ -32,5 +16,21 @@ const SlideToggle = ({ active, ...props }) => {
 		</StyledContainer>
 	);
 };
+
+const StyledContainer = styled.div`
+	overflow: hidden;
+	transition-property: all;
+	transition-duration: ${({ duration }) => duration || "0.4s"};
+	transition-timing-function: ${({ transitionFunction }) =>
+		transitionFunction || "ease"};
+	height: 0;
+	margin: ${({ margin }) => margin || "0"};
+	padding: ${({ padding }) => padding || "0"};
+	${({ active }) =>
+		active &&
+		css`
+			height: ${({ height }) => `${height}px`};
+		`};
+`;
 
 export default SlideToggle;

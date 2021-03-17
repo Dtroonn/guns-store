@@ -8,6 +8,23 @@ import HeaderBottom from "./HeaderBottom.jsx";
 
 import { useBreakpoint } from "../../hooks";
 
+const Header = () => {
+	const largeDevices = useBreakpoint("min-width", 991.98);
+
+	return (
+		<StyledHeader>
+			{largeDevices && <Menu />}
+			<Container>
+				<StyledBody>
+					{!largeDevices && <Menu />}
+					<HeaderTop />
+					<HeaderBottom />
+				</StyledBody>
+			</Container>
+		</StyledHeader>
+	);
+};
+
 const StyledHeader = styled.div`
 	padding: 0 0 30px 0;
 	border-bottom: 1px solid #e9e9e9;
@@ -41,22 +58,5 @@ const StyledBody = styled.div`
 		align-items: center;
 	}
 `;
-
-const Header = () => {
-	const largeDevices = useBreakpoint("min-width", 991.98);
-
-	return (
-		<StyledHeader>
-			{largeDevices && <Menu />}
-			<Container>
-				<StyledBody>
-					{!largeDevices && <Menu />}
-					<HeaderTop />
-					<HeaderBottom />
-				</StyledBody>
-			</Container>
-		</StyledHeader>
-	);
-};
 
 export default Header;

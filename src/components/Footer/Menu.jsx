@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks";
 
-import { FlexContainer, Title, SlideToggle } from "../../components";
+import { Title, SlideToggle } from "../../components";
 import { ArrowIcon } from "../../components/icons";
 
 const MenuList = ({ items }) => {
@@ -32,14 +32,10 @@ const Menu = ({ title, items, ...props }) => {
 			<StyledHeader
 				onClick={isExtraSmallDevices ? toggleIsMenuOpenESD : null}
 			>
-				<FlexContainer align="center" justify="space-between">
-					<Title margin="0 20px 0 0" small>
-						{title}
-					</Title>
-					{isExtraSmallDevices && (
-						<ArrowIcon active={isMenuOpenESD} />
-					)}
-				</FlexContainer>
+				<Title margin="0 20px 0 0" small>
+					{title}
+				</Title>
+				{isExtraSmallDevices && <ArrowIcon active={isMenuOpenESD} />}
 			</StyledHeader>
 			{isExtraSmallDevices ? (
 				<SlideToggle active={isMenuOpenESD}>
@@ -65,7 +61,11 @@ const StyledMenu = styled.div`
 	}
 `;
 
-const StyledHeader = styled.div``;
+const StyledHeader = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+`;
 
 const StyledList = styled.ul`
 	padding: 27px 0 0 0;
@@ -90,6 +90,12 @@ const StyledLink = styled(Link)`
 	font-weight: 500;
 	font-size: 16px;
 	line-height: 27px;
+	transition: all 0.4s ease 0s;
+	@media ${({ theme }) => theme.mediaFM.largeDevices} {
+		&:hover {
+			color: #ffa621;
+		}
+	}
 `;
 
 export default Menu;

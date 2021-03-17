@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-const StyledSvg = styled.svg``;
-
 const Cross = (props) => {
 	return (
 		<StyledSvg
@@ -23,5 +21,7 @@ const Cross = (props) => {
 		</StyledSvg>
 	);
 };
+
+const StyledSvg = styled.svg``;
 
 export default Cross;

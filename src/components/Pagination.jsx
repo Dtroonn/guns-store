@@ -4,6 +4,33 @@ import styled from "styled-components";
 
 import { ArrowIcon } from "../components/icons";
 
+const Pagination = ({
+	pageCount,
+	currentPage,
+	marginPagesDisplayed,
+	pageRangeDisplayed,
+	handlePageClick,
+}) => {
+	return (
+		<StyledPagination>
+			<ReactPaginate
+				nextLabel={<ArrowIcon small gray rotateStart="-90deg" />}
+				previousLabel={<ArrowIcon small gray rotateStart="90deg" />}
+				breakLabel={"..."}
+				breakClassName={"break-me"}
+				pageCount={1000}
+				marginPagesDisplayed={1}
+				pageRangeDisplayed={2}
+				onPageChange={null}
+				containerClassName={"pagination"}
+				pageLinkClassName={"item"}
+				activeClassName={"active"}
+				forcePage={null}
+			/>
+		</StyledPagination>
+	);
+};
+
 const StyledPagination = styled.div`
 	.pagination {
 		display: flex;
@@ -54,7 +81,7 @@ const StyledPagination = styled.div`
 				font-weight: 700;
 				font-size: 14px;
 				cursor: pointer;
-				@media ${({theme}) => theme.media.extraSmallDevices} {
+				@media ${({ theme }) => theme.media.extraSmallDevices} {
 					height: 32px;
 					min-width: 32px;
 					font-weight: 500;
@@ -64,32 +91,5 @@ const StyledPagination = styled.div`
 		}
 	}
 `;
-
-const Pagination = ({
-	pageCount,
-	currentPage,
-	marginPagesDisplayed,
-	pageRangeDisplayed,
-	handlePageClick,
-}) => {
-	return (
-		<StyledPagination>
-			<ReactPaginate
-				nextLabel={<ArrowIcon small gray rotateStart="-90deg" />}
-				previousLabel={<ArrowIcon small gray rotateStart="90deg" />}
-				breakLabel={"..."}
-				breakClassName={"break-me"}
-				pageCount={1000}
-				marginPagesDisplayed={1}
-				pageRangeDisplayed={2}
-				onPageChange={null}
-				containerClassName={"pagination"}
-				pageLinkClassName={"item"}
-				activeClassName={"active"}
-				forcePage={null}
-			/>
-		</StyledPagination>
-	);
-};
 
 export default Pagination;

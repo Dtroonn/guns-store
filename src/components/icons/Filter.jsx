@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-const StyledSvg = styled.svg``;
-
 const Filter = () => {
 	return (
 		<StyledSvg
@@ -20,5 +18,7 @@ const Filter = () => {
 		</StyledSvg>
 	);
 };
+
+const StyledSvg = styled.svg``;
 
 export default Filter;

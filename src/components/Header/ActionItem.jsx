@@ -1,9 +1,25 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { FlexContainer } from "../../components";
 import { Button } from "../forms";
+
+const ActionItem = ({ icon, title, count, to, ...props }) => {
+	return (
+		<StyledActionItem>
+			<Button to={to} as={Link} hv="true" outline="true" padding="0">
+				<StyledIcon>{props.children}</StyledIcon>
+				{count && <StyledCountItems>{count}</StyledCountItems>}
+			</Button>
+			<StyledTitle>{title}</StyledTitle>
+		</StyledActionItem>
+	);
+};
+
+const StyledActionItem = styled.div`
+	display: flex;
+	align-items: center;
+`;
 
 const StyledIcon = styled.div`
 	display: flex;
@@ -39,16 +55,4 @@ const StyledCountItems = styled.div`
 	color: #fff;
 `;
 
-const Favorites = ({ icon, title, count, to, ...props }) => {
-	return (
-		<FlexContainer align="center" {...props}>
-			<Button to={to} as={Link} hv="true" outline="true" padding="0">
-				<StyledIcon>{props.children}</StyledIcon>
-				{count && <StyledCountItems>{count}</StyledCountItems>}
-			</Button>
-			<StyledTitle>{title}</StyledTitle>
-		</FlexContainer>
-	);
-};
-
-export default Favorites;
+export default ActionItem;

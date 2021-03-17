@@ -1,6 +1,10 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+const TextField = React.forwardRef((props, ref) => {
+	return <StyledInput ref={ref} {...props} />;
+});
+
 const StyledInput = styled.input`
 	width: 100%;
 	display: block;
@@ -24,6 +28,12 @@ const StyledInput = styled.input`
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
 		font-size: 12px;
 	}
+	${({ notAdaptive }) =>
+		notAdaptive &&
+		css`
+			font-size: 16px !important;
+			padding: 0 16px !important;
+		`}
 	${({ notOutline }) =>
 		notOutline &&
 		css`
@@ -34,9 +44,5 @@ const StyledInput = styled.input`
 			}
 		`}
 `;
-
-const TextField = ({ reference, ...props }) => {
-	return <StyledInput ref={reference} {...props} />;
-};
 
 export default TextField;

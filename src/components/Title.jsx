@@ -1,6 +1,10 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+const Title = (props) => {
+	return <StyledTitle {...props} />;
+};
+
 const StyledTitle = styled.div`
 	font-size: 32px;
 	font-weight: 700;
@@ -60,9 +64,5 @@ const StyledTitle = styled.div`
 			}
 		`}
 `;
-
-const Title = (props) => {
-	return <StyledTitle {...props} />;
-};
 
 export default Title;

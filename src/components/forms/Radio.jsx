@@ -1,6 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 
+const Radio = React.forwardRef((props, ref) => {
+	return (
+		<StyledBody>
+			<StyledRadio
+				checked={props.checked}
+				id={props.value}
+				name={props.name}
+				value={props.value}
+				ref={ref}
+				type="radio"
+			/>
+			<StyledLabel htmlFor={props.value}>{props.label}</StyledLabel>
+		</StyledBody>
+	);
+});
+
 const StyledBody = styled.div`
 	display: flex;
 	align-items: center;
@@ -12,8 +28,11 @@ const StyledRadio = styled.input`
 		& ~ label {
 			font-weight: 500;
 			color: #000;
+			&:after {
+				border-color: #d9d9d9;
+			}
 			&:before {
-				display: block;
+				opacity: 1;
 			}
 		}
 	}
@@ -25,6 +44,15 @@ const StyledLabel = styled.label`
 	padding: 0 0 0 36px;
 	cursor: pointer;
 	color: rgba(0, 0, 0, 0.6);
+	transition: color 0.4s ease 0s;
+	@media ${({ theme }) => theme.mediaFM.largeDevices} {
+		&:hover {
+			color: #ffa621;
+			&:after {
+				border-color: #ffa621;
+			}
+		}
+	}
 	&:after {
 		content: "";
 		background: #ffffff;
@@ -35,6 +63,7 @@ const StyledLabel = styled.label`
 		width: 20px;
 		height: 20px;
 		position: absolute;
+		transition: all 0.4s ease 0s;
 		z-index: 1;
 	}
 	&:before {
@@ -47,23 +76,9 @@ const StyledLabel = styled.label`
 		height: 10px;
 		position: absolute;
 		z-index: 2;
-		display: none;
+		transition: all 0.4s ease 0s;
+		opacity: 0;
 	}
 `;
-
-const Radio = ({ label, name, value, checked }) => {
-	return (
-		<StyledBody>
-			<StyledRadio
-				checked={checked}
-				id={value}
-				name={name}
-				value={value}
-				type="radio"
-			/>
-			<StyledLabel htmlFor={value}>{label}</StyledLabel>
-		</StyledBody>
-	);
-};
 
 export default Radio;

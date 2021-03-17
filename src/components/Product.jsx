@@ -2,17 +2,60 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Title, FlexContainer } from "../components";
+import { Title } from "../components";
 import { FavouriteIcon, CartIcon } from "../components/icons";
 import { Button } from "../components/forms";
 
 import GunPng from "../assets/Gun.png";
+
+const Product = ({ title, price }) => {
+	return (
+		<StyledProduct>
+			<StyledBody>
+				<StyledTop>
+					<StyledImageWrapper>
+						<StyledImage src={GunPng} alt="" />
+					</StyledImageWrapper>
+					<StyledTags>
+						<StyledTag>скидка</StyledTag>
+					</StyledTags>
+					<StyledFavourite>
+						<FavouriteIcon hv />
+					</StyledFavourite>
+				</StyledTop>
+				<StyledText>
+					<Title margin="0 0 7px 0" as={Link} to="/" small="true">
+						{title}
+					</Title>
+					<StyledCategory>Охолощенное оружие и макеты</StyledCategory>
+				</StyledText>
+				<StyledBottom>
+					<StyledPrice>
+						{false && <StyledOldPrice>21000 руб.</StyledOldPrice>}
+						<StyledCurrentPrice sale={false}>
+							38800 руб.
+						</StyledCurrentPrice>
+					</StyledPrice>
+					<Button>
+						<CartIcon white />
+					</Button>
+				</StyledBottom>
+			</StyledBody>
+		</StyledProduct>
+	);
+};
 
 const StyledProduct = styled.div`
 	border-radius: 6px;
 	border: 1px solid #e9e9e9;
 	padding: 20px;
 	height: 100%;
+`;
+
+const StyledBody = styled.div`
+	display: flex;
+	height: 100%;
+	flex-direction: column;
 `;
 
 const StyledTop = styled.div`
@@ -54,6 +97,13 @@ const StyledText = styled.div`
 	flex: 1 1 auto;
 `;
 
+const StyledBottom = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin: 35px 0 0 0;
+`;
+
 const StyledCategory = styled.div`
 	font-size: 14px;
 	color: rgba(0, 0, 0, 0.4);
@@ -90,46 +140,5 @@ const StyledImageWrapper = styled.div`
 const StyledImage = styled.img`
 	width: 100%;
 `;
-
-const Product = ({ title, price }) => {
-	return (
-		<StyledProduct>
-			<FlexContainer height="100%" direction="column">
-				<StyledTop>
-					<StyledImageWrapper>
-						<StyledImage src={GunPng} alt="" />
-					</StyledImageWrapper>
-					<StyledTags>
-						<StyledTag>скидка</StyledTag>
-					</StyledTags>
-					<StyledFavourite>
-						<FavouriteIcon hv />
-					</StyledFavourite>
-				</StyledTop>
-				<StyledText>
-					<Title margin="0 0 7px 0" as={Link} to="/" small="true">
-						{title}
-					</Title>
-					<StyledCategory>Охолощенное оружие и макеты</StyledCategory>
-				</StyledText>
-				<FlexContainer
-					justify="space-between"
-					align="flex-end"
-					margin="35px 0 0 0"
-				>
-					<StyledPrice>
-						{false && <StyledOldPrice>21000 руб.</StyledOldPrice>}
-						<StyledCurrentPrice sale={false}>
-							38800 руб.
-						</StyledCurrentPrice>
-					</StyledPrice>
-					<Button>
-						<CartIcon white />
-					</Button>
-				</FlexContainer>
-			</FlexContainer>
-		</StyledProduct>
-	);
-};
 
 export default Product;

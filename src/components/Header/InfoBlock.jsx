@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { FlexContainer, Socials } from "../../components";
+import { Socials } from "../../components";
 
 const StyledItem = styled.div`
 	margin: 0 50px 0 0;
@@ -51,12 +51,7 @@ const StyledItemText = styled.div`
 
 const InfoBlock = (props) => {
 	return (
-		<FlexContainer
-			align="center"
-			directionSD="column"
-			alignSD="flex-start"
-			{...props}
-		>
+		<StyledInfoBlock {...props}>
 			<StyledItem>
 				<StyledContactLink href="tel:+79670169197">
 					+7 967 016 91 97
@@ -72,8 +67,18 @@ const InfoBlock = (props) => {
 				<StyledItemText>Служба поддержки</StyledItemText>
 			</StyledItem>
 			<Socials />
-		</FlexContainer>
+		</StyledInfoBlock>
 	);
 };
+
+const StyledInfoBlock = styled.div`
+	display: flex;
+	align-items: center;
+	margin: ${({ margin }) => margin || "0"};
+	@media ${({ theme }) => theme.media.smallDevices} {
+		flex-direction: column;
+		align-items: center;
+	}
+`;
 
 export default InfoBlock;

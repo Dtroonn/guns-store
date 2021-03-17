@@ -2,6 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+const Authentication = () => {
+	return (
+		<StyledBody>
+			<StyledLink to="/login">Войти</StyledLink>
+			<StyledLink to="register">Зарегистрироваться</StyledLink>
+		</StyledBody>
+	);
+};
+
 const StyledBody = styled.div`
 	padding: 14px 0 0 0;
 	@media ${({ theme }) => theme.media.mediumDevices} {
@@ -49,14 +58,5 @@ const StyledLink = styled(Link)`
 		padding: 15px 0;
 	}
 `;
-
-const Authentication = () => {
-	return (
-		<StyledBody>
-			<StyledLink to="/login">Войти</StyledLink>
-			<StyledLink to="register">Зарегистрироваться</StyledLink>
-		</StyledBody>
-	);
-};
 
 export default Authentication;
