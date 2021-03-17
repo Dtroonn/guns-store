@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { FavouriteIcon, CartIcon } from "../icons";
+import { FavoriteIcon, CartIcon } from "../icons";
 import CatalogMenu from "./CatalogMenu.jsx";
 import Search from "./Search.jsx";
 import ActionItem from "./ActionItem.jsx";
@@ -18,7 +18,7 @@ const HeaderBottom = () => {
 				<StyledActions>
 					<StyledActionsColumn>
 						<ActionItem title="Избранное" to="/favorites">
-							<FavouriteIcon />
+							<FavoriteIcon />
 						</ActionItem>
 					</StyledActionsColumn>
 					<StyledActionsColumn>

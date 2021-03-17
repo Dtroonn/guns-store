@@ -3,12 +3,12 @@ import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
 import { Title } from "../components";
-import { FavouriteIcon, CartIcon } from "../components/icons";
+import { FavoriteIcon, CartIcon } from "../components/icons";
 import { Button } from "../components/forms";
 
 import GunPng from "../assets/Gun.png";
 
-const Product = ({ title, price }) => {
+const Product = ({ title, price, isFavorite }) => {
 	return (
 		<StyledProduct>
 			<StyledBody>
@@ -20,7 +20,7 @@ const Product = ({ title, price }) => {
 						<StyledTag>скидка</StyledTag>
 					</StyledTags>
 					<StyledFavourite>
-						<FavouriteIcon hv />
+						<FavoriteIcon active={isFavorite} hv />
 					</StyledFavourite>
 				</StyledTop>
 				<StyledText>

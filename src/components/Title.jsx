@@ -63,6 +63,17 @@ const StyledTitle = styled.div`
 				line-height: 19px;
 			}
 		`}
+	span {
+		color: rgba(0, 0, 0, 0.2);
+		letter-spacing: 0;
+		margin: 0 0 0 24px;
+		@media ${({ theme }) => theme.media.largeDevices} {
+			margin: 0 0 0 18px;
+		}
+		@media ${({ theme }) => theme.media.smallDevices} {
+			margin: 0 0 0 14px;
+		}
+	}
 `;
 
 export default Title;

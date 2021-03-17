@@ -1,13 +1,10 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Cross = (props) => {
 	return (
 		<StyledSvg
-			width="13"
-			height="13"
 			viewBox="0 0 13 13"
-			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			{...props}
 		>
@@ -22,6 +19,23 @@ const Cross = (props) => {
 	);
 };
 
-const StyledSvg = styled.svg``;
+const StyledSvg = styled.svg`
+	fill: none;
+	width: 13px;
+	height: 13px;
+	path {
+		transition-property: all;
+		transition-duration: ${({ duration }) => duration || "0.4s"};
+		transition-timing-function: ease;
+	}
+	${({ darkGray }) =>
+		darkGray &&
+		css`
+			path {
+				fill: rgba(0, 0, 0, 0.6);
+				fill-opacity: 1;
+			}
+		`}
+`;
 
 export default Cross;

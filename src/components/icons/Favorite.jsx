@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-const Favourite = (props) => {
+const Favorite = (props) => {
 	return (
 		<StyledSvg
 			width="24"
@@ -75,4 +75,4 @@ const StyledSvg = styled.svg`
 		`};
 `;
 
-export default Favourite;
+export default Favorite;

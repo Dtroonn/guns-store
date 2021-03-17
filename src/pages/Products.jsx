@@ -21,7 +21,7 @@ const Products = () => {
 					{!isLargeDevices && (
 						<Title marginMD="0 0 18px 0">
 							Охолощенное оружие и макеты
-							<StyledProductsCount>862</StyledProductsCount>
+							<span>862</span>
 						</Title>
 					)}
 					<StyledHeader>
@@ -29,9 +29,7 @@ const Products = () => {
 							{isLargeDevices ? (
 								<Title>
 									Охолощенное оружие и макеты
-									<StyledProductsCount>
-										862
-									</StyledProductsCount>
+									<span>862</span>
 								</Title>
 							) : (
 								<Filterbar />
@@ -73,7 +71,7 @@ const Products = () => {
 };
 
 const StyledProducts = styled.div`
-	margin: 0 0 76px 0;
+	margin: 0 0 86px 0;
 	@media ${({ theme }) => theme.media.largeDevices} {
 		margin: 0 0 66px 0;
 	}
@@ -152,18 +150,6 @@ const StyledColumn = styled.div`
 	}
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
 		flex: 0 0 100%;
-	}
-`;
-
-const StyledProductsCount = styled.span`
-	color: rgba(0, 0, 0, 0.2);
-	letter-spacing: 0;
-	margin: 0 0 0 24px;
-	@media ${({ theme }) => theme.media.largeDevices} {
-		margin: 0 0 0 18px;
-	}
-	@media ${({ theme }) => theme.media.smallDevices} {
-		margin: 0 0 0 14px;
 	}
 `;
 
