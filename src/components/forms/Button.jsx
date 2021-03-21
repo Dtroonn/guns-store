@@ -57,6 +57,18 @@ const StyledButton = styled.button`
 		css`
 			width: 100%;
 		`}
+
+	${({ nbrr }) =>
+		nbrr &&
+		css`
+			border-radius: 6px 0px 0px 6px;
+		`}
+
+	${({ nbrl }) =>
+		nbrl &&
+		css`
+			border-radius: 0px 6px 6px 0px;
+		`}
 `;
 
 export default Button;

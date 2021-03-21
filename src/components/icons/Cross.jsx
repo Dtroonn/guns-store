@@ -23,10 +23,19 @@ const StyledSvg = styled.svg`
 	fill: none;
 	width: 13px;
 	height: 13px;
+	cursor: pointer;
 	path {
 		transition-property: all;
 		transition-duration: ${({ duration }) => duration || "0.4s"};
 		transition-timing-function: ease;
+	}
+	@media ${({ theme }) => theme.mediaFM.largeDevices} {
+		&:hover {
+			path {
+				fill-opacity: 1;
+				fill: #ffa621;
+			}
+		}
 	}
 	${({ darkGray }) =>
 		darkGray &&

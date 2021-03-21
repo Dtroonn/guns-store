@@ -45,6 +45,15 @@ const StyledTitle = styled.div`
 				line-height: 30px;
 			`}
 	}
+	${({ medium }) =>
+		medium &&
+		css`
+			font-size: 24px;
+			@media ${({ theme }) => theme.media.mediumDevices} {
+				font-size: 20px;
+			}
+		`}
+
 	${({ small }) =>
 		small &&
 		css`
@@ -53,6 +62,7 @@ const StyledTitle = styled.div`
 			text-transform: none;
 			letter-spacing: 0;
 		`}
+
 	${({ extraSmall }) =>
 		extraSmall &&
 		css`

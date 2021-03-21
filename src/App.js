@@ -2,7 +2,7 @@ import React from "react";
 import { Route } from "react-router-dom";
 import styled from "styled-components";
 
-import { Crm, Products, Favorites } from "./pages";
+import { Crm, Products, Favorites, Cart } from "./pages";
 import { Header, Footer } from "./components";
 
 //import Footer from "./components/Footer/Footer.jsx";
@@ -28,6 +28,7 @@ function App() {
       <main>
         <Route exact path="/" component={Products} />
         <Route exact path="/favorites" component={Favorites} />
+        <Route exact path="/cart" component={Cart} />
         <Route exact path="/crm" component={Crm} />
       </main>
       <Footer />
