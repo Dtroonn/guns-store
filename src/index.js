@@ -2,10 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
+import { Provider } from "react-redux";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./fonts.css";
+
+import store from "./redux/store.js";
 
 const GlobalStyle = createGlobalStyle` 
 
@@ -41,6 +44,10 @@ body {
 	&.lock {
 		overflow: hidden; 
 	}
+}
+
+#root {
+	min-height: 100%;
 }
 
 a:focus,
@@ -112,8 +119,10 @@ ReactDOM.render(
 	<React.StrictMode>
 		<Router>
 			<ThemeProvider theme={theme}>
-				<GlobalStyle />
-				<App />
+				<Provider store={store}>
+					<GlobalStyle />
+					<App />
+				</Provider>
 			</ThemeProvider>
 		</Router>
 	</React.StrictMode>,

@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { MenuIcon, ArrowIcon } from "../../components/icons";
 import { Button } from "../forms";
@@ -60,7 +61,6 @@ const StyledListItem = styled.li`
 	cursor: pointer;
 	transition: all 0.4s ease 0s;
 	border-radius: 6px;
-	padding: 15px 15px;
 	&:hover {
 		@media ${({ theme }) => theme.mediaFM.largeDevices} {
 			background: #ffa621;
@@ -70,7 +70,6 @@ const StyledListItem = styled.li`
 		}
 	}
 	@media ${({ theme }) => theme.media.mediumDevices} {
-		padding: 20px 0;
 		position: relative;
 		&:after {
 			content: "";
@@ -83,15 +82,20 @@ const StyledListItem = styled.li`
 			background: #e9e9e9;
 		}
 	}
-	@media ${({ theme }) => theme.media.smallDevices} {
-		padding: 15px 0;
-	}
 `;
 const StyledLink = styled(Link)`
-	transition: all 0.4s ease 0s;
+	display: block;
+	padding: 15px 15px;
+	transition: color 0.4s ease 0s;
 	font-weight: 500;
 	font-size: 16px;
 	color: #000;
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		padding: 20px 0;
+	}
+	@media ${({ theme }) => theme.media.smallDevices} {
+		padding: 15px 0;
+	}
 `;
 
 const StyledHeaderMobile = styled.div`
@@ -121,54 +125,24 @@ const StyledHeaderMobile = styled.div`
 	}
 `;
 
-const MenuList = (props) => {
+const MenuList = ({ items, onClickLink, ...props }) => {
 	return (
 		<StyledList {...props}>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">
-					Охолощенное оружие и макеты
-				</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">
-					Патроны, пули, гильзы
-				</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">Релоадинг</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">
-					Стволики и бланки
-				</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">Развертки</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">Снижение шума</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">
-					Уход и инструмент
-				</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">ЗИП</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">
-					Комплектующие и аксессуары
-				</StyledLink>
-			</StyledListItem>
-			<StyledListItem>
-				<StyledLink to="/somethingCategory">Тюнинг</StyledLink>
-			</StyledListItem>
+			{items.map((item) => (
+				<StyledListItem key={item._id}>
+					<StyledLink
+						onClick={onClickLink}
+						to={`/products/${item.slug}`}
+					>
+						{item.name}
+					</StyledLink>
+				</StyledListItem>
+			))}
 		</StyledList>
 	);
 };
 
-const CatalogMenu = (props) => {
+const CatalogMenu = ({ onClickLink, ...props }) => {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 	const toggleIsMenuOpen = (e) => {
 		setIsMenuOpen((isMenuOpen) => !isMenuOpen);
@@ -180,6 +154,15 @@ const CatalogMenu = (props) => {
 	useOutsideClick(largeDevices ? [CatalogMenuRef] : null, () =>
 		setIsMenuOpen(false)
 	);
+
+	const categories = useSelector(({ filters }) => filters.categories);
+
+	const handleClickLink = () => {
+		setIsMenuOpen(false);
+		if (onClickLink) {
+			onClickLink();
+		}
+	};
 
 	return (
 		<StyledCatalogMenu ref={CatalogMenuRef} {...props}>
@@ -206,7 +189,11 @@ const CatalogMenu = (props) => {
 			)}
 			{largeDevices ? (
 				<StyledMenuWrapper isMenuOpen={isMenuOpen}>
-					<MenuList isMenuOpen={!isMenuOpen} />
+					<MenuList
+						onClickLink={handleClickLink}
+						items={categories}
+						isMenuOpen={!isMenuOpen}
+					/>
 				</StyledMenuWrapper>
 			) : (
 				<SlideToggle
@@ -215,7 +202,10 @@ const CatalogMenu = (props) => {
 					duration="1s"
 					active={isMenuOpen}
 				>
-					<MenuList />
+					<MenuList
+						onClickLink={handleClickLink}
+						items={categories}
+					/>
 				</SlideToggle>
 			)}
 		</StyledCatalogMenu>

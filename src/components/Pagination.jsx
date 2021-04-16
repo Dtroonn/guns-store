@@ -4,32 +4,34 @@ import styled from "styled-components";
 
 import { ArrowIcon } from "../components/icons";
 
-const Pagination = ({
-	pageCount,
-	currentPage,
-	marginPagesDisplayed,
-	pageRangeDisplayed,
-	handlePageClick,
-}) => {
-	return (
-		<StyledPagination>
-			<ReactPaginate
-				nextLabel={<ArrowIcon small gray rotateStart="-90deg" />}
-				previousLabel={<ArrowIcon small gray rotateStart="90deg" />}
-				breakLabel={"..."}
-				breakClassName={"break-me"}
-				pageCount={1000}
-				marginPagesDisplayed={1}
-				pageRangeDisplayed={2}
-				onPageChange={null}
-				containerClassName={"pagination"}
-				pageLinkClassName={"item"}
-				activeClassName={"active"}
-				forcePage={null}
-			/>
-		</StyledPagination>
-	);
-};
+const Pagination = React.memo(
+	({
+		pageCount,
+		forcePage,
+		marginPagesDisplayed,
+		pageRangeDisplayed,
+		onPageChange,
+	}) => {
+		return (
+			<StyledPagination>
+				<ReactPaginate
+					nextLabel={<ArrowIcon small gray rotateStart="-90deg" />}
+					previousLabel={<ArrowIcon small gray rotateStart="90deg" />}
+					breakLabel={"..."}
+					breakClassName={"break-me"}
+					pageCount={pageCount}
+					marginPagesDisplayed={1}
+					pageRangeDisplayed={2}
+					onPageChange={onPageChange}
+					containerClassName={"pagination"}
+					pageLinkClassName={"item"}
+					activeClassName={"active"}
+					forcePage={forcePage}
+				/>
+			</StyledPagination>
+		);
+	}
+);
 
 const StyledPagination = styled.div`
 	.pagination {

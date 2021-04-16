@@ -3,20 +3,31 @@ import styled, { css } from "styled-components";
 import { useForm } from "react-hook-form";
 import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.css";
+import { useSelector, shallowEqual } from "react-redux";
 
 import FilterItem from "./FilterItem.jsx";
 import { Container, Title } from "../../components";
-import { TextField, Button } from "../forms";
+import { TextField, Button, Checkbox } from "../forms";
 import { CrossIcon, FilterIcon } from "../icons";
 import { useBreakpoint, useOutsideClick } from "../../hooks";
 
-const Filterbar = ({ ...styles }) => {
+const formatFormData = (data) => {
+	const formObj = {
+		...data,
+		price: { min: data.minPrice, max: data.maxPrice },
+	};
+	delete formObj.minPrice;
+	delete formObj.maxPrice;
+	return formObj;
+};
+
+const Filterbar = React.memo(({ filters, onFiltersSubmit, onFiltersReset }) => {
 	const nouisliderRef = React.useRef(null);
 	const formRef = React.useRef(null);
 	const buttonRef = React.useRef(null);
 	const isLargeDevices = useBreakpoint("min-width", 991.98);
 	const [isFilterbarOpenMD, setIsFilterbarOpenMD] = React.useState(false);
-	const { register, handleSubmit, setValue, getValues } = useForm();
+	const { register, handleSubmit, setValue, getValues, reset } = useForm();
 
 	const toggleIsFilterbarOpenMD = (e) => {
 		setIsFilterbarOpenMD((isFilterbarOpenMD) => !isFilterbarOpenMD);
@@ -24,31 +35,57 @@ const Filterbar = ({ ...styles }) => {
 	};
 
 	useOutsideClick(isLargeDevices ? null : [formRef, buttonRef], () => {
-		setIsFilterbarOpenMD(false);
-		document.body.classList.remove("lock");
+		setIsFilterbarOpenMD((isFilterbarOpenMD) => {
+			if (isFilterbarOpenMD) {
+				document.body.classList.remove("lock");
+				return false;
+			}
+		});
 	});
 
-	const onUpdateSlider = (values) => {
-		setValue("lowerPriceValue", values[0]);
-		setValue("upperPriceValue", values[1]);
+	const handleSliderUpdate = (values) => {
+		setValue("minPrice", values[0]);
+		setValue("maxPrice", values[1]);
 	};
 
-	const onPriceChange = (e) => {
-		if (e.target.name === "lowerPriceValue") {
+	const handlePriceInputChange = (e) => {
+		if (e.target.name === "minPrice") {
 			nouisliderRef.current.noUiSlider.set([
 				e.target.value,
-				getValues("upperPriceValue"),
+				getValues("maxPrice"),
 			]);
 		} else {
 			nouisliderRef.current.noUiSlider.set([
-				getValues("lowerPriceValue"),
+				getValues("minPrice"),
 				e.target.value,
 			]);
 		}
 	};
 
+	const onFormSubmit = (data, reset) => {
+		if (onFiltersSubmit) {
+			onFiltersSubmit(formatFormData(data));
+		}
+	};
+
+	const handleFormReset = (e) => {
+		e.preventDefault();
+		reset({
+			minPrice: filters.price.min,
+			maxPrice: filters.price.max,
+		});
+		nouisliderRef.current.noUiSlider.set([
+			filters.price.min,
+			filters.price.max,
+		]);
+		console.log(getValues());
+		if (onFiltersReset) {
+			onFiltersReset();
+		}
+	};
+
 	return (
-		<StyledFilterbar {...styles}>
+		<StyledFilterbar>
 			{!isLargeDevices && (
 				<StyledHeaderMD>
 					<Button
@@ -62,7 +99,11 @@ const Filterbar = ({ ...styles }) => {
 				</StyledHeaderMD>
 			)}
 			<StyledBody isFilterbarOpenMD={isFilterbarOpenMD}>
-				<StyledForm ref={formRef} isFilterbarOpenMD={isFilterbarOpenMD}>
+				<StyledForm
+					onSubmit={handleSubmit(onFormSubmit)}
+					ref={formRef}
+					isFilterbarOpenMD={isFilterbarOpenMD}
+				>
 					<Container>
 						{!isLargeDevices && (
 							<StyledFormHeaderMD>
@@ -79,8 +120,8 @@ const Filterbar = ({ ...styles }) => {
 											fontWeight="500"
 											textAlign="center"
 											largeFont
-											onChange={onPriceChange}
-											name="lowerPriceValue"
+											onChange={handlePriceInputChange}
+											name="minPrice"
 											ref={register}
 											notAdaptive
 										/>
@@ -89,8 +130,8 @@ const Filterbar = ({ ...styles }) => {
 										<TextField
 											fontWeight="500"
 											textAlign="center"
-											onChange={onPriceChange}
-											name="upperPriceValue"
+											onChange={handlePriceInputChange}
+											name="maxPrice"
 											ref={register}
 											notAdaptive
 										/>
@@ -99,10 +140,16 @@ const Filterbar = ({ ...styles }) => {
 								<StyledNouisliderWrapper>
 									<StyledNouislider
 										connect
-										range={{ min: 0, max: 250000 }}
-										start={[1000, 250000]}
+										range={{
+											min: filters.price.min,
+											max: filters.price.max,
+										}}
+										start={[
+											filters.price.min,
+											filters.price.max,
+										]}
 										step={1}
-										onUpdate={onUpdateSlider}
+										onUpdate={handleSliderUpdate}
 										instanceRef={nouisliderRef}
 										format={{
 											to: function (value) {
@@ -115,18 +162,48 @@ const Filterbar = ({ ...styles }) => {
 									/>
 								</StyledNouisliderWrapper>
 							</StyledPricing>
-							<StyledItems>
-								<FilterItem
-									isLargeDevices={isLargeDevices}
-									title="Бренд"
-								/>
-							</StyledItems>
+							<StyledFilters>
+								<StyledFiltersTop>
+									<StyledFiltersTopItem>
+										<Checkbox
+											ref={register}
+											name="isSale"
+											value="true"
+											label="Со скидкой"
+											labelAtEnd={`(${filters.sale.productsCount})`}
+										/>
+									</StyledFiltersTopItem>
+								</StyledFiltersTop>
+								{filters.types.length > 0 && (
+									<FilterItem
+										isLargeDevices={isLargeDevices}
+										title="Тип"
+										name="types"
+										items={filters.types}
+										register={register}
+									/>
+								)}
+								{filters.kinds.length > 0 && (
+									<FilterItem
+										isLargeDevices={isLargeDevices}
+										title="Вид"
+										name="kinds"
+										items={filters.kinds}
+										register={register}
+									/>
+								)}
+							</StyledFilters>
 							<StyledButtons>
 								<StyledButtonsColumn>
 									<Button fw>Применить фильтры</Button>
 								</StyledButtonsColumn>
 								<StyledButtonsColumn>
-									<Button outline dark fw>
+									<Button
+										onClick={handleFormReset}
+										outline
+										dark
+										fw
+									>
 										Очистить фильтры
 									</Button>
 								</StyledButtonsColumn>
@@ -137,7 +214,7 @@ const Filterbar = ({ ...styles }) => {
 			</StyledBody>
 		</StyledFilterbar>
 	);
-};
+});
 
 const StyledNouisliderWrapper = styled.div`
 	@media ${({ theme }) => theme.media.mediumDevices} {
@@ -214,7 +291,7 @@ const StyledBody = styled.div`
 	}
 `;
 
-const StyledForm = styled.div`
+const StyledForm = styled.form`
 	background: #f9f9f9;
 	border-radius: 6px;
 	padding: 25px 20px;
@@ -236,7 +313,7 @@ const StyledForm = styled.div`
 	}
 `;
 
-const StyledFormBody = styled.form``;
+const StyledFormBody = styled.div``;
 
 const StyledPricing = styled.div`
 	margin: 0 0 60px 0;
@@ -255,7 +332,16 @@ const StyledPricingInput = styled.div`
 	padding: 0 12px;
 `;
 
-const StyledItems = styled.div``;
+const StyledFilters = styled.div``;
+
+const StyledFiltersTop = styled.div`
+	margin: 0 0 40px 0;
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		margin: 50px 0 10px 0;
+	}
+`;
+
+const StyledFiltersTopItem = styled.div``;
 
 const StyledButtons = styled.div`
 	display: flex;

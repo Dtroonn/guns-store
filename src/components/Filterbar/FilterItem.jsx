@@ -5,20 +5,25 @@ import { Title, SlideToggle } from "../../components";
 import { Checkbox } from "../forms";
 import { ArrowIcon } from "../icons";
 
-const ItemsList = () => {
+const ItemsList = ({ items, name, register }) => {
 	return (
 		<StyledList>
-			<StyledListItem>
-				<Checkbox name="brend" value="off-white" label="off-white" />
-			</StyledListItem>
-			<StyledListItem>
-				<Checkbox name="brend" value="gucci" label="gucci" />
-			</StyledListItem>
+			{items.map((item) => (
+				<StyledListItem key={item._id}>
+					<Checkbox
+						ref={register}
+						name={name}
+						value={item.slug}
+						label={item.name}
+						labelAtEnd={`(${item.productsCount})`}
+					/>
+				</StyledListItem>
+			))}
 		</StyledList>
 	);
 };
 
-const FilterItem = ({ title, isLargeDevices }) => {
+const FilterItem = ({ title, isLargeDevices, items, name, register }) => {
 	const [isOpenMD, setIsOpenMD] = React.useState(false);
 	const toggleIsOpenMD = (e) => {
 		setIsOpenMD((isOpenMD) => !isOpenMD);
@@ -35,10 +40,10 @@ const FilterItem = ({ title, isLargeDevices }) => {
 				)}
 			</StyledHeader>
 			{isLargeDevices ? (
-				<ItemsList />
+				<ItemsList items={items} name={name} register={register} />
 			) : (
 				<SlideToggle active={isOpenMD}>
-					<ItemsList />
+					<ItemsList items={items} name={name} register={register} />
 				</SlideToggle>
 			)}
 		</StyledFilterItem>

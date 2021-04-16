@@ -2,38 +2,40 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Title } from "../components";
-import { FavoriteIcon, CartIcon } from "../components/icons";
-import { Button } from "../components/forms";
+import { Title } from "../../components";
+import { FavoriteIcon, CartIcon } from "../../components/icons";
+import { Button } from "../../components/forms";
 
-import GunPng from "../assets/Gun.png";
-
-const Product = ({ title, price, isFavorite }) => {
+const Product = ({ name, category, price, count, isFavorite, imgUrl }) => {
 	return (
 		<StyledProduct>
 			<StyledBody>
 				<StyledTop>
 					<StyledImageWrapper>
-						<StyledImage src={GunPng} alt="" />
+						<StyledImage src={imgUrl} alt="" />
 					</StyledImageWrapper>
 					<StyledTags>
-						<StyledTag>скидка</StyledTag>
+						{price.old && <StyledTag>скидка</StyledTag>}
 					</StyledTags>
 					<StyledFavourite>
 						<FavoriteIcon active={isFavorite} hv />
 					</StyledFavourite>
 				</StyledTop>
 				<StyledText>
-					<Title margin="0 0 7px 0" as={Link} to="/" small="true">
-						{title}
+					<Title margin="0 0 7px 0" to="/" small="true">
+						{name}
 					</Title>
-					<StyledCategory>Охолощенное оружие и макеты</StyledCategory>
+					<StyledCategory to={`/products/${category.slug}`}>
+						{category.name}
+					</StyledCategory>
 				</StyledText>
 				<StyledBottom>
 					<StyledPrice>
-						{false && <StyledOldPrice>21000 руб.</StyledOldPrice>}
-						<StyledCurrentPrice sale={false}>
-							38800 руб.
+						{price.old && (
+							<StyledOldPrice>{price.old}</StyledOldPrice>
+						)}
+						<StyledCurrentPrice sale={price.old}>
+							{price.current} руб.
 						</StyledCurrentPrice>
 					</StyledPrice>
 					<Button>
@@ -60,6 +62,7 @@ const StyledBody = styled.div`
 
 const StyledTop = styled.div`
 	position: relative;
+	padding: 35px 0 0 0;
 `;
 
 const StyledTags = styled.div`
@@ -89,7 +92,7 @@ const StyledTag = styled.div`
 const StyledFavourite = styled.div`
 	position: absolute;
 	right: 10px;
-	top: 10px;
+	top: 0;
 	cursor: pointer;
 `;
 
@@ -104,7 +107,7 @@ const StyledBottom = styled.div`
 	margin: 35px 0 0 0;
 `;
 
-const StyledCategory = styled.div`
+const StyledCategory = styled(Link)`
 	font-size: 14px;
 	color: rgba(0, 0, 0, 0.4);
 	line-height: 17px;

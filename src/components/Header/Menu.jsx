@@ -144,6 +144,10 @@ const Menu = ({ margin }) => {
 						{!largeDevices && <Search />}
 						{!largeDevices && (
 							<CatalogMenu
+								onClickLink={() => {
+									setIsActiveIconMenu(false);
+									document.body.classList.remove("lock");
+								}}
 								margin="30px 0 0 0"
 								marginSD="20px 0 0 0"
 							/>

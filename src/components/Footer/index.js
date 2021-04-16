@@ -7,7 +7,10 @@ import { Container, Title, Socials } from "../../components";
 
 const catalogItems = [
 	{ name: "Акции", slug: "sale" },
-	{ name: "Охолощенное оружие и макеты", slug: "OhloshOuegieIMaketi" },
+	{
+		name: "Охолощенное оружие и макеты",
+		slug: "products/oholoshennoe-oruzhie-i-makety",
+	},
 ];
 
 const informationItems = [

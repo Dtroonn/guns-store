@@ -8,12 +8,16 @@ const Checkbox = React.forwardRef((props, ref) => {
 		<StyledBody>
 			<StyledCheckbox
 				checked={props.checked}
+				ref={ref}
 				id={props.value}
 				name={props.name}
 				value={props.value}
 				type="checkbox"
 			/>
-			<StyledLabel htmlFor={props.value}>{props.label}</StyledLabel>
+			<StyledLabel htmlFor={props.value}>
+				{props.label}{" "}
+				{props.labelAtEnd && <span>{props.labelAtEnd}</span>}
+			</StyledLabel>
 		</StyledBody>
 	);
 });
@@ -29,6 +33,9 @@ const StyledCheckbox = styled.input`
 		& ~ label {
 			font-weight: 500;
 			color: #000;
+			span {
+				color: #000;
+			}
 			&:after {
 				background: #ffa621;
 				border-color #ffa621;
@@ -44,12 +51,22 @@ const StyledLabel = styled.label`
 	font-size: 14px;
 	position: relative;
 	padding: 0 0 0 36px;
+	line-height: 18px;
 	cursor: pointer;
 	color: rgba(0, 0, 0, 0.6);
 	transition: color 0.4s ease 0s;
+	span {
+		color: #000;
+		font-weight: bold;
+		margin: 0 0 0 5px;
+		transition: color 0.4s ease 0s;
+	}
 	@media ${({ theme }) => theme.mediaFM.largeDevices} {
 		&:hover {
 			color: #ffa621;
+			span {
+				color: #ffa621;
+			}
 			&:after {
 				border-color: #ffa621;
 			}
@@ -59,7 +76,7 @@ const StyledLabel = styled.label`
 		content: "";
 		background: #fff;
 		border: 1px solid #d9d9d9;
-		top: -4px;
+		top: -2px;
 		left: 0;
 		border-radius: 6px;
 		width: 20px;
@@ -71,7 +88,7 @@ const StyledLabel = styled.label`
 	&:before {
 		content: "";
 		background: url(${checkMark}) center / 100% no-repeat;
-		top: 1px;
+		top: 3px;
 		left: 5px;
 		width: 10px;
 		height: 10px;

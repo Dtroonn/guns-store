@@ -5,71 +5,81 @@ import { Radio } from "../components/forms";
 import { ArrowIcon, CrossIcon } from "../components/icons";
 import { useBreakpoint, useOutsideClick } from "../hooks";
 
-const SelectBlock = ({ title, items, selectedValue, ...props }) => {
-	const largeDevices = useBreakpoint("min-width", 991.98);
-	const selectBodyRef = React.useRef(null);
-	const selectHeaderRef = React.useRef(null);
+const SelectBlock = React.memo(
+	({ title, items, selectedValue, onItemSelect, ...props }) => {
+		const largeDevices = useBreakpoint("min-width", 991.98);
+		const selectBodyRef = React.useRef(null);
+		const selectHeaderRef = React.useRef(null);
 
-	const [isSelectOpen, setIsSelectOpen] = React.useState(false);
+		const [isSelectOpen, setIsSelectOpen] = React.useState(false);
 
-	useOutsideClick([selectHeaderRef, selectBodyRef], () => {
-		setIsSelectOpen(false);
-		document.body.classList.remove("lock");
-	});
+		useOutsideClick([selectHeaderRef, selectBodyRef], () => {
+			setIsSelectOpen((isSelectOpen) => {
+				if (isSelectOpen) {
+					document.body.classList.remove("lock");
+					return false;
+				}
+			});
+		});
 
-	const toggleisSelectOpen = (e) => {
-		setIsSelectOpen((isSelectOpen) => !isSelectOpen);
-		if (!largeDevices) {
-			document.body.classList.toggle("lock");
-		}
-	};
+		const toggleisSelectOpen = (e) => {
+			setIsSelectOpen((isSelectOpen) => !isSelectOpen);
+			if (!largeDevices) {
+				document.body.classList.toggle("lock");
+			}
+		};
 
-	const onRadioClick = (e) => {
-		alert(e.value);
-	};
+		const handleRadioChange = (e) => {
+			if (onItemSelect) {
+				onItemSelect(e.target.value);
+			}
+			toggleisSelectOpen();
+		};
 
-	return (
-		<StyledSelectBlock {...props}>
-			<StyledHeader ref={selectHeaderRef} onClick={toggleisSelectOpen}>
-				<StyledTitle>
-					{title}
-					<span>возрастанию цены</span>
-				</StyledTitle>
-				<ArrowIcon small active={isSelectOpen} />
-			</StyledHeader>
-			<StyledBodyWrapper isSelectOpen={isSelectOpen}>
-				<StyledBody ref={selectBodyRef} isSelectOpen={isSelectOpen}>
-					{!largeDevices && (
-						<StyledHeaderMd>
-							<StyledHeaderTitleMd>
-								Сортировать по:
-							</StyledHeaderTitleMd>
-							<CrossIcon onClick={toggleisSelectOpen} />
-						</StyledHeaderMd>
-					)}
-					<StyledList isHidden={!isSelectOpen}>
-						<StyledListItem>
-							<Radio
-								name="football"
-								value="lalka"
-								label="Возрастанию цены"
-								onClick={onRadioClick}
-							/>
-						</StyledListItem>
-						<StyledListItem>
-							<Radio
-								name="football"
-								value="trololo"
-								label="Убыванию цены"
-								onClick={onRadioClick}
-							/>
-						</StyledListItem>
-					</StyledList>
-				</StyledBody>
-			</StyledBodyWrapper>
-		</StyledSelectBlock>
-	);
-};
+		const activeLabel = items.find((item) => item.value === selectedValue)
+			.name;
+
+		return (
+			<StyledSelectBlock {...props}>
+				<StyledHeader
+					ref={selectHeaderRef}
+					onClick={toggleisSelectOpen}
+				>
+					<StyledTitle>
+						{title}
+						<span>{activeLabel}</span>
+					</StyledTitle>
+					<ArrowIcon small active={isSelectOpen} />
+				</StyledHeader>
+				<StyledBodyWrapper isSelectOpen={isSelectOpen}>
+					<StyledBody ref={selectBodyRef} isSelectOpen={isSelectOpen}>
+						{!largeDevices && (
+							<StyledHeaderMd>
+								<StyledHeaderTitleMd>
+									{title}
+								</StyledHeaderTitleMd>
+								<CrossIcon onClick={toggleisSelectOpen} />
+							</StyledHeaderMd>
+						)}
+						<StyledList isHidden={!isSelectOpen}>
+							{items.map((item, index) => (
+								<StyledListItem key={index}>
+									<Radio
+										name="selectItem"
+										value={item.value}
+										label={item.name}
+										onChange={handleRadioChange}
+										checked={item.value === selectedValue}
+									/>
+								</StyledListItem>
+							))}
+						</StyledList>
+					</StyledBody>
+				</StyledBodyWrapper>
+			</StyledSelectBlock>
+		);
+	}
+);
 
 const StyledSelectBlock = styled.div`
 	position: relative;
@@ -93,6 +103,7 @@ const StyledTitle = styled.div`
 	span {
 		color: #ffa621;
 		margin: 0 0 0 10px;
+		text-transform: lowercase;
 	}
 `;
 

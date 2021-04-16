@@ -11,6 +11,7 @@ const Radio = React.forwardRef((props, ref) => {
 				value={props.value}
 				ref={ref}
 				type="radio"
+				onChange={props.onChange}
 			/>
 			<StyledLabel htmlFor={props.value}>{props.label}</StyledLabel>
 		</StyledBody>

@@ -25,7 +25,7 @@ const Header = () => {
 	);
 };
 
-const StyledHeader = styled.div`
+const StyledHeader = styled.header`
 	padding: 0 0 30px 0;
 	border-bottom: 1px solid #e9e9e9;
 	margin: 0 0 70px 0;

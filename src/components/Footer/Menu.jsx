@@ -32,9 +32,7 @@ const Menu = ({ title, items, ...props }) => {
 			<StyledHeader
 				onClick={isExtraSmallDevices ? toggleIsMenuOpenESD : null}
 			>
-				<Title margin="0 20px 0 0" small>
-					{title}
-				</Title>
+				<Title small>{title}</Title>
 				{isExtraSmallDevices && <ArrowIcon active={isMenuOpenESD} />}
 			</StyledHeader>
 			{isExtraSmallDevices ? (

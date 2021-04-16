@@ -1,64 +1,236 @@
 import React from "react";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import ContentLoader from "react-content-loader";
 
 import {
 	Container,
 	Title,
 	SelectBlock,
 	Product,
+	ProductLoadingBlock,
 	Filterbar,
+	FilterbarLoadingBlock,
 	Attention,
 	Pagination,
 } from "../components";
-import { useBreakpoint } from "../hooks";
+
+import { useBreakpoint, usePrevious } from "../hooks";
+
+import { fetchProducts, setPage } from "../redux/actions/products";
+import {
+	setActiveCategory,
+	setSortBy,
+	fetchFilterbarFilters,
+	setActiveFilterbarFilters,
+	resetActiveFilters,
+} from "../redux/actions/filters";
+
+const sortItems = [
+	{ name: "Популярности", value: "rating_-1" },
+	{ name: "Возрастанию цены", value: "price_1" },
+	{ name: "Убыванию цены", value: "price_-1" },
+];
+
+const TotalCountLoader = ({ isLargeDevices }) => (
+	<ContentLoader
+		style={{ margin: "0 0 -4px 0" }}
+		speed={2}
+		width={isLargeDevices ? 84 : 74}
+		height={isLargeDevices ? 30 : 25}
+		viewBox="0 0 89 30"
+		backgroundColor="#f3f3f3"
+		foregroundColor="#ecebeb"
+	>
+		<rect x="20" y="0" rx="0" ry="0" width="54" height="30" />
+	</ContentLoader>
+);
 
 const Products = () => {
 	const isLargeDevices = useBreakpoint("min-width", 991.98);
+	const productsRef = React.useRef(null);
+
+	const { category } = useParams();
+
+	console.log("rerender");
+
+	const dispatch = useDispatch();
+	const {
+		items,
+		page,
+		count,
+		totalCount,
+		isLoading,
+		categories,
+		activeCategory,
+		sortBy,
+		filterbarFilters,
+		isLoadingFilterbarFilters,
+		activeFilterbarFilters,
+		activeTypes,
+	} = useSelector(
+		({ products, filters }) => ({
+			items: products.items,
+			count: products.count,
+			page: products.page,
+			totalCount: products.totalCount,
+			isLoading: products.isLoading,
+			categories: filters.categories,
+			activeCategory: filters.activeCategory,
+			sortBy: filters.sortBy,
+			filterbarFilters: filters.filterbarFilters,
+			isLoadingFilterbarFilters: filters.isLoadingFilterbarFilters,
+			activeFilterbarFilters: filters.activeFilterbarFilters,
+		}),
+		shallowEqual
+	);
+
+	const prevActiveFilterbarFilters = usePrevious(activeFilterbarFilters);
+
+	React.useEffect(() => {
+		const goToProductsValue =
+			productsRef.current.getBoundingClientRect().top +
+			window.pageYOffset -
+			15 -
+			(!isLargeDevices
+				? document.querySelector("header").offsetHeight
+				: 0);
+		window.scrollTo({
+			top: goToProductsValue,
+		});
+	});
+
+	React.useLayoutEffect(() => {
+		if (activeCategory.slug !== category) {
+			dispatch(resetActiveFilters());
+			dispatch(setPage(1));
+			dispatch(fetchFilterbarFilters(category));
+			dispatch(setActiveCategory(category));
+			return;
+		}
+		if (
+			prevActiveFilterbarFilters !== activeFilterbarFilters &&
+			page !== 1
+		) {
+			dispatch(setPage(1));
+			return;
+		}
+		dispatch(
+			fetchProducts(category, page, count, sortBy, activeFilterbarFilters)
+		);
+	}, [category, activeCategory, page, sortBy, activeFilterbarFilters]);
+
+	const handlePageChange = React.useCallback((data) => {
+		dispatch(setPage(data.selected + 1));
+	}, []);
+
+	const onSortTypeSelect = React.useCallback((value) => {
+		dispatch(setSortBy(value));
+		dispatch(setPage(1));
+	}, []);
+
+	const handleFiltersSubmit = React.useCallback((filters) => {
+		console.log(filters);
+		dispatch(setActiveFilterbarFilters(filters));
+	}, []);
+
+	const handleFiltersReset = React.useCallback((filters) => {
+		dispatch(
+			setActiveFilterbarFilters({
+				types: [],
+				kinds: [],
+				isSale: false,
+				price: {},
+			})
+		);
+	}, []);
+
+	const TitleWithData = () => {
+		return (
+			<Title>
+				{activeCategory.name}
+				{isLoading ? (
+					<TotalCountLoader isLargeDevices={isLargeDevices} />
+				) : (
+					<span>{totalCount}</span>
+				)}
+			</Title>
+		);
+	};
+
 	return (
 		<React.Fragment>
-			<StyledProducts>
+			<StyledProducts ref={productsRef}>
 				<Container>
-					{!isLargeDevices && (
-						<Title marginMD="0 0 18px 0">
-							Охолощенное оружие и макеты
-							<span>862</span>
-						</Title>
-					)}
+					{!isLargeDevices && <TitleWithData />}
 					<StyledHeader>
 						<StyledHeaderColumn>
 							{isLargeDevices ? (
-								<Title>
-									Охолощенное оружие и макеты
-									<span>862</span>
-								</Title>
+								<TitleWithData />
+							) : isLoadingFilterbarFilters ? (
+								<FilterbarLoadingBlock />
 							) : (
-								<Filterbar />
+								<Filterbar
+									filters={filterbarFilters}
+									onFiltersSubmit={handleFiltersSubmit}
+									onFiltersReset={handleFiltersReset}
+								/>
 							)}
 						</StyledHeaderColumn>
 						<StyledHeaderColumn>
-							<SelectBlock title="Сортировать по:" />
+							<SelectBlock
+								title="Сортировать по:"
+								items={sortItems}
+								selectedValue={sortBy}
+								onItemSelect={onSortTypeSelect}
+							/>
 						</StyledHeaderColumn>
 					</StyledHeader>
 					<StyledBody>
-						{isLargeDevices && (
-							<StyledFilterbarWrapper>
-								<Filterbar />
-							</StyledFilterbarWrapper>
-						)}
+						{isLargeDevices &&
+							(isLoadingFilterbarFilters ? (
+								<StyledFilterbarWrapper>
+									<FilterbarLoadingBlock />
+								</StyledFilterbarWrapper>
+							) : (
+								<StyledFilterbarWrapper>
+									<Filterbar
+										filters={filterbarFilters}
+										onFiltersSubmit={handleFiltersSubmit}
+										onFiltersReset={handleFiltersReset}
+									/>
+								</StyledFilterbarWrapper>
+							))}
 						<StyledContent>
 							<StyledRow>
-								{Array(9)
-									.fill(0)
-									.map((item, index) => (
-										<StyledColumn key={index}>
-											<Product title="Glock 17 СХ Retay" />
+								{isLoading &&
+									Array(count)
+										.fill(0)
+										.map((_, index) => (
+											<StyledColumn key={index}>
+												<ProductLoadingBlock />
+											</StyledColumn>
+										))}
+								{!isLoading &&
+									items.map((product) => (
+										<StyledColumn key={product._id}>
+											<Product {...product} />
 										</StyledColumn>
 									))}
 							</StyledRow>
 							<StyledContentBottom>
-								<Pagination />
+								<Pagination
+									pageCount={Math.ceil(totalCount / count)}
+									onPageChange={handlePageChange}
+									forcePage={page - 1}
+								/>
 								<StyledWatchedProductsCount>
-									Вы посмотрели 28 из 862 товаров
+									Вы посмотрели{" "}
+									{count * page >= totalCount
+										? totalCount
+										: count * page}{" "}
+									из {totalCount} товаров
 								</StyledWatchedProductsCount>
 							</StyledContentBottom>
 						</StyledContent>
@@ -92,7 +264,7 @@ const StyledHeader = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	@media ${({ theme }) => theme.media.mediumDevices} {
-		margin: 0 0 30px 0;
+		margin: 18px 0 30px 0;
 	}
 	@media (max-width: 530px) {
 		display: block;
@@ -116,7 +288,6 @@ const StyledFilterbarWrapper = styled.div`
 	margin: 0 24px 0 0;
 	flex: 0 0 288px;
 	@media ${({ theme }) => theme.media.largeDevices} {
-		flex: 0 0 258px;
 	}
 `;
 
@@ -128,7 +299,23 @@ const StyledRow = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	margin: 0 -12px;
+	@media ${({ theme }) => theme.media.smallDevices} {
+		margin: 0 -8px;
+	}
+`;
+
+const StyledColumn = styled.div`
+	padding: 0 12px;
+	flex: 0 0 33.333%;
+	margin: 0 0 24px 0;
+	@media ${({ theme }) => theme.media.largeDevices} {
+		flex: 0 0 50%;
+	}
+	@media ${({ theme }) => theme.media.smallDevices} {
+		padding: 0 8px;
+	}
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		flex: 0 0 100%;
 	}
 `;
 
@@ -138,18 +325,6 @@ const StyledContentBottom = styled.div`
 	align-items: center;
 	@media ${({ theme }) => theme.media.smallDevices} {
 		flex-direction: column;
-	}
-`;
-
-const StyledColumn = styled.div`
-	padding: 0 12px;
-	flex: 0 0 33.333%;
-	margin: 0 0 24px 0;
-	@media ${({ theme }) => theme.media.mediumDevices} {
-		flex: 0 0 50%;
-	}
-	@media ${({ theme }) => theme.media.extraSmallDevices} {
-		flex: 0 0 100%;
 	}
 `;
 
