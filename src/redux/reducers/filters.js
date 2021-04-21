@@ -7,12 +7,14 @@ import {
 	SET_FILTERBAR_FILTERS,
 	SET_IS_LOADING_FILTERBAR_FILTERS,
 	SET_ACTIVE_FILTERBAR_FILTERS,
+	SET_ACTIVE_SEARCH,
 	RESET_ACTIVE_FILTERS,
 } from "../types/filters";
 
 const initialState = {
 	categories: [],
 	activeCategory: {},
+	activeSearch: null,
 	sortBy: "rating_-1",
 	filterbarFilters: {
 		sale: {
@@ -56,11 +58,16 @@ const filters = (state = initialState, action) => {
 			case SET_ACTIVE_FILTERBAR_FILTERS:
 				Object.assign(draft.activeFilterbarFilters, payload);
 				break;
+			case SET_ACTIVE_SEARCH:
+				draft.activeSearch = payload;
+				break;
 			case RESET_ACTIVE_FILTERS:
 				draft.activeCategory = {};
+				draft.activeSearch = null;
 				draft.sortBy = "rating_-1";
 				draft.activeFilterbarFilters =
 					initialState.activeFilterbarFilters;
+
 				break;
 			default:
 				break;

@@ -3,13 +3,12 @@ import styled, { css } from "styled-components";
 import { useForm } from "react-hook-form";
 import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.css";
-import { useSelector, shallowEqual } from "react-redux";
 
 import FilterItem from "./FilterItem.jsx";
 import { Container, Title } from "../../components";
 import { TextField, Button, Checkbox } from "../forms";
 import { CrossIcon, FilterIcon } from "../icons";
-import { useBreakpoint, useOutsideClick } from "../../hooks";
+import { useBreakpoint } from "../../hooks";
 
 const formatFormData = (data) => {
 	const formObj = {
@@ -34,15 +33,6 @@ const Filterbar = React.memo(({ filters, onFiltersSubmit, onFiltersReset }) => {
 		document.body.classList.toggle("lock");
 	};
 
-	useOutsideClick(isLargeDevices ? null : [formRef, buttonRef], () => {
-		setIsFilterbarOpenMD((isFilterbarOpenMD) => {
-			if (isFilterbarOpenMD) {
-				document.body.classList.remove("lock");
-				return false;
-			}
-		});
-	});
-
 	const handleSliderUpdate = (values) => {
 		setValue("minPrice", values[0]);
 		setValue("maxPrice", values[1]);
@@ -66,6 +56,9 @@ const Filterbar = React.memo(({ filters, onFiltersSubmit, onFiltersReset }) => {
 		if (onFiltersSubmit) {
 			onFiltersSubmit(formatFormData(data));
 		}
+		if (!isLargeDevices) {
+			toggleIsFilterbarOpenMD();
+		}
 	};
 
 	const handleFormReset = (e) => {
@@ -78,7 +71,7 @@ const Filterbar = React.memo(({ filters, onFiltersSubmit, onFiltersReset }) => {
 			filters.price.min,
 			filters.price.max,
 		]);
-		console.log(getValues());
+
 		if (onFiltersReset) {
 			onFiltersReset();
 		}
@@ -98,8 +91,12 @@ const Filterbar = React.memo(({ filters, onFiltersSubmit, onFiltersReset }) => {
 					<StyledTitleMd>Фильтры</StyledTitleMd>
 				</StyledHeaderMD>
 			)}
-			<StyledBody isFilterbarOpenMD={isFilterbarOpenMD}>
+			<StyledBody
+				onClick={toggleIsFilterbarOpenMD}
+				isFilterbarOpenMD={isFilterbarOpenMD}
+			>
 				<StyledForm
+					onClick={(e) => e.stopPropagation()}
 					onSubmit={handleSubmit(onFormSubmit)}
 					ref={formRef}
 					isFilterbarOpenMD={isFilterbarOpenMD}
@@ -142,7 +139,11 @@ const Filterbar = React.memo(({ filters, onFiltersSubmit, onFiltersReset }) => {
 										connect
 										range={{
 											min: filters.price.min,
-											max: filters.price.max,
+											max:
+												filters.price.max ===
+												filters.price.min
+													? filters.price.max + 1
+													: filters.price.max,
 										}}
 										start={[
 											filters.price.min,
@@ -278,15 +279,16 @@ const StyledBody = styled.div`
 		height: 100%;
 		opacity: 0;
 		visability: hidden;
-		z-index: -100;
 		overflow: auto;
+		pointer-events: none;
+		z-index: 100;
 		transition: opacity 0.4s ease 0s;
 		${({ isFilterbarOpenMD }) =>
 			isFilterbarOpenMD &&
 			css`
-				z-index: 100;
-				visability: visible;
 				opacity: 1;
+				pointer-events: all;
+				visability: visible;
 			`}
 	}
 `;

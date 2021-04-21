@@ -7,7 +7,8 @@ export const fetchProducts = (
 	page,
 	count,
 	sortBy,
-	activeFilters
+	activeFilters,
+	search
 ) => async (dispatch) => {
 	try {
 		dispatch(setIsLoading(true));
@@ -16,7 +17,8 @@ export const fetchProducts = (
 			page,
 			count,
 			sortBy,
-			activeFilters
+			activeFilters,
+			search
 		);
 		console.log(response);
 		dispatch(setProducts(response.data.items, response.data.totalCount));

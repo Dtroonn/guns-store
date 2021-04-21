@@ -6,7 +6,37 @@ import { Title } from "../../components";
 import { FavoriteIcon, CartIcon } from "../../components/icons";
 import { Button } from "../../components/forms";
 
-const Product = ({ name, category, price, count, isFavorite, imgUrl }) => {
+const Product = ({
+	name,
+	category,
+	price,
+	count,
+	isFavorite,
+	imgUrl,
+	_id,
+	onFavoritesButtonClick,
+}) => {
+	let cleanupFunction = false;
+
+	const [
+		isDisabledFavoritesButton,
+		setIsDisabledFavoritesButton,
+	] = React.useState(false);
+
+	const handleFavoritesButtonClick = async () => {
+		if (onFavoritesButtonClick) {
+			setIsDisabledFavoritesButton(true);
+			await onFavoritesButtonClick(_id, isFavorite);
+			if (!cleanupFunction) {
+				setIsDisabledFavoritesButton(false);
+			}
+		}
+	};
+
+	React.useEffect(() => {
+		return () => (cleanupFunction = true);
+	}, []);
+
 	return (
 		<StyledProduct>
 			<StyledBody>
@@ -16,10 +46,17 @@ const Product = ({ name, category, price, count, isFavorite, imgUrl }) => {
 					</StyledImageWrapper>
 					<StyledTags>
 						{price.old && <StyledTag>скидка</StyledTag>}
+						{count === 1 && <StyledTag red>Последний</StyledTag>}
+						{count > 1 && count <= 10 && (
+							<StyledTag yellow>заканчивается</StyledTag>
+						)}
 					</StyledTags>
-					<StyledFavourite>
+					<StyledFavoritesButton
+						disable={isDisabledFavoritesButton}
+						onClick={handleFavoritesButtonClick}
+					>
 						<FavoriteIcon active={isFavorite} hv />
-					</StyledFavourite>
+					</StyledFavoritesButton>
 				</StyledTop>
 				<StyledText>
 					<Title margin="0 0 7px 0" to="/" small="true">
@@ -81,19 +118,36 @@ const StyledTag = styled.div`
 	background: #999999;
 	border-radius: 4px;
 	font-size: 14px;
+	line-height: 16px;
 	font-weight: 700;
 	margin: 0 0 7px 0;
 	text-align: center;
+	${({ red }) =>
+		red &&
+		css`
+			background: #f00;
+		`}
+	${({ yellow }) =>
+		yellow &&
+		css`
+			background: #f5cb42;
+		`}
 	&:last-child {
 		margin: 0;
 	}
 `;
 
-const StyledFavourite = styled.div`
+const StyledFavoritesButton = styled.div`
 	position: absolute;
 	right: 10px;
 	top: 0;
+	height: 24px;
 	cursor: pointer;
+	${({ disable }) =>
+		disable &&
+		css`
+			pointer-events: none;
+		`}
 `;
 
 const StyledText = styled.div`

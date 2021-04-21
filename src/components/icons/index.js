@@ -6,3 +6,4 @@ export { default as ArrowIcon } from "./Arrow.jsx";
 export { default as FilterIcon } from "./Filter.jsx";
 export { default as MinusIcon } from "./Minus.jsx";
 export { default as PlusIcon } from "./Plus.jsx";
+export { default as SearchIcon } from "./Search.jsx";

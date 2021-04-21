@@ -25,7 +25,7 @@ function App() {
     <AppWrapper>
       <Header />
       <main>
-        <Route exact path="/products/:category" component={Products} />
+        <Route exact path="/products/:category?" component={Products} />
         <Route exact path="/favorites" component={Favorites} />
         <Route exact path="/cart" component={Cart} />
         <Route exact path="/crm" component={Crm} />

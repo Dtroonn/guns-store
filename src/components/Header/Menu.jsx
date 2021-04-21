@@ -134,20 +134,24 @@ const Menu = ({ margin }) => {
 	return (
 		<StyledMenu>
 			{!largeDevices && (
-				<Button relative padding="0" onClick={toggleIsActiveIconMenu}>
+				<Button
+					active={isActiveIconMenu}
+					relative
+					padding="0"
+					onClick={toggleIsActiveIconMenu}
+				>
 					<MenuIcon active={isActiveIconMenu} />
 				</Button>
 			)}
 			<StyledWrapper active={isActiveIconMenu}>
 				<StyledBody>
 					<Container>
-						{!largeDevices && <Search />}
+						{!largeDevices && (
+							<Search onSearchSubmit={toggleIsActiveIconMenu} />
+						)}
 						{!largeDevices && (
 							<CatalogMenu
-								onClickLink={() => {
-									setIsActiveIconMenu(false);
-									document.body.classList.remove("lock");
-								}}
+								onClickLink={toggleIsActiveIconMenu}
 								margin="30px 0 0 0"
 								marginSD="20px 0 0 0"
 							/>

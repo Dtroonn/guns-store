@@ -130,8 +130,8 @@ const StyledBodyWrapper = styled.div`
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		z-index: -100;
-		visability: hidden;
+		z-index: 100;
+		pointer-events: none;
 		&:after {
 			content: "";
 			position: absolute;
@@ -146,9 +146,8 @@ const StyledBodyWrapper = styled.div`
 		${({ isSelectOpen }) =>
 			isSelectOpen &&
 			css`
-				z-index: 11;
 				visability: visible;
-				opacity: 1;
+				pointer-events: all;
 				&:after {
 					opacity: 1;
 				}

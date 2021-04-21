@@ -30,6 +30,9 @@ const StyledInput = styled.input`
 	background: transparent;
 	font-weight: ${({ fontWeight }) => fontWeight || "400"};
 	text-align: ${({ textAlign }) => textAlign || "left"};
+	@media ${({ theme }) => theme.media.largeDevices} {
+		font-size: 15px;
+	}
 	&::placeholder {
 		color: rgba(0, 0, 0, 0.2);
 	}
@@ -58,6 +61,11 @@ const StyledInput = styled.input`
 			@media ${({ theme }) => theme.media.smallDevices} {
 				font-size: 14px;
 				padding: 0 8px;
+				${({ paddingSD }) =>
+					paddingSD &&
+					css`
+						padding: ${paddingSD};
+					`}
 			}
 			@media ${({ theme }) => theme.media.extraSmallDevices} {
 				font-size: 12px;

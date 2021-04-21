@@ -2,8 +2,6 @@ import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import styled from "styled-components";
 
-import { Title } from "../../components";
-
 const Textarea = React.forwardRef((props, ref) => {
 	return (
 		<StyledBody>

@@ -1,8 +1,9 @@
 import React from "react";
-import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import styled, { css } from "styled-components";
+import { useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import ContentLoader from "react-content-loader";
+import queryString from "query-string";
 
 import {
 	Container,
@@ -24,11 +25,18 @@ import {
 	setSortBy,
 	fetchFilterbarFilters,
 	setActiveFilterbarFilters,
+	setActiveSearch,
 	resetActiveFilters,
 } from "../redux/actions/filters";
+import {
+	addToFavorites,
+	removeFromFavorites,
+} from "../redux/actions/favorites";
+
+import { selectFavoriteItemsIds } from "../selectors/favorites";
 
 const sortItems = [
-	{ name: "Популярности", value: "rating_-1" },
+	{ name: "Рейтингу", value: "rating_-1" },
 	{ name: "Возрастанию цены", value: "price_1" },
 	{ name: "Убыванию цены", value: "price_-1" },
 ];
@@ -52,8 +60,9 @@ const Products = () => {
 	const productsRef = React.useRef(null);
 
 	const { category } = useParams();
-
-	console.log("rerender");
+	const location = useLocation();
+	const parsedQueries = queryString.parse(location.search);
+	const search = parsedQueries.search ? parsedQueries.search : "";
 
 	const dispatch = useDispatch();
 	const {
@@ -62,22 +71,23 @@ const Products = () => {
 		count,
 		totalCount,
 		isLoading,
-		categories,
+		favoriteItemsIds,
 		activeCategory,
+		activeSearch,
 		sortBy,
 		filterbarFilters,
 		isLoadingFilterbarFilters,
 		activeFilterbarFilters,
-		activeTypes,
 	} = useSelector(
-		({ products, filters }) => ({
+		({ products, filters, ...state }) => ({
 			items: products.items,
 			count: products.count,
 			page: products.page,
 			totalCount: products.totalCount,
 			isLoading: products.isLoading,
-			categories: filters.categories,
+			favoriteItemsIds: selectFavoriteItemsIds(state),
 			activeCategory: filters.activeCategory,
+			activeSearch: filters.activeSearch,
 			sortBy: filters.sortBy,
 			filterbarFilters: filters.filterbarFilters,
 			isLoadingFilterbarFilters: filters.isLoadingFilterbarFilters,
@@ -88,7 +98,7 @@ const Products = () => {
 
 	const prevActiveFilterbarFilters = usePrevious(activeFilterbarFilters);
 
-	React.useEffect(() => {
+	const goToPageTop = () => {
 		const goToProductsValue =
 			productsRef.current.getBoundingClientRect().top +
 			window.pageYOffset -
@@ -99,14 +109,24 @@ const Products = () => {
 		window.scrollTo({
 			top: goToProductsValue,
 		});
-	});
+	};
+
+	React.useEffect(() => {
+		return () => {
+			dispatch(setActiveSearch(null));
+		};
+	}, []);
 
 	React.useLayoutEffect(() => {
-		if (activeCategory.slug !== category) {
+		goToPageTop();
+		if (activeCategory.slug !== category || activeSearch !== search) {
 			dispatch(resetActiveFilters());
 			dispatch(setPage(1));
-			dispatch(fetchFilterbarFilters(category));
-			dispatch(setActiveCategory(category));
+			dispatch(fetchFilterbarFilters(category, search));
+			dispatch(setActiveSearch(search));
+			if (category) {
+				dispatch(setActiveCategory(category));
+			}
 			return;
 		}
 		if (
@@ -117,9 +137,24 @@ const Products = () => {
 			return;
 		}
 		dispatch(
-			fetchProducts(category, page, count, sortBy, activeFilterbarFilters)
+			fetchProducts(
+				category,
+				page,
+				count,
+				sortBy,
+				activeFilterbarFilters,
+				search
+			)
 		);
-	}, [category, activeCategory, page, sortBy, activeFilterbarFilters]);
+	}, [
+		category,
+		activeCategory,
+		page,
+		sortBy,
+		activeFilterbarFilters,
+		search,
+		activeSearch,
+	]);
 
 	const handlePageChange = React.useCallback((data) => {
 		dispatch(setPage(data.selected + 1));
@@ -146,10 +181,17 @@ const Products = () => {
 		);
 	}, []);
 
+	const handleButtonFavoriteProductClick = (id, isFavorite) => {
+		if (!isFavorite) {
+			return dispatch(addToFavorites(id));
+		}
+		return dispatch(removeFromFavorites(id));
+	};
+
 	const TitleWithData = () => {
 		return (
 			<Title>
-				{activeCategory.name}
+				{activeCategory.name ? activeCategory.name : "Найдено"}
 				{isLoading ? (
 					<TotalCountLoader isLargeDevices={isLargeDevices} />
 				) : (
@@ -203,7 +245,7 @@ const Products = () => {
 								</StyledFilterbarWrapper>
 							))}
 						<StyledContent>
-							<StyledRow>
+							<StyledRow justifyCenter={totalCount === 0}>
 								{isLoading &&
 									Array(count)
 										.fill(0)
@@ -213,26 +255,41 @@ const Products = () => {
 											</StyledColumn>
 										))}
 								{!isLoading &&
-									items.map((product) => (
-										<StyledColumn key={product._id}>
-											<Product {...product} />
+									items.map((item) => (
+										<StyledColumn key={item._id}>
+											<Product
+												{...item}
+												isFavorite={favoriteItemsIds.includes(
+													item._id
+												)}
+												onFavoritesButtonClick={
+													handleButtonFavoriteProductClick
+												}
+											/>
 										</StyledColumn>
 									))}
+								{totalCount === 0 && (
+									<Title medium>Товары не найдены</Title>
+								)}
 							</StyledRow>
-							<StyledContentBottom>
-								<Pagination
-									pageCount={Math.ceil(totalCount / count)}
-									onPageChange={handlePageChange}
-									forcePage={page - 1}
-								/>
-								<StyledWatchedProductsCount>
-									Вы посмотрели{" "}
-									{count * page >= totalCount
-										? totalCount
-										: count * page}{" "}
-									из {totalCount} товаров
-								</StyledWatchedProductsCount>
-							</StyledContentBottom>
+							{count < totalCount && (
+								<StyledContentBottom>
+									<Pagination
+										pageCount={Math.ceil(
+											totalCount / count
+										)}
+										onPageChange={handlePageChange}
+										forcePage={page - 1}
+									/>
+									<StyledWatchedProductsCount>
+										Вы посмотрели{" "}
+										{count * page >= totalCount
+											? totalCount
+											: count * page}{" "}
+										из {totalCount} товаров
+									</StyledWatchedProductsCount>
+								</StyledContentBottom>
+							)}
 						</StyledContent>
 					</StyledBody>
 				</Container>
@@ -299,6 +356,11 @@ const StyledRow = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	margin: 0 -12px;
+	${({ justifyCenter }) =>
+		justifyCenter &&
+		css`
+			justify-content: center;
+		`}
 	@media ${({ theme }) => theme.media.smallDevices} {
 		margin: 0 -8px;
 	}

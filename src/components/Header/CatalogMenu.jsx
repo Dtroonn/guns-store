@@ -167,11 +167,7 @@ const CatalogMenu = ({ onClickLink, ...props }) => {
 	return (
 		<StyledCatalogMenu ref={CatalogMenuRef} {...props}>
 			{largeDevices && (
-				<Button
-					onClick={toggleIsMenuOpen}
-					background={isMenuOpen ? "#FF8C21" : ""}
-					animate="all 0.4s ease 0s"
-				>
+				<Button onClick={toggleIsMenuOpen} active={isMenuOpen}>
 					<MenuIcon active={isMenuOpen} />
 					<StyledTitle>Каталог товаров</StyledTitle>
 				</Button>

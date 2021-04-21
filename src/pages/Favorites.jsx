@@ -1,35 +1,72 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Container, Attention, Title, Product } from "../components";
 import { CrossIcon } from "../components/icons";
 
+import {
+	clearFavorites,
+	removeFromFavorites,
+} from "../redux/actions/favorites";
+
+import { selectFavoriteItems } from "../selectors/favorites";
+
 const Favorites = () => {
+	const dispatch = useDispatch();
+	const items = useSelector(selectFavoriteItems);
+
+	const handleCleansingBtnClick = (e) => {
+		const isConfirm = window.confirm(
+			"Вы действительно хотите удалить все товары?"
+		);
+		if (isConfirm) {
+			dispatch(clearFavorites());
+		}
+	};
+
+	const onRemoveItemFromFavoritesClick = (id) => {
+		return dispatch(removeFromFavorites(id));
+	};
+
 	return (
 		<React.Fragment>
 			<StyledFavorites>
 				<Container>
-					<StyledHeader>
-						<Title>
-							избранное
-							<span>6</span>
-						</Title>
-						<StyledCleansingAction>
-							<span>Очистить избранное полностью</span>
-							<CrossIcon darkGray />
-						</StyledCleansingAction>
-					</StyledHeader>
-					<StyledRow>
-						{Array(6)
-							.fill(0)
-							.map((item, index) => (
-								<StyledColumn key={index}>
+					{items.length > 0 && (
+						<StyledHeader>
+							<Title>
+								избранное
+								<span>{items.length}</span>
+							</Title>
+							<StyledCleansingBtn
+								onClick={handleCleansingBtnClick}
+							>
+								<span>Очистить избранное полностью</span>
+								<CrossIcon darkGray />
+							</StyledCleansingBtn>
+						</StyledHeader>
+					)}
+					<StyledRow justifyCenter={!items.length}>
+						{items.length > 0 &&
+							items.map((item) => (
+								<StyledColumn key={item._id}>
 									<Product
+										onFavoritesButtonClick={
+											onRemoveItemFromFavoritesClick
+										}
 										isFavorite={true}
-										title="Glock 17 СХ Retay"
+										{...item}
 									/>
 								</StyledColumn>
 							))}
+						{!items.length && (
+							<StyledTextForEmptyFavorites>
+								У вас пока нет избранных товаров. Начните
+								собирать свою коллекцию желаний нажатием кнопки
+								в карточке продукта.
+							</StyledTextForEmptyFavorites>
+						)}
 					</StyledRow>
 				</Container>
 			</StyledFavorites>
@@ -67,7 +104,7 @@ const StyledHeader = styled.div`
 	}
 `;
 
-const StyledCleansingAction = styled.div`
+const StyledCleansingBtn = styled.div`
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -102,6 +139,11 @@ const StyledRow = styled.div`
 	@media ${({ theme }) => theme.media.mediumDevices} {
 		margin: 0 -8px;
 	}
+	${({ justifyCenter }) =>
+		justifyCenter &&
+		css`
+			justify-content: center;
+		`}
 `;
 
 const StyledColumn = styled.div`
@@ -118,6 +160,12 @@ const StyledColumn = styled.div`
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
 		flex: 0 0 100%;
 	}
+`;
+
+const StyledTextForEmptyFavorites = styled.div`
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 22px;
 `;
 
 export default Favorites;

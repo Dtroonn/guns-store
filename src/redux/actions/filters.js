@@ -7,6 +7,7 @@ import {
 	SET_FILTERBAR_FILTERS,
 	SET_IS_LOADING_FILTERBAR_FILTERS,
 	SET_ACTIVE_FILTERBAR_FILTERS,
+	SET_ACTIVE_SEARCH,
 	RESET_ACTIVE_FILTERS,
 } from "../types/filters";
 
@@ -19,10 +20,10 @@ export const fetchCategories = () => async (dispatch) => {
 	}
 };
 
-export const fetchFilterbarFilters = (category) => async (dispatch) => {
+export const fetchFilterbarFilters = (category, search) => async (dispatch) => {
 	try {
 		dispatch(setIsLoadingFilterbarFilters(true));
-		const response = await filtersApi.get(category);
+		const response = await filtersApi.get(category, search);
 		dispatch(setFilterbarFilters(response.data.filters));
 		dispatch(setIsLoadingFilterbarFilters(false));
 	} catch (e) {
@@ -64,6 +65,11 @@ export const setSortBy = (value) => ({
 export const setActiveFilterbarFilters = (filters) => ({
 	type: SET_ACTIVE_FILTERBAR_FILTERS,
 	payload: filters,
+});
+
+export const setActiveSearch = (value) => ({
+	type: SET_ACTIVE_SEARCH,
+	payload: value,
 });
 
 export const resetActiveFilters = () => ({

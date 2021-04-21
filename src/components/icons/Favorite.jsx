@@ -42,17 +42,12 @@ const StyledSvg = styled.svg`
 		css`
 			@media ${({ theme }) => theme.mediaFM.largeDevices} {
 				path {
-					&:last-child {
-						transition: all 0.4s ease 0s;
-					}
+					transition: all 0.4s ease 0s;
 				}
 				&:hover {
 					path {
 						&:first-child {
 							fill-opacity: 1;
-							fill: #ffa621;
-						}
-						&:last-child {
 							fill: #ffa621;
 						}
 					}
@@ -68,7 +63,6 @@ const StyledSvg = styled.svg`
 					fill: #ffa621;
 				}
 				&:last-child {
-					transition: all 0.4s ease 0s;
 					fill: #ffa621;
 				}
 			}
