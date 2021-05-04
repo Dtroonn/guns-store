@@ -1,10 +1,10 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Crm, Products, Favorites, Cart } from "./pages";
-import { Header, Footer, MainPreloader } from "./components";
+import { Crm, Products, Favorites, Cart, Page404 } from "./pages";
+import { Header, Footer, MainPreloader, Popups } from "./components";
 
 import { initialize } from "./redux/actions/initialize";
 
@@ -25,12 +25,17 @@ function App() {
     <AppWrapper>
       <Header />
       <main>
-        <Route exact path="/products/:category?" component={Products} />
-        <Route exact path="/favorites" component={Favorites} />
-        <Route exact path="/cart" component={Cart} />
-        <Route exact path="/crm" component={Crm} />
+        <Switch>
+          <Route exact path="/products/:category?" component={Products} />
+          <Route exact path="/favorites" component={Favorites} />
+          <Route exact path="/cart" component={Cart} />
+          <Route exact path="/crm" component={Crm} />
+          <Route path="/404" component={Page404} />
+          <Redirect to="/404" />
+        </Switch>
       </main>
       <Footer />
+      <Popups />
     </AppWrapper>
   );
 }

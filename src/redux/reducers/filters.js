@@ -48,6 +48,7 @@ const filters = (state = initialState, action) => {
 				break;
 			case SET_FILTERBAR_FILTERS:
 				Object.assign(draft.filterbarFilters, payload);
+				draft.isLoadingFilterbarFilters = false;
 				break;
 			case SET_IS_LOADING_FILTERBAR_FILTERS:
 				draft.isLoadingFilterbarFilters = payload;

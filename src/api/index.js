@@ -13,11 +13,11 @@ export const categoriesApi = {
 
 export const filtersApi = {
 	async get(category, search) {
-		console.log(
-			`filters/${category ? category : ""}${
-				search ? `?search=${search}` : ""
-			}`
-		);
+		// console.log(
+		// 	`filters/${category ? category : ""}${
+		// 		search ? `?search=${search}` : ""
+		// 	}`
+		// );
 		return axiosInstance.get(
 			`filters/${category ? category : ""}${
 				search ? `?search=${search}` : ""

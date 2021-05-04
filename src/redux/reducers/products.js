@@ -17,6 +17,7 @@ const products = (state = initialState, action) => {
 			case SET_PRODUCTS:
 				draft.items = payload.items;
 				draft.totalCount = payload.totalCount;
+				draft.isLoading = false;
 				break;
 			case SET_IS_LOADING:
 				draft.isLoading = payload;

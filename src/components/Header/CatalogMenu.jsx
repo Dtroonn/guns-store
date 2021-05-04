@@ -1,13 +1,90 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import { MenuIcon, ArrowIcon } from "../../components/icons";
 import { Button } from "../forms";
 import { SlideToggle } from "../../components";
 
 import { useBreakpoint, useOutsideClick } from "../../hooks";
+
+const MenuList = ({ items, onClickLink, ...props }) => {
+	return (
+		<StyledList {...props}>
+			{items.map((item) => (
+				<StyledListItem key={item._id}>
+					<StyledLink
+						onClick={onClickLink}
+						to={`/products/${item.slug}`}
+					>
+						{item.name}
+					</StyledLink>
+				</StyledListItem>
+			))}
+		</StyledList>
+	);
+};
+
+const CatalogMenu = ({ items, onClickLink, ...props }) => {
+	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+	const toggleIsMenuOpen = (e) => {
+		setIsMenuOpen((isMenuOpen) => !isMenuOpen);
+	};
+
+	const CatalogMenuRef = React.useRef(null);
+	const largeDevices = useBreakpoint("min-width", 991.98);
+
+	useOutsideClick(largeDevices ? [CatalogMenuRef] : null, () =>
+		setIsMenuOpen(false)
+	);
+
+	const handleClickLink = () => {
+		setIsMenuOpen(false);
+		if (onClickLink) {
+			onClickLink();
+		}
+	};
+
+	return (
+		<StyledCatalogMenu ref={CatalogMenuRef} {...props}>
+			{largeDevices && (
+				<Button onClick={toggleIsMenuOpen} active={isMenuOpen}>
+					<MenuIcon active={isMenuOpen} />
+					<StyledTitle>Каталог товаров</StyledTitle>
+				</Button>
+			)}
+			{!largeDevices && (
+				<StyledHeaderMobile onClick={toggleIsMenuOpen}>
+					<StyledTitle>Каталог</StyledTitle>
+					<ArrowIcon
+						rotateStart="-90deg"
+						active={isMenuOpen}
+						rotateEnd="0"
+						duration="1s"
+					/>
+				</StyledHeaderMobile>
+			)}
+			{largeDevices ? (
+				<StyledMenuWrapper isMenuOpen={isMenuOpen}>
+					<MenuList
+						onClickLink={handleClickLink}
+						items={items}
+						isMenuOpen={!isMenuOpen}
+					/>
+				</StyledMenuWrapper>
+			) : (
+				<SlideToggle
+					margin="0 -1000px"
+					padding="0 1000px"
+					duration="1s"
+					active={isMenuOpen}
+				>
+					<MenuList onClickLink={handleClickLink} items={items} />
+				</SlideToggle>
+			)}
+		</StyledCatalogMenu>
+	);
+};
 
 const StyledCatalogMenu = styled.div`
 	position: relative;
@@ -124,88 +201,5 @@ const StyledHeaderMobile = styled.div`
 		padding: 18px 0;
 	}
 `;
-
-const MenuList = ({ items, onClickLink, ...props }) => {
-	return (
-		<StyledList {...props}>
-			{items.map((item) => (
-				<StyledListItem key={item._id}>
-					<StyledLink
-						onClick={onClickLink}
-						to={`/products/${item.slug}`}
-					>
-						{item.name}
-					</StyledLink>
-				</StyledListItem>
-			))}
-		</StyledList>
-	);
-};
-
-const CatalogMenu = ({ onClickLink, ...props }) => {
-	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-	const toggleIsMenuOpen = (e) => {
-		setIsMenuOpen((isMenuOpen) => !isMenuOpen);
-	};
-
-	const CatalogMenuRef = React.useRef(null);
-	const largeDevices = useBreakpoint("min-width", 991.98);
-
-	useOutsideClick(largeDevices ? [CatalogMenuRef] : null, () =>
-		setIsMenuOpen(false)
-	);
-
-	const categories = useSelector(({ filters }) => filters.categories);
-
-	const handleClickLink = () => {
-		setIsMenuOpen(false);
-		if (onClickLink) {
-			onClickLink();
-		}
-	};
-
-	return (
-		<StyledCatalogMenu ref={CatalogMenuRef} {...props}>
-			{largeDevices && (
-				<Button onClick={toggleIsMenuOpen} active={isMenuOpen}>
-					<MenuIcon active={isMenuOpen} />
-					<StyledTitle>Каталог товаров</StyledTitle>
-				</Button>
-			)}
-			{!largeDevices && (
-				<StyledHeaderMobile onClick={toggleIsMenuOpen}>
-					<StyledTitle>Каталог</StyledTitle>
-					<ArrowIcon
-						rotateStart="-90deg"
-						active={isMenuOpen}
-						rotateEnd="0"
-						duration="1s"
-					/>
-				</StyledHeaderMobile>
-			)}
-			{largeDevices ? (
-				<StyledMenuWrapper isMenuOpen={isMenuOpen}>
-					<MenuList
-						onClickLink={handleClickLink}
-						items={categories}
-						isMenuOpen={!isMenuOpen}
-					/>
-				</StyledMenuWrapper>
-			) : (
-				<SlideToggle
-					margin="0 -1000px"
-					padding="0 1000px"
-					duration="1s"
-					active={isMenuOpen}
-				>
-					<MenuList
-						onClickLink={handleClickLink}
-						items={categories}
-					/>
-				</SlideToggle>
-			)}
-		</StyledCatalogMenu>
-	);
-};
 
 export default CatalogMenu;

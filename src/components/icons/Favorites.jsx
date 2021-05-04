@@ -37,13 +37,13 @@ const Favorite = (props) => {
 };
 
 const StyledSvg = styled.svg`
+	path {
+		transition: all 0.4s ease 0s;
+	}
 	${({ hv }) =>
 		hv &&
 		css`
 			@media ${({ theme }) => theme.mediaFM.largeDevices} {
-				path {
-					transition: all 0.4s ease 0s;
-				}
 				&:hover {
 					path {
 						&:first-child {

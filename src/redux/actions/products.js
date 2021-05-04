@@ -22,7 +22,6 @@ export const fetchProducts = (
 		);
 		console.log(response);
 		dispatch(setProducts(response.data.items, response.data.totalCount));
-		dispatch(setIsLoading(false));
 	} catch (e) {
 		console.log(e);
 	}

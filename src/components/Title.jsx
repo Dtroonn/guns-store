@@ -42,7 +42,7 @@ const StyledTitle = styled.div`
 			!extraSmall &&
 			css`
 				font-size: 20px;
-				line-height: 30px;
+				line-height: 26px;
 			`}
 	}
 	${({ medium }) =>

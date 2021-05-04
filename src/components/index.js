@@ -16,3 +16,5 @@ export { default as Pagination } from "./Pagination.jsx";
 export { default as CartProduct } from "./CartProduct.jsx";
 export { default as CartForm } from "./CartForm.jsx";
 export { default as MainPreloader } from "./MainPreloader.jsx";
+export { default as Popups } from "./Popups";
+export { default as CountButton } from "./CountButton.jsx";

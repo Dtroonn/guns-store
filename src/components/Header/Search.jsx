@@ -1,16 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { TextField, Button } from "../forms";
 import { SearchIcon, CrossIcon } from "../icons";
 
-const Search = ({ onSearchSubmit, ...props }) => {
+const Search = ({ onSearchSubmit, activeSearch, ...props }) => {
 	const history = useHistory();
 	const [searchValue, setSearchValue] = React.useState("");
-
-	const activeSearch = useSelector(({ filters }) => filters.activeSearch);
 
 	const handleSearchInputChange = (e) => {
 		setSearchValue(e.target.value);

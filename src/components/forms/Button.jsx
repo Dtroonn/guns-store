@@ -22,6 +22,12 @@ const StyledButton = styled.button`
 	font-weight: 500;
 	font-size: 16px;
 	transition: all 0.4s ease 0s;
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		font-size: 15px;
+		height: 40px;
+		min-width: 40px;
+		padding: 0 6px;
+	}
 	&:hover {
 		@media ${({ theme }) => theme.mediaFM.largeDevices} {
 			background: #ffb341;

@@ -1,4 +1,4 @@
-export { default as FavoriteIcon } from "./Favorite.jsx";
+export { default as FavoritesIcon } from "./Favorites.jsx";
 export { default as CartIcon } from "./Cart.jsx";
 export { default as MenuIcon } from "./Menu.jsx";
 export { default as CrossIcon } from "./Cross.jsx";

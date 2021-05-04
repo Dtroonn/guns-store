@@ -1,8 +1,8 @@
 import { createSelector } from "reselect";
 
-export const selectFavoriteItems = (state) => state.favorites.items;
+export const selectFavoritesItems = (state) => state.favorites.items;
 
-export const selectFavoriteItemsIds = createSelector(
-	selectFavoriteItems,
+export const selectFavoritesItemsIds = createSelector(
+	selectFavoritesItems,
 	(items) => items.map((item) => item._id)
 );

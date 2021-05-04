@@ -10,11 +10,11 @@ import {
 	removeFromFavorites,
 } from "../redux/actions/favorites";
 
-import { selectFavoriteItems } from "../selectors/favorites";
+import { selectFavoritesItems } from "../selectors/favorites";
 
 const Favorites = () => {
 	const dispatch = useDispatch();
-	const items = useSelector(selectFavoriteItems);
+	const items = useSelector(selectFavoritesItems);
 
 	const handleCleansingBtnClick = (e) => {
 		const isConfirm = window.confirm(

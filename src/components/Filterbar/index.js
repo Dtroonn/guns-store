@@ -5,7 +5,7 @@ import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.css";
 
 import FilterItem from "./FilterItem.jsx";
-import { Container, Title } from "../../components";
+import { Container, Title, CountButton } from "../../components";
 import { TextField, Button, Checkbox } from "../forms";
 import { CrossIcon, FilterIcon } from "../icons";
 import { useBreakpoint } from "../../hooks";
@@ -20,202 +20,216 @@ const formatFormData = (data) => {
 	return formObj;
 };
 
-const Filterbar = React.memo(({ filters, onFiltersSubmit, onFiltersReset }) => {
-	const nouisliderRef = React.useRef(null);
-	const formRef = React.useRef(null);
-	const buttonRef = React.useRef(null);
-	const isLargeDevices = useBreakpoint("min-width", 991.98);
-	const [isFilterbarOpenMD, setIsFilterbarOpenMD] = React.useState(false);
-	const { register, handleSubmit, setValue, getValues, reset } = useForm();
+const Filterbar = React.memo(
+	({ filters, onFiltersSubmit, onFiltersReset, activeFiltersCount }) => {
+		const nouisliderRef = React.useRef(null);
+		const isLargeDevices = useBreakpoint("min-width", 991.98);
+		const [isFilterbarOpenMD, setIsFilterbarOpenMD] = React.useState(false);
+		const {
+			register,
+			handleSubmit,
+			setValue,
+			getValues,
+			reset,
+		} = useForm();
 
-	const toggleIsFilterbarOpenMD = (e) => {
-		setIsFilterbarOpenMD((isFilterbarOpenMD) => !isFilterbarOpenMD);
-		document.body.classList.toggle("lock");
-	};
+		const toggleIsFilterbarOpenMD = (e) => {
+			setIsFilterbarOpenMD((isFilterbarOpenMD) => !isFilterbarOpenMD);
+			document.body.classList.toggle("lock");
+		};
 
-	const handleSliderUpdate = (values) => {
-		setValue("minPrice", values[0]);
-		setValue("maxPrice", values[1]);
-	};
+		const handleSliderUpdate = (values) => {
+			setValue("minPrice", values[0]);
+			setValue("maxPrice", values[1]);
+		};
 
-	const handlePriceInputChange = (e) => {
-		if (e.target.name === "minPrice") {
+		const handlePriceInputChange = (e) => {
+			if (e.target.name === "minPrice") {
+				nouisliderRef.current.noUiSlider.set([
+					e.target.value,
+					getValues("maxPrice"),
+				]);
+			} else {
+				nouisliderRef.current.noUiSlider.set([
+					getValues("minPrice"),
+					e.target.value,
+				]);
+			}
+		};
+
+		const onFormSubmit = (data, reset) => {
+			if (onFiltersSubmit) {
+				onFiltersSubmit(formatFormData(data));
+			}
+			if (!isLargeDevices) {
+				toggleIsFilterbarOpenMD();
+			}
+		};
+
+		const handleFormReset = (e) => {
+			e.preventDefault();
+			reset({
+				minPrice: filters.price.min,
+				maxPrice: filters.price.max,
+			});
 			nouisliderRef.current.noUiSlider.set([
-				e.target.value,
-				getValues("maxPrice"),
+				filters.price.min,
+				filters.price.max,
 			]);
-		} else {
-			nouisliderRef.current.noUiSlider.set([
-				getValues("minPrice"),
-				e.target.value,
-			]);
-		}
-	};
 
-	const onFormSubmit = (data, reset) => {
-		if (onFiltersSubmit) {
-			onFiltersSubmit(formatFormData(data));
-		}
-		if (!isLargeDevices) {
-			toggleIsFilterbarOpenMD();
-		}
-	};
+			if (onFiltersReset) {
+				onFiltersReset();
+			}
+		};
 
-	const handleFormReset = (e) => {
-		e.preventDefault();
-		reset({
-			minPrice: filters.price.min,
-			maxPrice: filters.price.max,
-		});
-		nouisliderRef.current.noUiSlider.set([
-			filters.price.min,
-			filters.price.max,
-		]);
-
-		if (onFiltersReset) {
-			onFiltersReset();
-		}
-	};
-
-	return (
-		<StyledFilterbar>
-			{!isLargeDevices && (
-				<StyledHeaderMD>
-					<Button
-						ref={buttonRef}
-						onClick={toggleIsFilterbarOpenMD}
-						outline
-					>
-						<FilterIcon />
-					</Button>
-					<StyledTitleMd>Фильтры</StyledTitleMd>
-				</StyledHeaderMD>
-			)}
-			<StyledBody
-				onClick={toggleIsFilterbarOpenMD}
-				isFilterbarOpenMD={isFilterbarOpenMD}
-			>
-				<StyledForm
-					onClick={(e) => e.stopPropagation()}
-					onSubmit={handleSubmit(onFormSubmit)}
-					ref={formRef}
+		return (
+			<StyledFilterbar>
+				{!isLargeDevices && (
+					<StyledHeaderMD>
+						<CountButton
+							onClick={toggleIsFilterbarOpenMD}
+							count={activeFiltersCount}
+						>
+							<FilterIcon active={Boolean(activeFiltersCount)} />
+						</CountButton>
+						<StyledTitleMd>Фильтры</StyledTitleMd>
+					</StyledHeaderMD>
+				)}
+				<StyledBody
+					onClick={toggleIsFilterbarOpenMD}
 					isFilterbarOpenMD={isFilterbarOpenMD}
 				>
-					<Container>
-						{!isLargeDevices && (
-							<StyledFormHeaderMD>
-								<Title>Фильтр</Title>
-								<CrossIcon onClick={toggleIsFilterbarOpenMD} />
-							</StyledFormHeaderMD>
-						)}
-						<StyledFormBody>
-							<StyledPricing>
-								<Title extraSmall>Цена, руб.</Title>
-								<StyledPricingInputs>
-									<StyledPricingInput>
-										<TextField
-											fontWeight="500"
-											textAlign="center"
-											largeFont
-											onChange={handlePriceInputChange}
-											name="minPrice"
-											ref={register}
-											notAdaptive
-										/>
-									</StyledPricingInput>
-									<StyledPricingInput>
-										<TextField
-											fontWeight="500"
-											textAlign="center"
-											onChange={handlePriceInputChange}
-											name="maxPrice"
-											ref={register}
-											notAdaptive
-										/>
-									</StyledPricingInput>
-								</StyledPricingInputs>
-								<StyledNouisliderWrapper>
-									<StyledNouislider
-										connect
-										range={{
-											min: filters.price.min,
-											max:
-												filters.price.max ===
-												filters.price.min
-													? filters.price.max + 1
-													: filters.price.max,
-										}}
-										start={[
-											filters.price.min,
-											filters.price.max,
-										]}
-										step={1}
-										onUpdate={handleSliderUpdate}
-										instanceRef={nouisliderRef}
-										format={{
-											to: function (value) {
-												return parseInt(value);
-											},
-											from: function (value) {
-												return parseInt(value);
-											},
-										}}
+					<StyledForm
+						onClick={(e) => e.stopPropagation()}
+						onSubmit={handleSubmit(onFormSubmit)}
+						isFilterbarOpenMD={isFilterbarOpenMD}
+					>
+						<Container>
+							{!isLargeDevices && (
+								<StyledFormHeaderMD>
+									<Title>Фильтр</Title>
+									<CrossIcon
+										onClick={toggleIsFilterbarOpenMD}
 									/>
-								</StyledNouisliderWrapper>
-							</StyledPricing>
-							<StyledFilters>
-								<StyledFiltersTop>
-									<StyledFiltersTopItem>
-										<Checkbox
-											ref={register}
-											name="isSale"
-											value="true"
-											label="Со скидкой"
-											labelAtEnd={`(${filters.sale.productsCount})`}
+								</StyledFormHeaderMD>
+							)}
+							<StyledFormBody>
+								<StyledPricing>
+									<Title extraSmall>Цена, руб.</Title>
+									<StyledPricingInputs>
+										<StyledPricingInput>
+											<TextField
+												fontWeight="500"
+												textAlign="center"
+												largeFont
+												onChange={
+													handlePriceInputChange
+												}
+												name="minPrice"
+												ref={register({
+													valueAsNumber: true,
+												})}
+												notAdaptive
+											/>
+										</StyledPricingInput>
+										<StyledPricingInput>
+											<TextField
+												fontWeight="500"
+												textAlign="center"
+												onChange={
+													handlePriceInputChange
+												}
+												name="maxPrice"
+												ref={register({
+													valueAsNumber: true,
+												})}
+												notAdaptive
+											/>
+										</StyledPricingInput>
+									</StyledPricingInputs>
+									<StyledNouisliderWrapper>
+										<StyledNouislider
+											connect
+											range={{
+												min: filters.price.min,
+												max:
+													filters.price.max ===
+													filters.price.min
+														? filters.price.max + 1
+														: filters.price.max,
+											}}
+											start={[
+												filters.price.min,
+												filters.price.max,
+											]}
+											step={1}
+											onUpdate={handleSliderUpdate}
+											instanceRef={nouisliderRef}
+											format={{
+												to: function (value) {
+													return parseInt(value);
+												},
+												from: function (value) {
+													return parseInt(value);
+												},
+											}}
 										/>
-									</StyledFiltersTopItem>
-								</StyledFiltersTop>
-								{filters.types.length > 0 && (
-									<FilterItem
-										isLargeDevices={isLargeDevices}
-										title="Тип"
-										name="types"
-										items={filters.types}
-										register={register}
-									/>
-								)}
-								{filters.kinds.length > 0 && (
-									<FilterItem
-										isLargeDevices={isLargeDevices}
-										title="Вид"
-										name="kinds"
-										items={filters.kinds}
-										register={register}
-									/>
-								)}
-							</StyledFilters>
-							<StyledButtons>
-								<StyledButtonsColumn>
-									<Button fw>Применить фильтры</Button>
-								</StyledButtonsColumn>
-								<StyledButtonsColumn>
-									<Button
-										onClick={handleFormReset}
-										outline
-										dark
-										fw
-									>
-										Очистить фильтры
-									</Button>
-								</StyledButtonsColumn>
-							</StyledButtons>
-						</StyledFormBody>
-					</Container>
-				</StyledForm>
-			</StyledBody>
-		</StyledFilterbar>
-	);
-});
+									</StyledNouisliderWrapper>
+								</StyledPricing>
+								<StyledFilters>
+									<StyledFiltersTop>
+										<StyledFiltersTopItem>
+											<Checkbox
+												ref={register}
+												name="isSale"
+												value="true"
+												label="Со скидкой"
+												labelAtEnd={`(${filters.sale.productsCount})`}
+											/>
+										</StyledFiltersTopItem>
+									</StyledFiltersTop>
+									{filters.types.length > 0 && (
+										<FilterItem
+											isLargeDevices={isLargeDevices}
+											title="Тип"
+											name="types"
+											items={filters.types}
+											register={register}
+										/>
+									)}
+									{filters.kinds.length > 0 && (
+										<FilterItem
+											isLargeDevices={isLargeDevices}
+											title="Вид"
+											name="kinds"
+											items={filters.kinds}
+											register={register}
+										/>
+									)}
+								</StyledFilters>
+								<StyledButtons>
+									<StyledButtonsColumn>
+										<Button fw>Применить фильтры</Button>
+									</StyledButtonsColumn>
+									<StyledButtonsColumn>
+										<Button
+											onClick={handleFormReset}
+											outline
+											dark
+											fw
+										>
+											Очистить фильтры
+										</Button>
+									</StyledButtonsColumn>
+								</StyledButtons>
+							</StyledFormBody>
+						</Container>
+					</StyledForm>
+				</StyledBody>
+			</StyledFilterbar>
+		);
+	}
+);
 
 const StyledNouisliderWrapper = styled.div`
 	@media ${({ theme }) => theme.media.mediumDevices} {

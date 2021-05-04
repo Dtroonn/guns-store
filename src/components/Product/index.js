@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
 import { Title } from "../../components";
-import { FavoriteIcon, CartIcon } from "../../components/icons";
+import { FavoritesIcon, CartIcon } from "../../components/icons";
 import { Button } from "../../components/forms";
 
 const Product = ({
@@ -16,7 +16,7 @@ const Product = ({
 	_id,
 	onFavoritesButtonClick,
 }) => {
-	let cleanupFunction = false;
+	const cleanupFunctionRef = React.useRef(false);
 
 	const [
 		isDisabledFavoritesButton,
@@ -27,14 +27,14 @@ const Product = ({
 		if (onFavoritesButtonClick) {
 			setIsDisabledFavoritesButton(true);
 			await onFavoritesButtonClick(_id, isFavorite);
-			if (!cleanupFunction) {
+			if (!cleanupFunctionRef.current) {
 				setIsDisabledFavoritesButton(false);
 			}
 		}
 	};
 
 	React.useEffect(() => {
-		return () => (cleanupFunction = true);
+		return () => (cleanupFunctionRef.current = true);
 	}, []);
 
 	return (
@@ -55,7 +55,7 @@ const Product = ({
 						disable={isDisabledFavoritesButton}
 						onClick={handleFavoritesButtonClick}
 					>
-						<FavoriteIcon active={isFavorite} hv />
+						<FavoritesIcon active={isFavorite} hv />
 					</StyledFavoritesButton>
 				</StyledTop>
 				<StyledText>

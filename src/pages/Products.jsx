@@ -33,7 +33,12 @@ import {
 	removeFromFavorites,
 } from "../redux/actions/favorites";
 
-import { selectFavoriteItemsIds } from "../selectors/favorites";
+import { selectFavoritesItemsIds } from "../selectors/favorites";
+import {
+	selectFilterbarFilters,
+	selectActiveFilterbarFilters,
+	selectCountActiveFilterbarFilters,
+} from "../selectors/filterbarFilters.js";
 
 const sortItems = [
 	{ name: "Рейтингу", value: "rating_-1" },
@@ -71,27 +76,31 @@ const Products = () => {
 		count,
 		totalCount,
 		isLoading,
-		favoriteItemsIds,
+		favoritesItemsIds,
 		activeCategory,
 		activeSearch,
 		sortBy,
 		filterbarFilters,
 		isLoadingFilterbarFilters,
 		activeFilterbarFilters,
+		activeFilterbarFiltersCount,
 	} = useSelector(
-		({ products, filters, ...state }) => ({
+		({ products, ...state }) => ({
 			items: products.items,
 			count: products.count,
 			page: products.page,
 			totalCount: products.totalCount,
 			isLoading: products.isLoading,
-			favoriteItemsIds: selectFavoriteItemsIds(state),
-			activeCategory: filters.activeCategory,
-			activeSearch: filters.activeSearch,
-			sortBy: filters.sortBy,
-			filterbarFilters: filters.filterbarFilters,
-			isLoadingFilterbarFilters: filters.isLoadingFilterbarFilters,
-			activeFilterbarFilters: filters.activeFilterbarFilters,
+			favoritesItemsIds: selectFavoritesItemsIds(state),
+			activeCategory: state.filters.activeCategory,
+			activeSearch: state.filters.activeSearch,
+			sortBy: state.filters.sortBy,
+			filterbarFilters: selectFilterbarFilters(state),
+			isLoadingFilterbarFilters: state.filters.isLoadingFilterbarFilters,
+			activeFilterbarFilters: selectActiveFilterbarFilters(state),
+			activeFilterbarFiltersCount: selectCountActiveFilterbarFilters(
+				state
+			),
 		}),
 		shallowEqual
 	);
@@ -201,6 +210,8 @@ const Products = () => {
 		);
 	};
 
+	console.log("render products");
+
 	return (
 		<React.Fragment>
 			<StyledProducts ref={productsRef}>
@@ -217,6 +228,9 @@ const Products = () => {
 									filters={filterbarFilters}
 									onFiltersSubmit={handleFiltersSubmit}
 									onFiltersReset={handleFiltersReset}
+									activeFiltersCount={
+										activeFilterbarFiltersCount
+									}
 								/>
 							)}
 						</StyledHeaderColumn>
@@ -241,6 +255,9 @@ const Products = () => {
 										filters={filterbarFilters}
 										onFiltersSubmit={handleFiltersSubmit}
 										onFiltersReset={handleFiltersReset}
+										activeFiltersCount={
+											activeFilterbarFiltersCount
+										}
 									/>
 								</StyledFilterbarWrapper>
 							))}
@@ -259,7 +276,7 @@ const Products = () => {
 										<StyledColumn key={item._id}>
 											<Product
 												{...item}
-												isFavorite={favoriteItemsIds.includes(
+												isFavorite={favoritesItemsIds.includes(
 													item._id
 												)}
 												onFavoritesButtonClick={

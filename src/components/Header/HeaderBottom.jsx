@@ -1,32 +1,51 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-import { FavoriteIcon, CartIcon } from "../icons";
+import { FavoritesIcon, CartIcon } from "../icons";
+import { CountButton } from "../../components";
+import { Button } from "../../components/forms";
 import CatalogMenu from "./CatalogMenu.jsx";
 import Search from "./Search.jsx";
-import ActionItem from "./ActionItem.jsx";
 
 import { useBreakpoint } from "../../hooks";
 
-const HeaderBottom = () => {
+const HeaderBottom = ({
+	favoritesItems,
+	categories,
+	activeSearch,
+	dispatch,
+}) => {
 	const largeDevices = useBreakpoint("min-width", 991.98);
 	return (
 		<StyledHeaderBottom>
-			{largeDevices && <CatalogMenu margin="0 24px 0 0" />}
+			{largeDevices && (
+				<CatalogMenu items={categories} margin="0 24px 0 0" />
+			)}
 			<StyledBody>
-				{largeDevices && <Search flex="0 1 600px" />}
-				<StyledActions>
-					<StyledActionsColumn>
-						<ActionItem title="Избранное" to="/favorites">
-							<FavoriteIcon />
-						</ActionItem>
-					</StyledActionsColumn>
-					<StyledActionsColumn>
-						<ActionItem title="Корзина" to="/cart">
-							<CartIcon />
-						</ActionItem>
-					</StyledActionsColumn>
-				</StyledActions>
+				{largeDevices && (
+					<Search flex="0 1 600px" activeSearch={activeSearch} />
+				)}
+				<StyledBodyRight>
+					<StyledBodyRightColumn>
+						<Link to="/favorites">
+							<Button outline padding="0">
+								<FavoritesIcon
+									active={Boolean(favoritesItems.length)}
+								/>
+							</Button>
+						</Link>
+						<StyledItemTitle>Избранное</StyledItemTitle>
+					</StyledBodyRightColumn>
+					<StyledBodyRightColumn>
+						<Link to="/cart">
+							<CountButton count="5">
+								<CartIcon />
+							</CountButton>
+						</Link>
+						<StyledItemTitle>Корзина</StyledItemTitle>
+					</StyledBodyRightColumn>
+				</StyledBodyRight>
 			</StyledBody>
 		</StyledHeaderBottom>
 	);
@@ -48,19 +67,30 @@ const StyledBody = styled.div`
 	}
 `;
 
-const StyledActions = styled.div`
+const StyledBodyRight = styled.div`
 	display: flex;
 	position: relative;
 	z-index: 50;
 	margin: 0 0 0 35px;
 `;
 
-const StyledActionsColumn = styled.div`
+const StyledBodyRightColumn = styled.div`
+	display: flex;
+	align-items: center;
 	&:first-child {
 		margin: 0 26px 0 0;
+		@media ${({ theme }) => theme.media.smallDevices} {
+			margin: 0 12px 0 0;
+		}
 	}
+`;
+
+const StyledItemTitle = styled.div`
+	font-weight: 500;
+	font-size: 16px;
+	margin: 0 0 0 12px;
 	@media ${({ theme }) => theme.media.smallDevices} {
-		margin: 0 8px 0 0;
+		display: none;
 	}
 `;
 

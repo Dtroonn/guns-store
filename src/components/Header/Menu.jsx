@@ -12,6 +12,105 @@ import { Button } from "../forms";
 
 import { useBreakpoint } from "../../hooks";
 
+const Menu = ({ categories, activeSearch }) => {
+	const [isOpenIconMenu, setIsOpenIconMenu] = React.useState(false);
+	const toggleIsOpenIconMenu = (e) => {
+		setIsOpenIconMenu((isOpenIconMenu) => !isOpenIconMenu);
+		document.body.classList.toggle("lock");
+	};
+
+	React.useEffect(() => {
+		return () => {
+			document.body.classList.remove("lock");
+		};
+	}, []);
+
+	const largeDevices = useBreakpoint("min-width", 991.98);
+
+	return (
+		<StyledMenu>
+			{!largeDevices && (
+				<Button
+					active={isOpenIconMenu}
+					relative
+					padding="0"
+					onClick={toggleIsOpenIconMenu}
+				>
+					<MenuIcon active={isOpenIconMenu} />
+				</Button>
+			)}
+			<StyledWrapper
+				onClick={toggleIsOpenIconMenu}
+				active={isOpenIconMenu}
+			>
+				<StyledBody onClick={(e) => e.stopPropagation()}>
+					<Container>
+						{!largeDevices && (
+							<Search
+								onSearchSubmit={toggleIsOpenIconMenu}
+								activeSearch={activeSearch}
+							/>
+						)}
+						{!largeDevices && (
+							<CatalogMenu
+								onClickLink={toggleIsOpenIconMenu}
+								margin="30px 0 0 0"
+								marginSD="20px 0 0 0"
+								items={categories}
+							/>
+						)}
+						<StyledList>
+							<StyledListItem>
+								<StyledMenuLink to="/1">
+									Мастерская
+								</StyledMenuLink>
+							</StyledListItem>
+							<StyledListItem>
+								<StyledMenuLink to="/2">
+									Обучение
+								</StyledMenuLink>
+							</StyledListItem>
+							<StyledListItem>
+								<StyledMenuLink to="3">
+									Правовые вопросы
+								</StyledMenuLink>
+							</StyledListItem>
+							<StyledListItem>
+								<StyledMenuLink to="/4">
+									Оптовикам
+								</StyledMenuLink>
+							</StyledListItem>
+							<StyledListItem>
+								<StyledMenuLink to="/5">
+									Гарантии
+								</StyledMenuLink>
+							</StyledListItem>
+							<StyledListItem>
+								<StyledMenuLink to="/6">
+									Доставка
+								</StyledMenuLink>
+							</StyledListItem>
+							<StyledListItem>
+								<StyledMenuLink to="/7">
+									Контакты
+								</StyledMenuLink>
+							</StyledListItem>
+						</StyledList>
+						{!largeDevices && <Authentication />}
+						{!largeDevices && (
+							<InfoBlock
+								margin="40px 0 0 0"
+								justifyMD="space-between"
+								marginSD="30px 0 0 0"
+							/>
+						)}
+					</Container>
+				</StyledBody>
+			</StyledWrapper>
+		</StyledMenu>
+	);
+};
+
 const StyledMenu = styled.div`
 	background: #f9f9f9;
 	padding: 16px 0;
@@ -115,97 +214,5 @@ const StyledMenuLink = styled(NavLink)`
 		font-size: 16px;
 	}
 `;
-
-const Menu = ({ margin }) => {
-	const [isActiveIconMenu, setIsActiveIconMenu] = React.useState(false);
-	const toggleIsActiveIconMenu = (e) => {
-		setIsActiveIconMenu((isActiveIconMenu) => !isActiveIconMenu);
-		document.body.classList.toggle("lock");
-	};
-
-	React.useEffect(() => {
-		return () => {
-			document.body.classList.remove("lock");
-		};
-	}, []);
-
-	const largeDevices = useBreakpoint("min-width", 991.98);
-
-	return (
-		<StyledMenu>
-			{!largeDevices && (
-				<Button
-					active={isActiveIconMenu}
-					relative
-					padding="0"
-					onClick={toggleIsActiveIconMenu}
-				>
-					<MenuIcon active={isActiveIconMenu} />
-				</Button>
-			)}
-			<StyledWrapper active={isActiveIconMenu}>
-				<StyledBody>
-					<Container>
-						{!largeDevices && (
-							<Search onSearchSubmit={toggleIsActiveIconMenu} />
-						)}
-						{!largeDevices && (
-							<CatalogMenu
-								onClickLink={toggleIsActiveIconMenu}
-								margin="30px 0 0 0"
-								marginSD="20px 0 0 0"
-							/>
-						)}
-						<StyledList>
-							<StyledListItem>
-								<StyledMenuLink to="/1">
-									Мастерская
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/2">
-									Обучение
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="3">
-									Правовые вопросы
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/4">
-									Оптовикам
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/5">
-									Гарантии
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/6">
-									Доставка
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/7">
-									Контакты
-								</StyledMenuLink>
-							</StyledListItem>
-						</StyledList>
-						{!largeDevices && <Authentication />}
-						{!largeDevices && (
-							<InfoBlock
-								margin="40px 0 0 0"
-								justifyMD="space-between"
-								marginSD="30px 0 0 0"
-							/>
-						)}
-					</Container>
-				</StyledBody>
-			</StyledWrapper>
-		</StyledMenu>
-	);
-};
 
 export default Menu;

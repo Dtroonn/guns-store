@@ -1,8 +1,51 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { Socials } from "../../components";
+
+import { setIsActiveCallbackPopup } from "../../redux/actions/popups";
+
+const InfoBlock = (props) => {
+	const dispatch = useDispatch();
+	const handleOrderCallLinkClick = (e) => {
+		dispatch(setIsActiveCallbackPopup(true));
+		e.preventDefault();
+	};
+
+	return (
+		<StyledInfoBlock {...props}>
+			<StyledItem>
+				<StyledContactLink href="tel:+79670169197">
+					+7 967 016 91 97
+				</StyledContactLink>
+				<StyledOrderCallLink
+					href="#"
+					onClick={handleOrderCallLinkClick}
+				>
+					Заказать звонок
+				</StyledOrderCallLink>
+			</StyledItem>
+			<StyledItem>
+				<StyledContactLink href="mailto:222@papigun.ru">
+					222@papigun.ru
+				</StyledContactLink>
+				<StyledItemText>Служба поддержки</StyledItemText>
+			</StyledItem>
+			<Socials />
+		</StyledInfoBlock>
+	);
+};
+
+const StyledInfoBlock = styled.div`
+	display: flex;
+	align-items: center;
+	margin: ${({ margin }) => margin || "0"};
+	@media ${({ theme }) => theme.media.smallDevices} {
+		flex-direction: column;
+		align-items: center;
+	}
+`;
 
 const StyledItem = styled.div`
 	margin: 0 50px 0 0;
@@ -33,7 +76,7 @@ const StyledContactLink = styled.a`
 	}
 `;
 
-const StyledOrderCallLink = styled(Link)`
+const StyledOrderCallLink = styled.a`
 	font-weight: 700;
 	font-size: 14px;
 	color: #ffa621;
@@ -47,38 +90,6 @@ const StyledOrderCallLink = styled(Link)`
 const StyledItemText = styled.div`
 	font-size: 14px;
 	color: rgba(0, 0, 0, 0.4);
-`;
-
-const InfoBlock = (props) => {
-	return (
-		<StyledInfoBlock {...props}>
-			<StyledItem>
-				<StyledContactLink href="tel:+79670169197">
-					+7 967 016 91 97
-				</StyledContactLink>
-				<StyledOrderCallLink to="/orderCall">
-					Заказать звонок
-				</StyledOrderCallLink>
-			</StyledItem>
-			<StyledItem>
-				<StyledContactLink href="mailto:222@papigun.ru">
-					222@papigun.ru
-				</StyledContactLink>
-				<StyledItemText>Служба поддержки</StyledItemText>
-			</StyledItem>
-			<Socials />
-		</StyledInfoBlock>
-	);
-};
-
-const StyledInfoBlock = styled.div`
-	display: flex;
-	align-items: center;
-	margin: ${({ margin }) => margin || "0"};
-	@media ${({ theme }) => theme.media.smallDevices} {
-		flex-direction: column;
-		align-items: center;
-	}
 `;
 
 export default InfoBlock;

@@ -25,7 +25,6 @@ export const fetchFilterbarFilters = (category, search) => async (dispatch) => {
 		dispatch(setIsLoadingFilterbarFilters(true));
 		const response = await filtersApi.get(category, search);
 		dispatch(setFilterbarFilters(response.data.filters));
-		dispatch(setIsLoadingFilterbarFilters(false));
 	} catch (e) {
 		console.log(e);
 	}
@@ -38,8 +37,11 @@ const setCategories = (items) => ({
 
 export const setActiveCategory = (category) => (dispatch, getState) => {
 	const { categories } = getState().filters;
-	const activeCategory = categories.find((item) => item.slug === category);
-	dispatch(acceptActiveCategory(activeCategory));
+	const candidate = categories.find((item) => item.slug === category);
+	if (!candidate) {
+		//some actions
+	}
+	dispatch(acceptActiveCategory(candidate));
 };
 
 const acceptActiveCategory = (category) => ({

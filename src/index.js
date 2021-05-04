@@ -41,7 +41,7 @@ body {
 	height: 100%;
 	min-width: 320px;
 	font-family: "Rubik";
-	&.lock {
+	&.lock, &.popup-lock {
 		overflow: hidden; 
 	}
 }

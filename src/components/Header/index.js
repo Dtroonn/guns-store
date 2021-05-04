@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import { Container } from "../../components";
 import Menu from "./Menu.jsx";
@@ -8,17 +9,38 @@ import HeaderBottom from "./HeaderBottom.jsx";
 
 import { useBreakpoint } from "../../hooks";
 
+import { selectFavoritesItems } from "../../selectors/favorites";
+
 const Header = () => {
-	const largeDevices = useBreakpoint("min-width", 991.98);
+	const isLargeDevices = useBreakpoint("min-width", 991.98);
+	const dispatch = useDispatch();
+	const { favoritesItems, categories, activeSearch } = useSelector(
+		({ filters, ...state }) => ({
+			favoritesItems: selectFavoritesItems(state),
+			categories: filters.categories,
+			activeSearch: filters.activeSearch,
+		}),
+		shallowEqual
+	);
 
 	return (
 		<StyledHeader>
-			{largeDevices && <Menu />}
+			{isLargeDevices && <Menu />}
 			<Container>
 				<StyledBody>
-					{!largeDevices && <Menu />}
+					{!isLargeDevices && (
+						<Menu
+							categories={categories}
+							activeSearch={activeSearch}
+						/>
+					)}
 					<HeaderTop />
-					<HeaderBottom />
+					<HeaderBottom
+						favoritesItems={favoritesItems}
+						categories={categories}
+						dispatch={dispatch}
+						activeSearch={activeSearch}
+					/>
 				</StyledBody>
 			</Container>
 		</StyledHeader>
