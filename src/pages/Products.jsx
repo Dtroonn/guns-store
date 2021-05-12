@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import ContentLoader from "react-content-loader";
 import queryString from "query-string";
@@ -32,13 +32,15 @@ import {
 	addToFavorites,
 	removeFromFavorites,
 } from "../redux/actions/favorites";
+import { addToCart } from "../redux/actions/cart";
 
 import { selectFavoritesItemsIds } from "../selectors/favorites";
 import {
 	selectFilterbarFilters,
 	selectActiveFilterbarFilters,
 	selectCountActiveFilterbarFilters,
-} from "../selectors/filterbarFilters.js";
+} from "../selectors/filterbarFilters";
+import { selectCartItemsIds } from "../selectors/cart";
 
 const sortItems = [
 	{ name: "Рейтингу", value: "rating_-1" },
@@ -46,27 +48,13 @@ const sortItems = [
 	{ name: "Убыванию цены", value: "price_-1" },
 ];
 
-const TotalCountLoader = ({ isLargeDevices }) => (
-	<ContentLoader
-		style={{ margin: "0 0 -4px 0" }}
-		speed={2}
-		width={isLargeDevices ? 84 : 74}
-		height={isLargeDevices ? 30 : 25}
-		viewBox="0 0 89 30"
-		backgroundColor="#f3f3f3"
-		foregroundColor="#ecebeb"
-	>
-		<rect x="20" y="0" rx="0" ry="0" width="54" height="30" />
-	</ContentLoader>
-);
-
 const Products = () => {
 	const isLargeDevices = useBreakpoint("min-width", 991.98);
 	const productsRef = React.useRef(null);
 
+	const history = useHistory();
 	const { category } = useParams();
-	const location = useLocation();
-	const parsedQueries = queryString.parse(location.search);
+	const parsedQueries = queryString.parse(history.location.search);
 	const search = parsedQueries.search ? parsedQueries.search : "";
 
 	const dispatch = useDispatch();
@@ -84,6 +72,7 @@ const Products = () => {
 		isLoadingFilterbarFilters,
 		activeFilterbarFilters,
 		activeFilterbarFiltersCount,
+		cartItemsIds,
 	} = useSelector(
 		({ products, ...state }) => ({
 			items: products.items,
@@ -101,6 +90,7 @@ const Products = () => {
 			activeFilterbarFiltersCount: selectCountActiveFilterbarFilters(
 				state
 			),
+			cartItemsIds: selectCartItemsIds(state),
 		}),
 		shallowEqual
 	);
@@ -134,7 +124,7 @@ const Products = () => {
 			dispatch(fetchFilterbarFilters(category, search));
 			dispatch(setActiveSearch(search));
 			if (category) {
-				dispatch(setActiveCategory(category));
+				dispatch(setActiveCategory(category, history));
 			}
 			return;
 		}
@@ -195,6 +185,10 @@ const Products = () => {
 			return dispatch(addToFavorites(id));
 		}
 		return dispatch(removeFromFavorites(id));
+	};
+
+	const handleProductCartButtonClick = (id) => {
+		return dispatch(addToCart(id));
 	};
 
 	const TitleWithData = () => {
@@ -279,8 +273,14 @@ const Products = () => {
 												isFavorite={favoritesItemsIds.includes(
 													item._id
 												)}
+												isInCart={cartItemsIds.includes(
+													item._id
+												)}
 												onFavoritesButtonClick={
 													handleButtonFavoriteProductClick
+												}
+												onCartButtonClick={
+													handleProductCartButtonClick
 												}
 											/>
 										</StyledColumn>
@@ -315,6 +315,23 @@ const Products = () => {
 		</React.Fragment>
 	);
 };
+
+/////////////////////////////////////////////////////////
+
+const TotalCountLoader = ({ isLargeDevices }) => (
+	<ContentLoader
+		style={{ margin: "0 0 -4px 0" }}
+		speed={2}
+		width={isLargeDevices ? 84 : 74}
+		height={isLargeDevices ? 30 : 25}
+		viewBox="0 0 89 30"
+		backgroundColor="#f3f3f3"
+		foregroundColor="#ecebeb"
+	>
+		<rect x="20" y="0" rx="0" ry="0" width="54" height="30" />
+	</ContentLoader>
+);
+////////////////////////////////////////////////////////////////////////////
 
 const StyledProducts = styled.div`
 	margin: 0 0 86px 0;

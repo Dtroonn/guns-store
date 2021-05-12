@@ -35,11 +35,14 @@ const setCategories = (items) => ({
 	payload: items,
 });
 
-export const setActiveCategory = (category) => (dispatch, getState) => {
+export const setActiveCategory = (category, history) => (
+	dispatch,
+	getState
+) => {
 	const { categories } = getState().filters;
 	const candidate = categories.find((item) => item.slug === category);
 	if (!candidate) {
-		//some actions
+		return history.push("/404");
 	}
 	dispatch(acceptActiveCategory(candidate));
 };

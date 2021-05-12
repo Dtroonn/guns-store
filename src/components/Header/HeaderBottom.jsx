@@ -14,6 +14,7 @@ const HeaderBottom = ({
 	favoritesItems,
 	categories,
 	activeSearch,
+	totalCountInCart,
 	dispatch,
 }) => {
 	const largeDevices = useBreakpoint("min-width", 991.98);
@@ -39,7 +40,7 @@ const HeaderBottom = ({
 					</StyledBodyRightColumn>
 					<StyledBodyRightColumn>
 						<Link to="/cart">
-							<CountButton count="5">
+							<CountButton count={totalCountInCart}>
 								<CartIcon />
 							</CountButton>
 						</Link>
@@ -72,6 +73,9 @@ const StyledBodyRight = styled.div`
 	position: relative;
 	z-index: 50;
 	margin: 0 0 0 35px;
+	@media ${({ theme }) => theme.media.mediumDevices} {
+		margin: 0 0 0 20px;
+	}
 `;
 
 const StyledBodyRightColumn = styled.div`

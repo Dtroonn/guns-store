@@ -13,11 +13,6 @@ export const categoriesApi = {
 
 export const filtersApi = {
 	async get(category, search) {
-		// console.log(
-		// 	`filters/${category ? category : ""}${
-		// 		search ? `?search=${search}` : ""
-		// 	}`
-		// );
 		return axiosInstance.get(
 			`filters/${category ? category : ""}${
 				search ? `?search=${search}` : ""
@@ -71,4 +66,22 @@ export const favoritesApi = {
 	async clear() {
 		return axiosInstance.delete("favorites");
 	},
+};
+
+export const cartApi = {
+	async get() {
+		return axiosInstance.get("cart");
+	},
+
+	async add(id, count) {
+		return axiosInstance.post(`cart/${id}`, {
+			count,
+		});
+	},
+
+	async remove(id) {
+		return axiosInstance.delete(`cart/${id}`);
+	},
+
+	async clear() {},
 };

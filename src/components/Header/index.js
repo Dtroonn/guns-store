@@ -14,11 +14,17 @@ import { selectFavoritesItems } from "../../selectors/favorites";
 const Header = () => {
 	const isLargeDevices = useBreakpoint("min-width", 991.98);
 	const dispatch = useDispatch();
-	const { favoritesItems, categories, activeSearch } = useSelector(
-		({ filters, ...state }) => ({
+	const {
+		favoritesItems,
+		categories,
+		activeSearch,
+		totalCountInCart,
+	} = useSelector(
+		({ filters, cart, ...state }) => ({
 			favoritesItems: selectFavoritesItems(state),
 			categories: filters.categories,
 			activeSearch: filters.activeSearch,
+			totalCountInCart: cart.totalCount,
 		}),
 		shallowEqual
 	);
@@ -40,6 +46,7 @@ const Header = () => {
 						categories={categories}
 						dispatch={dispatch}
 						activeSearch={activeSearch}
+						totalCountInCart={totalCountInCart}
 					/>
 				</StyledBody>
 			</Container>

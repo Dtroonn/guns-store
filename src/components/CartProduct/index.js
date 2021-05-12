@@ -2,52 +2,75 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import productPng from "../assets/Gun.png";
+import { CrossIcon } from "../../components/icons";
+import Counter from "./Counter";
 
-import { Button, TextField } from "../components/forms";
-import { MinusIcon, PlusIcon, CrossIcon } from "../components/icons";
+const CartProduct = ({
+	_id,
+	name,
+	imgUrl,
+	category,
+	count,
+	price,
+	totalCountInCart,
+	onDeleteButtonClick,
+	onAddButtonClick,
+}) => {
+	const cleanupFunctionRef = React.useRef(false);
+	const [isDisabledDeleteButton, setIsDisabledDeleteButton] = React.useState(
+		false
+	);
 
-const CartProduct = ({ name }) => {
+	React.useEffect(() => {
+		return () => (cleanupFunctionRef.current = true);
+	}, []);
+
+	const handleDeleteButtonClick = async () => {
+		if (onDeleteButtonClick) {
+			setIsDisabledDeleteButton(true);
+			await onDeleteButtonClick(_id);
+			if (!cleanupFunctionRef.current) {
+				setIsDisabledDeleteButton(false);
+			}
+		}
+	};
 	return (
 		<StyledCartProduct>
 			<StyledLeft>
 				<StyledImageWrapper>
-					<StyledImage src={productPng} />
+					<StyledImage src={imgUrl} alt="name" />
 				</StyledImageWrapper>
 				<StyledInfo>
 					<StyledName>{name}</StyledName>
-					<StyledCategory to="/lalka">
-						Охолощенное оружие и макеты
+					<StyledCategory to={`/products/${category.slug}`}>
+						{category.name}
 					</StyledCategory>
 					<StyledRemainingCount>
-						Осталось 50 штук
+						Осталось {count} штук
 					</StyledRemainingCount>
 				</StyledInfo>
 			</StyledLeft>
 			<StyledRight>
-				<StyledCounter>
-					<Button minWidth="40px" nbrr>
-						<MinusIcon />
-					</Button>
-					<TextField
-						nbr
-						nblar
-						fontWeight="500"
-						padding="0 5px"
-						textAlign="center"
-						notAdaptive
-						type="text"
-						defaultValue="50"
-					/>
-					<Button minWidth="40px" nbrl>
-						<PlusIcon />
-					</Button>
-				</StyledCounter>
+				<Counter
+					initialCount={totalCountInCart}
+					maxCount={count}
+					itemId={_id}
+					onSubmit={onAddButtonClick}
+				/>
 				<StyledPrice>
-					<StyledCurrentPrice>150 900 руб. </StyledCurrentPrice>
-					<StyledOldPrice>16 100 руб.</StyledOldPrice>
+					<StyledCurrentPrice>
+						{price.current * totalCountInCart} руб.{" "}
+					</StyledCurrentPrice>
+					{price.old && (
+						<StyledOldPrice>
+							{price.old * totalCountInCart} руб.
+						</StyledOldPrice>
+					)}
 				</StyledPrice>
-				<StyledCross>
+				<StyledCross
+					disabled={isDisabledDeleteButton}
+					onClick={handleDeleteButtonClick}
+				>
 					<CrossIcon />
 				</StyledCross>
 			</StyledRight>
@@ -104,6 +127,45 @@ const StyledRight = styled.div`
 	}
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
 		max-width: none;
+		width: 100%;
+	}
+`;
+const StyledPrice = styled.div`
+	margin: 0 25px 0 0;
+	letter-spacing: 0.02em;
+	font-weight: 700;
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		order: 1;
+		flex: 0 0 100%;
+		display: flex;
+		align-items: center;
+		margin: 0 0 20px 0;
+	}
+`;
+
+const StyledCurrentPrice = styled.div`
+	font-size: 18px;
+`;
+
+const StyledOldPrice = styled.div`
+	text-decoration-line: line-through;
+	font-size: 14px;
+	color: #999999;
+	margin: 8px 0 0 0;
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		margin: 0 0 0 24px;
+	}
+`;
+
+const StyledCross = styled.div`
+	margin: 0 0 0 auto;
+	${({ disabled }) =>
+		disabled &&
+		css`
+			pointer-events: none;
+		`}
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		order: 3;
 	}
 `;
 
@@ -113,7 +175,7 @@ const StyledImageWrapper = styled.div`
 	border-radius: 6px;
 	margin: 0 24px 0 0;
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
-		flex: 0 0 100px;
+		flex: 0 0 144px;
 		order: 2;
 		margin: 0 0 0 24px;
 	}
@@ -167,49 +229,6 @@ const StyledRemainingCount = styled.div`
 		css`
 			color: #f00;
 		`}
-`;
-
-const StyledCounter = styled.div`
-	display: flex;
-	flex: 0 0 130px;
-	@media ${({ theme }) => theme.media.extraSmallDevices} {
-		order: 2;
-	}
-`;
-
-const StyledPrice = styled.div`
-	margin: 0 10px 0 80px;
-	letter-spacing: 0.02em;
-	font-weight: 700;
-	@media ${({ theme }) => theme.media.extraSmallDevices} {
-		order: 1;
-		flex: 0 0 100%;
-		display: flex;
-		align-items: center;
-		margin: 0 0 20px 0;
-	}
-`;
-
-const StyledCurrentPrice = styled.div`
-	font-size: 18px;
-`;
-
-const StyledOldPrice = styled.div`
-	text-decoration-line: line-through;
-	font-size: 14px;
-	color: #999999;
-	margin: 8px 0 0 0;
-	@media ${({ theme }) => theme.media.extraSmallDevices} {
-		margin: 0 0 0 24px;
-	}
-`;
-
-const StyledCross = styled.div`
-	align-self: center;
-	margin: 0 0 0 auto;
-	@media ${({ theme }) => theme.media.extraSmallDevices} {
-		order: 3;
-	}
 `;
 
 export default CartProduct;

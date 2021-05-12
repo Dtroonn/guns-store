@@ -33,6 +33,10 @@ const StyledInput = styled.input`
 	@media ${({ theme }) => theme.media.largeDevices} {
 		font-size: 15px;
 	}
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		height: 40px;
+		line-height: 40px;
+	}
 	&::placeholder {
 		color: rgba(0, 0, 0, 0.2);
 	}

@@ -1,10 +1,10 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
 
-const Button = React.forwardRef(({ showloader, children, ...props }, ref) => {
+const Button = React.forwardRef(({ showLoader, children, ...props }, ref) => {
 	return (
-		<StyledButton ref={ref} {...props} showloader={showloader}>
-			{showloader ? <StyledLoadingSpinner /> : children}
+		<StyledButton ref={ref} {...props} showLoader={showLoader}>
+			{showLoader ? <StyledLoadingSpinner /> : children}
 		</StyledButton>
 	);
 });
@@ -28,11 +28,24 @@ const StyledButton = styled.button`
 		min-width: 40px;
 		padding: 0 6px;
 	}
+
 	&:hover {
 		@media ${({ theme }) => theme.mediaFM.largeDevices} {
 			background: #ffb341;
 		}
 	}
+
+	${({ green }) =>
+		green &&
+		css`
+			background: #129968;
+			&:hover {
+				@media ${({ theme }) => theme.mediaFM.largeDevices} {
+					background: #26ab7a;
+				}
+			}
+		`}
+
 	${({ outline }) =>
 		outline &&
 		css`
@@ -52,8 +65,17 @@ const StyledButton = styled.button`
 				`}
 		`}
 
-	${({ showloader }) =>
-		showloader &&
+	${({ small }) =>
+		small &&
+		css`
+			min-width: 90px !important;
+			height: 30px !important;
+			padding: 0 10px !important;
+			font-size: 14px !important;
+		`}
+
+	${({ showLoader }) =>
+		showLoader &&
 		css`
 			pointer-events: none;
 		`}

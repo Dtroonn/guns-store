@@ -13,7 +13,7 @@ export { default as FilterbarLoadingBlock } from "./Filterbar/LoadingBlock.jsx";
 export { default as SlideToggle } from "./SlideToggle.jsx";
 export { default as Attention } from "./Attention.jsx";
 export { default as Pagination } from "./Pagination.jsx";
-export { default as CartProduct } from "./CartProduct.jsx";
+export { default as CartProduct } from "./CartProduct";
 export { default as CartForm } from "./CartForm.jsx";
 export { default as MainPreloader } from "./MainPreloader.jsx";
 export { default as Popups } from "./Popups";

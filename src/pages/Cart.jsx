@@ -1,25 +1,68 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Container, Title, CartProduct, CartForm } from "../components";
 
+import { removeFromCart, addToCart } from "../redux/actions/cart";
+
+import {
+	selectCartItems,
+	selectInitialPrice,
+	selectTotalPrice,
+	selectTotalDiscount,
+} from "../selectors/cart";
+
 const Cart = () => {
+	const dispatch = useDispatch();
+	const {
+		items,
+		totalCount,
+		totalPriceItems,
+		initialPriceItems,
+		totalDiscountOnItems,
+	} = useSelector((state) => ({
+		items: selectCartItems(state),
+		totalCount: state.cart.totalCount,
+		totalPriceItems: selectTotalPrice(state),
+		initialPriceItems: selectInitialPrice(state),
+		totalDiscountOnItems: selectTotalDiscount(state),
+	}));
+
+	const onDeleteItemFromCartClick = (id) => {
+		return dispatch(removeFromCart(id));
+	};
+
+	const onAddItemToCartClick = (id, count) => {
+		return dispatch(addToCart(id, count));
+	};
+
 	return (
 		<StyledCart>
 			<Container>
 				<Title>оформление заказа</Title>
 				<StyledProducts>
 					<Title medium>
-						Моя корзина <span>2</span>
+						Моя корзина <span>{totalCount}</span>
 					</Title>
 					<StyledProductsBody>
-						<CartProduct name="Beretta 92 MOD 92 Retay" />
-						<CartProduct name="Пуля .308 WIN Barnes TSX" />
+						{items.length > 0 &&
+							items.map((item) => (
+								<CartProduct
+									key={item.product._id}
+									{...item.product}
+									totalCountInCart={item.count}
+									onDeleteButtonClick={
+										onDeleteItemFromCartClick
+									}
+									onAddButtonClick={onAddItemToCartClick}
+								/>
+							))}
 					</StyledProductsBody>
 					<StyledTotalProductsCost>
 						<Title extraSmall>Товаров на сумму:</Title>
 						<StyledTotalProductsCostPrice>
-							24 750 руб.
+							{totalPriceItems} руб.
 						</StyledTotalProductsCostPrice>
 					</StyledTotalProductsCost>
 				</StyledProducts>
@@ -32,11 +75,11 @@ const Cart = () => {
 							<StyledTotalBlockBody>
 								<StyledTotalItem>
 									<StyledTotalItemLabel>
-										Товары (2)
+										Товары ({totalCount})
 									</StyledTotalItemLabel>
 									<StyledTotalItemLine></StyledTotalItemLine>
 									<StyledTotalItemPrice>
-										24 950 руб.
+										{initialPriceItems} руб.
 									</StyledTotalItemPrice>
 								</StyledTotalItem>
 								<StyledTotalItem>
@@ -45,7 +88,7 @@ const Cart = () => {
 									</StyledTotalItemLabel>
 									<StyledTotalItemLine></StyledTotalItemLine>
 									<StyledTotalItemPrice red>
-										- 200 руб.
+										- {totalDiscountOnItems} руб.
 									</StyledTotalItemPrice>
 								</StyledTotalItem>
 								<StyledTotalItem>

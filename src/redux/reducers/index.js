@@ -5,6 +5,7 @@ import filters from "./filters";
 import products from "./products";
 import favorites from "./favorites";
 import popups from "./popups";
+import cart from "./cart";
 
 const rootReducer = combineReducers({
 	initialize,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
 	products,
 	favorites,
 	popups,
+	cart,
 });
 
 export default rootReducer;

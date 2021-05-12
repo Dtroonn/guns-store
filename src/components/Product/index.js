@@ -12,9 +12,11 @@ const Product = ({
 	price,
 	count,
 	isFavorite,
+	isInCart,
 	imgUrl,
 	_id,
 	onFavoritesButtonClick,
+	onCartButtonClick,
 }) => {
 	const cleanupFunctionRef = React.useRef(false);
 
@@ -23,12 +25,26 @@ const Product = ({
 		setIsDisabledFavoritesButton,
 	] = React.useState(false);
 
+	const [showCartButtonLoader, setShowCartButtonLoader] = React.useState(
+		false
+	);
+
 	const handleFavoritesButtonClick = async () => {
 		if (onFavoritesButtonClick) {
 			setIsDisabledFavoritesButton(true);
 			await onFavoritesButtonClick(_id, isFavorite);
 			if (!cleanupFunctionRef.current) {
 				setIsDisabledFavoritesButton(false);
+			}
+		}
+	};
+
+	const handleCartButtonClick = async () => {
+		if (onCartButtonClick) {
+			setShowCartButtonLoader(true);
+			await onCartButtonClick(_id);
+			if (!cleanupFunctionRef.current) {
+				setShowCartButtonLoader(false);
 			}
 		}
 	};
@@ -42,7 +58,7 @@ const Product = ({
 			<StyledBody>
 				<StyledTop>
 					<StyledImageWrapper>
-						<StyledImage src={imgUrl} alt="" />
+						<StyledImage src={imgUrl} alt={name} />
 					</StyledImageWrapper>
 					<StyledTags>
 						{price.old && <StyledTag>скидка</StyledTag>}
@@ -75,9 +91,20 @@ const Product = ({
 							{price.current} руб.
 						</StyledCurrentPrice>
 					</StyledPrice>
-					<Button>
-						<CartIcon white />
-					</Button>
+					{isInCart ? (
+						<Link to="/cart">
+							<Button green>
+								<CartIcon white />
+							</Button>
+						</Link>
+					) : (
+						<Button
+							onClick={handleCartButtonClick}
+							showLoader={showCartButtonLoader}
+						>
+							<CartIcon white />
+						</Button>
+					)}
 				</StyledBottom>
 			</StyledBody>
 		</StyledProduct>
