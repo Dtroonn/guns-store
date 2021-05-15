@@ -6,12 +6,12 @@ import { Button, TextField, ErrorText } from "../../components/forms";
 
 const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 	const [count, setCount] = React.useState(initialCount);
-	const [err, setErr] = React.useState(false);
 	const [isLoadingAccept, setIsLoadingAccept] = React.useState(false);
+
+	const isErr = count > maxCount;
 	const isShowButtons = count !== initialCount;
 
 	const handleChange = (e) => {
-		setErr(false);
 		const value = e.target.value;
 		if (value.match(/^[0-9]*$/)) {
 			const count = Number(value);
@@ -28,20 +28,19 @@ const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 	};
 
 	const handleMinusButtonClick = () => {
-		setErr(false);
 		setCount((prevCount) => {
-			if (prevCount === 1) {
-				return prevCount;
+			if (prevCount === 1 || prevCount > maxCount) {
+				return 1;
 			}
+
 			return prevCount - 1;
 		});
 	};
 
 	const handlePlusButtonClick = () => {
-		setErr(false);
 		setCount((prevCount) => {
-			if (prevCount === maxCount) {
-				return prevCount;
+			if (prevCount > maxCount) {
+				return maxCount;
 			}
 			return prevCount + 1;
 		});
@@ -51,8 +50,6 @@ const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 		try {
 			setIsLoadingAccept(true);
 			await onSubmit(itemId, count);
-		} catch (e) {
-			setErr(true);
 		} finally {
 			setIsLoadingAccept(false);
 		}
@@ -110,12 +107,13 @@ const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 								small
 								onClick={handleAceptButtonClick}
 								showLoader={isLoadingAccept}
+								disable={isErr}
 							>
 								принять
 							</Button>
 						</StyledButtonsColumn>
 					</StyledButtonsBody>
-					{err && (
+					{isErr && (
 						<StyledErrorText>
 							<ErrorText>
 								Извините! Такого кол-ва товара нет в наличии!

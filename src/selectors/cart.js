@@ -4,6 +4,8 @@ export const selectCartItems = (state) => state.cart.items;
 
 export const selectTotalPrice = (state) => state.cart.totalPrice;
 
+export const selectTotalCount = (state) => state.cart.totalCount;
+
 export const selectCartItemsIds = createSelector(selectCartItems, (items) =>
 	items.map((item) => item.product._id)
 );

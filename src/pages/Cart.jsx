@@ -11,6 +11,7 @@ import {
 	selectInitialPrice,
 	selectTotalPrice,
 	selectTotalDiscount,
+	selectTotalCount,
 } from "../selectors/cart";
 
 const Cart = () => {
@@ -23,7 +24,7 @@ const Cart = () => {
 		totalDiscountOnItems,
 	} = useSelector((state) => ({
 		items: selectCartItems(state),
-		totalCount: state.cart.totalCount,
+		totalCount: selectTotalCount(state),
 		totalPriceItems: selectTotalPrice(state),
 		initialPriceItems: selectInitialPrice(state),
 		totalDiscountOnItems: selectTotalDiscount(state),

@@ -27,6 +27,7 @@ export const addToCart = (id, count = 1) => async (dispatch) => {
 		dispatch(acceptAddToCart(response.data.data, count));
 	} catch (e) {
 		const { status, data } = e.response;
+		console.log(e.response);
 		if (data.errorCode === 2) {
 			dispatch(editItemInCart(data.data));
 			throw e;
