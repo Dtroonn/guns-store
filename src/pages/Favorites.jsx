@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import { Container, Attention, Title, Product } from "../components";
 import { CrossIcon } from "../components/icons";
@@ -17,10 +17,13 @@ import { selectCartItemsIds } from "../selectors/cart";
 
 const Favorites = () => {
 	const dispatch = useDispatch();
-	const { items, cartItemsIds } = useSelector((state) => ({
-		items: selectFavoritesItems(state),
-		cartItemsIds: selectCartItemsIds(state),
-	}));
+	const { items, cartItemsIds } = useSelector(
+		(state) => ({
+			items: selectFavoritesItems(state),
+			cartItemsIds: selectCartItemsIds(state),
+		}),
+		shallowEqual
+	);
 
 	const handleCleansingBtnClick = (e) => {
 		const isConfirm = window.confirm(

@@ -11,7 +11,6 @@ import { setTextPopup } from "./popups";
 export const fetchFavorites = () => async (dispatch) => {
 	try {
 		const response = await favoritesApi.get();
-		console.log(response.data);
 		dispatch(setFavorites(response.data.items));
 	} catch (e) {
 		console.log(e);

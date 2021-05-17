@@ -20,7 +20,6 @@ export const fetchProducts = (
 			activeFilters,
 			search
 		);
-		console.log(response);
 		dispatch(setProducts(response.data.items, response.data.totalCount));
 	} catch (e) {
 		console.log(e);

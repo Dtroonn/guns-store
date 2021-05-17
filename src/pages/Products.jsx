@@ -34,8 +34,6 @@ import {
 } from "../redux/actions/favorites";
 import { addToCart } from "../redux/actions/cart";
 
-import { setTextPopup } from "../redux/actions/popups";
-
 import { selectFavoritesItemsIds } from "../selectors/favorites";
 import {
 	selectFilterbarFilters,

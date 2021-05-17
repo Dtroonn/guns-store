@@ -1,31 +1,29 @@
 import React from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 
 import Menu from "./Menu.jsx";
 
 import { Container, Title, Socials } from "../../components";
 
-const catalogItems = [
-	{ name: "Акции", slug: "sale" },
-	{
-		name: "Охолощенное оружие и макеты",
-		slug: "products/oholoshennoe-oruzhie-i-makety",
-	},
-];
-
 const informationItems = [
-	{ name: "Мастерская", slug: "masterskaya" },
-	{ name: "Обучение", slug: "Obychenie" },
+	{ name: "Мастерская", slug: "developing-page" },
+	{ name: "Обучение", slug: "developing-page" },
 ];
 
 const Footer = () => {
+	const categories = useSelector(({ filters }) => filters.categories);
 	return (
 		<StyledFooter>
 			<Container>
 				<StyledBody>
 					<StyledLeftContent>
 						<StyledLeftContentColumn>
-							<Menu items={catalogItems} title="КАТАЛОГ" />
+							<Menu
+								items={categories}
+								title="КАТАЛОГ"
+								rootTo="/products"
+							/>
 						</StyledLeftContentColumn>
 						<StyledLeftContentColumn>
 							<Menu

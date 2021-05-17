@@ -12,6 +12,13 @@ import { Button } from "../forms";
 
 import { useBreakpoint } from "../../hooks";
 
+const menuItems = [
+	{ name: "Мастерская", slug: "developing-page" },
+	{ name: "Обучение", slug: "developing-page" },
+	{ name: "Оптовикам", slug: "developing-page" },
+	{ name: "Гарантии", slug: "developing-page" },
+];
+
 const Menu = ({ categories, activeSearch }) => {
 	const [isOpenIconMenu, setIsOpenIconMenu] = React.useState(false);
 	const toggleIsOpenIconMenu = (e) => {
@@ -60,41 +67,13 @@ const Menu = ({ categories, activeSearch }) => {
 							/>
 						)}
 						<StyledList>
-							<StyledListItem>
-								<StyledMenuLink to="/1">
-									Мастерская
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/2">
-									Обучение
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="3">
-									Правовые вопросы
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/4">
-									Оптовикам
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/5">
-									Гарантии
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/6">
-									Доставка
-								</StyledMenuLink>
-							</StyledListItem>
-							<StyledListItem>
-								<StyledMenuLink to="/7">
-									Контакты
-								</StyledMenuLink>
-							</StyledListItem>
+							{menuItems.map((item, index) => (
+								<StyledListItem key={index}>
+									<StyledMenuLink to={`/${item.slug}`}>
+										{item.name}
+									</StyledMenuLink>
+								</StyledListItem>
+							))}
 						</StyledList>
 						{!largeDevices && <Authentication />}
 						{!largeDevices && (

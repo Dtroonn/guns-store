@@ -71,7 +71,6 @@ export const editItemsInCart = (items) => ({
 export const removeFromCart = (id) => async (dispatch) => {
 	try {
 		const response = await cartApi.remove(id);
-		console.log(response);
 		dispatch(acceptRemoveFromCart(id));
 	} catch (e) {
 		console.log(e);

@@ -7,19 +7,21 @@ import { useBreakpoint } from "../../hooks";
 import { Title, SlideToggle } from "../../components";
 import { ArrowIcon } from "../../components/icons";
 
-const MenuList = ({ items }) => {
+const MenuList = ({ items, rootTo }) => {
 	return (
 		<StyledList>
 			{items.map((item, index) => (
 				<StyledListItem key={index}>
-					<StyledLink to={`/${item.slug}`}>{item.name}</StyledLink>
+					<StyledLink to={`${rootTo ? rootTo : ""}/${item.slug}`}>
+						{item.name}
+					</StyledLink>
 				</StyledListItem>
 			))}
 		</StyledList>
 	);
 };
 
-const Menu = ({ title, items, ...props }) => {
+const Menu = ({ title, items, rootTo, ...props }) => {
 	const isExtraSmallDevices = useBreakpoint("max-width", 479.98);
 	const [isMenuOpenESD, setIsMenuOpenESD] = React.useState(false);
 
@@ -37,10 +39,10 @@ const Menu = ({ title, items, ...props }) => {
 			</StyledHeader>
 			{isExtraSmallDevices ? (
 				<SlideToggle active={isMenuOpenESD}>
-					<MenuList items={items} />
+					<MenuList items={items} rootTo={rootTo} />
 				</SlideToggle>
 			) : (
-				<MenuList items={items} />
+				<MenuList items={items} rootTo={rootTo} />
 			)}
 		</StyledMenu>
 	);
@@ -87,7 +89,7 @@ const StyledLink = styled(Link)`
 	color: rgba(0, 0, 0, 0.6);
 	font-weight: 500;
 	font-size: 16px;
-	line-height: 27px;
+	line-height: 20px;
 	transition: all 0.4s ease 0s;
 	@media ${({ theme }) => theme.mediaFM.largeDevices} {
 		&:hover {

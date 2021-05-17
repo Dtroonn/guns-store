@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const Authentication = () => {
 	return (
 		<StyledBody>
-			<StyledLink to="/login">Войти</StyledLink>
-			<StyledLink to="register">Зарегистрироваться</StyledLink>
+			<StyledLink to="/developing-page">Войти</StyledLink>
+			<StyledLink to="/developing-page">Зарегистрироваться</StyledLink>
 		</StyledBody>
 	);
 };
