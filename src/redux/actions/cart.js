@@ -5,7 +5,11 @@ import {
 	ACCEPT_ADD_TO_CART,
 	ACCEPT_REMOVE_FROM_CART,
 	EDIT_ITEM_IN_CART,
+	CLEAR_CART,
+	EDIT_ITEMS_IN_CART,
 } from "../types/cart";
+
+import { setTextPopup } from "./popups";
 
 export const fetchCart = () => async (dispatch) => {
 	try {
@@ -21,16 +25,24 @@ const setCart = (data) => ({
 	payload: data,
 });
 
-export const addToCart = (id, count = 1) => async (dispatch) => {
+export const addToCart = (id, count = 1, isFromCart) => async (dispatch) => {
 	try {
 		const response = await cartApi.add(id, count);
 		dispatch(acceptAddToCart(response.data.data, count));
 	} catch (e) {
 		const { status, data } = e.response;
-		console.log(e.response);
+		console.log(data);
 		if (data.errorCode === 2) {
-			dispatch(editItemInCart(data.data));
-			throw e;
+			if (isFromCart) {
+				dispatch(editItemInCart(data.data));
+				throw e;
+			}
+			return dispatch(
+				setTextPopup(
+					true,
+					"Извиняемся за неудобства! Похоже кто-то опередил вас и уже купил данный товар."
+				)
+			);
 		}
 
 		window.alert(data.message);
@@ -45,9 +57,14 @@ const acceptAddToCart = (item, count) => ({
 	},
 });
 
-export const editItemInCart = (data) => ({
+export const editItemInCart = (item) => ({
 	type: EDIT_ITEM_IN_CART,
-	payload: data,
+	payload: item,
+});
+
+export const editItemsInCart = (items) => ({
+	type: EDIT_ITEMS_IN_CART,
+	payload: items,
 });
 
 export const removeFromCart = (id) => async (dispatch) => {
@@ -63,4 +80,8 @@ export const removeFromCart = (id) => async (dispatch) => {
 const acceptRemoveFromCart = (id) => ({
 	type: ACCEPT_REMOVE_FROM_CART,
 	payload: id,
+});
+
+export const clearCart = () => ({
+	type: CLEAR_CART,
 });

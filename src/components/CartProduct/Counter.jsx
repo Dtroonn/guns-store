@@ -4,12 +4,12 @@ import styled, { css } from "styled-components";
 import { MinusIcon, PlusIcon } from "../../components/icons";
 import { Button, TextField, ErrorText } from "../../components/forms";
 
-const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
-	const [count, setCount] = React.useState(initialCount);
+const Counter = ({ countInCart, maxCount, onSubmit, itemId }) => {
+	const [count, setCount] = React.useState(countInCart);
 	const [isLoadingAccept, setIsLoadingAccept] = React.useState(false);
 
 	const isErr = count > maxCount;
-	const isShowButtons = count !== initialCount;
+	const isShowButtons = count !== countInCart;
 
 	const handleChange = (e) => {
 		const value = e.target.value;
@@ -29,7 +29,10 @@ const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 
 	const handleMinusButtonClick = () => {
 		setCount((prevCount) => {
-			if (prevCount === 1 || prevCount > maxCount) {
+			if (prevCount > maxCount) {
+				return maxCount;
+			}
+			if (prevCount === 1) {
 				return 1;
 			}
 
@@ -53,6 +56,15 @@ const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 		} finally {
 			setIsLoadingAccept(false);
 		}
+	};
+
+	const handleCancelButtonClick = () => {
+		setCount((prevCount) => {
+			if (countInCart <= maxCount) {
+				return countInCart;
+			}
+			return 1;
+		});
 	};
 
 	return (
@@ -82,12 +94,12 @@ const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 					minWidth="40px"
 					nbrl
 					onClick={handlePlusButtonClick}
-					disable={count === maxCount || isLoadingAccept}
+					disable={count >= maxCount || isLoadingAccept}
 				>
 					<PlusIcon />
 				</Button>
 			</StyledBody>
-			{isShowButtons && (
+			{(isShowButtons || isErr) && (
 				<StyledButtons>
 					<StyledButtonsBody>
 						<StyledButtonsColumn>
@@ -95,7 +107,7 @@ const Counter = ({ initialCount, maxCount, onSubmit, itemId }) => {
 								outline
 								small
 								dark
-								onClick={() => setCount(initialCount)}
+								onClick={handleCancelButtonClick}
 								disable={isLoadingAccept}
 							>
 								отменить

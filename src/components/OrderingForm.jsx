@@ -1,17 +1,59 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import NumberFormat from "react-number-format";
+import { useForm, Controller } from "react-hook-form";
 
 import { Title, HeaderBlock } from "../components";
 import { TextField, Textarea, Button } from "../components/forms";
 
-const CartForm = () => {
+import {
+	setActiveReceiOption,
+	setActivePayOption,
+	makeOrder,
+} from "../redux/actions/ordering";
+
+const OrderingForm = ({
+	receiOptions,
+	payOptions,
+	activeReceiOption,
+	activePayOption,
+	dispatch,
+}) => {
+	const { register, handleSubmit, errors, control, getValues } = useForm();
+	const [isSubmitting, setIsSubmitting] = React.useState(false);
+	const telInputRef = React.useRef(null);
+
+	console.log(errors);
+
+	const onOrderingFormSubmit = async (data) => {
+		let newData = Object.assign({}, data);
+		Object.keys(newData).forEach((key) => {
+			if (newData[key] === 0) return;
+			if (!newData[key]) {
+				delete newData[key];
+			}
+		});
+		console.log(newData);
+		setIsSubmitting(true);
+		await dispatch(makeOrder(newData));
+		setIsSubmitting(false);
+	};
+
+	const handleReceiOptionChange = (e) => {
+		dispatch(setActiveReceiOption(e.target.value));
+	};
+
+	const handlePayOptionChange = (e) => {
+		dispatch(setActivePayOption(e.target.value));
+	};
+
 	return (
-		<StyledCartForm>
+		<StyledOrderingForm onSubmit={handleSubmit(onOrderingFormSubmit)}>
 			<StyledContactDetails>
 				<HeaderBlock maxWidth="420px" medium title="контактные данные">
-					Вы можете указать только <span>имя</span> и{" "}
-					<span>номер телефона,</span> мы с вами свяжемся и сами все
-					заполним за вас
+					Вы можете указать только{" "}
+					<span>контактные данные и город</span> мы с вами свяжемся и
+					сами все заполним за вас
 				</HeaderBlock>
 				<StyledContactDetailsBody>
 					<StyledContactDetailsInput>
@@ -19,14 +61,45 @@ const CartForm = () => {
 							name="name"
 							placeholder="Введите имя"
 							label="имя"
+							id="customerName"
+							ref={register({
+								required: true,
+								minLength: 2,
+								maxLength: 20,
+							})}
+							errText={errors.name ? "Заполните поле" : null}
 						/>
 					</StyledContactDetailsInput>
 					<StyledContactDetailsInput>
-						<TextField
-							name="phone"
-							placeholder="Введите номер телефона"
-							label="телефон"
-							hint="Позвоним по этому номеру для подтверждения заказа"
+						<Controller
+							render={({ onChange, value }) => (
+								<NumberFormat
+									label="Телефон"
+									hint="Позвоним по этому номеру для подтверждения заказа"
+									customInput={TextField}
+									format="+7 ### ### ####"
+									allowEmptyFormatting
+									mask="_"
+									onValueChange={(v) =>
+										onChange("7" + v.value)
+									}
+									errText={
+										errors.tel ? "Заполните поле" : null
+									}
+									getInputRef={telInputRef}
+								/>
+							)}
+							name="tel"
+							control={control}
+							defaultValue=""
+							rules={{
+								required: true,
+								minLength: 11,
+								valueAsNumber: true,
+							}}
+							onFocus={() => {
+								telInputRef.current.focus();
+							}}
 						/>
 					</StyledContactDetailsInput>
 					<StyledContactDetailsInput>
@@ -35,6 +108,18 @@ const CartForm = () => {
 							placeholder="Введите почту"
 							label="e-mail"
 							hint="Сюда отправим всю информацию по заказу"
+							errText={
+								errors.email &&
+								(errors.email.type === "pattern"
+									? "Введите корректный email"
+									: "Заполните поле")
+							}
+							ref={register({
+								required: true,
+								pattern: {
+									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+								},
+							})}
 						/>
 					</StyledContactDetailsInput>
 				</StyledContactDetailsBody>
@@ -42,57 +127,34 @@ const CartForm = () => {
 			<StyledOptionsRecei>
 				<Title medium>способ получения</Title>
 				<StyledOptions>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="trololo"
-							name="optionRecei"
-							type="radio"
-						/>
-						<StyledOption htmlFor="trololo">
-							<StyledOptionTitle>Курьером</StyledOptionTitle>
-							<StyledOptionText>
-								Москва и область <span>300 руб.</span>
-							</StyledOptionText>
-						</StyledOption>
-					</StyledOptionsItem>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="trololo2"
-							name="optionRecei"
-							type="radio"
-						/>
-						<StyledOption htmlFor="trololo2">
-							<StyledOptionTitle>
-								транспортной компанией
-							</StyledOptionTitle>
-							<StyledOptionText>
-								По предоплате <span>800 руб.</span>
-							</StyledOptionText>
-						</StyledOption>
-					</StyledOptionsItem>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="trololo3"
-							name="optionRecei"
-							type="radio"
-						/>
-						<StyledOption htmlFor="trololo3">
-							<StyledOptionTitle>почтой</StyledOptionTitle>
-							<StyledOptionText>
-								По предоплате <span>300 руб.</span>
-							</StyledOptionText>
-						</StyledOption>
-					</StyledOptionsItem>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="trololo4"
-							name="optionRecei"
-							type="radio"
-						/>
-						<StyledOption htmlFor="trololo4">
-							<StyledOptionTitle>самовывоз</StyledOptionTitle>
-						</StyledOption>
-					</StyledOptionsItem>
+					{receiOptions.map((option) => (
+						<StyledOptionsItem key={option._id}>
+							<StyledHiddenRadio
+								id={option._id}
+								name="receiOptionId"
+								type="radio"
+								value={option._id}
+								checked={option._id === activeReceiOption._id}
+								ref={register}
+								onChange={handleReceiOptionChange}
+							/>
+							<StyledOption htmlFor={option._id}>
+								<StyledOptionTitle>
+									{option.title}
+								</StyledOptionTitle>
+								{option.description && (
+									<StyledOptionText>
+										{option.description}
+									</StyledOptionText>
+								)}
+								{option.price > 0 && (
+									<StyledOptionPrice>
+										{option.price} руб
+									</StyledOptionPrice>
+								)}
+							</StyledOption>
+						</StyledOptionsItem>
+					))}
 				</StyledOptions>
 				<StyledOptionsReceiText>
 					Дату и время доставки уточнит менеджер после подтверждения
@@ -107,6 +169,17 @@ const CartForm = () => {
 							name="city"
 							placeholder="Москва"
 							label="город"
+							ref={register({
+								required: true,
+								minLength: 2,
+								maxLength: 30,
+							})}
+							errText={
+								errors.city &&
+								(errors.city.type === "required"
+									? "Заполните поле"
+									: "Введите корректный город")
+							}
 						/>
 					</StyledRecipientAddressInput>
 					<StyledRecipientAddressInput>
@@ -114,20 +187,47 @@ const CartForm = () => {
 							name="street"
 							placeholder="Ул. Тверская, д. 7"
 							label="улица, дом"
+							ref={register}
 						/>
 					</StyledRecipientAddressInput>
 					<StyledRecipientAddressInput>
-						<TextField
+						<Controller
+							render={({ onChange, value }) => (
+								<TextField
+									placeholder="2"
+									label="подъезд"
+									value={value}
+									onChange={(e) => {
+										if (e.target.value.match(/^[0-9]*$/)) {
+											onChange(e.target.value);
+										}
+									}}
+								/>
+							)}
 							name="entrance"
-							placeholder="2"
-							label="подъезд"
+							control={control}
+							defaultValue=""
+							rules={{ valueAsNumber: true }}
 						/>
 					</StyledRecipientAddressInput>
 					<StyledRecipientAddressInput>
-						<TextField
+						<Controller
+							render={({ onChange, value }) => (
+								<TextField
+									placeholder="2"
+									label="квартира"
+									value={value}
+									onChange={(e) => {
+										if (e.target.value.match(/^[0-9]*$/)) {
+											onChange(e.target.value);
+										}
+									}}
+								/>
+							)}
 							name="apartment"
-							placeholder="2"
-							label="квартира"
+							control={control}
+							defaultValue=""
+							rules={{ valueAsNumber: true }}
 						/>
 					</StyledRecipientAddressInput>
 				</StyledRecipientAddressBody>
@@ -135,71 +235,58 @@ const CartForm = () => {
 			<StyledOptionsPay>
 				<Title medium>способы оплаты</Title>
 				<StyledOptions>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="lalka"
-							name="optionPay"
-							type="radio"
-						/>
-						<StyledOption htmlFor="lalka">
-							<StyledOptionTitle>наличными</StyledOptionTitle>
-						</StyledOption>
-					</StyledOptionsItem>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="lalka2"
-							name="optionPay"
-							type="radio"
-						/>
-						<StyledOption htmlFor="lalka2">
-							<StyledOptionTitle>
-								перевод на р/с
-							</StyledOptionTitle>
-						</StyledOption>
-					</StyledOptionsItem>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="lalka3"
-							name="optionPay"
-							type="radio"
-						/>
-						<StyledOption htmlFor="lalka3">
-							<StyledOptionTitle>
-								перевод на карту
-							</StyledOptionTitle>
-						</StyledOption>
-					</StyledOptionsItem>
-					<StyledOptionsItem>
-						<StyledHiddenRadio
-							id="lalka4"
-							name="optionPay"
-							type="radio"
-						/>
-						<StyledOption htmlFor="lalka4">
-							<StyledOptionTitle>в кредит</StyledOptionTitle>
-							<StyledOptionText>вкредит.рф</StyledOptionText>
-						</StyledOption>
-					</StyledOptionsItem>
+					{payOptions.map((option) => (
+						<StyledOptionsItem key={option._id}>
+							<StyledHiddenRadio
+								id={option._id}
+								name="payOptionId"
+								type="radio"
+								value={option._id}
+								ref={register}
+								checked={option._id === activePayOption._id}
+								onChange={handlePayOptionChange}
+							/>
+							<StyledOption htmlFor={option._id}>
+								<StyledOptionTitle>
+									{option.title}
+								</StyledOptionTitle>
+								{option.description && (
+									<StyledOptionText>
+										{option.description}
+									</StyledOptionText>
+								)}
+							</StyledOption>
+						</StyledOptionsItem>
+					))}
 				</StyledOptions>
 			</StyledOptionsPay>
 			<StyledAdditionally>
 				<Title medium>дополнительно</Title>
 				<StyledAdditionallyBody>
-					<Textarea placeholder="Не звонить в дверь" />
+					<Textarea
+						name="comment"
+						placeholder="Не звонить в дверь"
+						ref={register({
+							maxLength: 250,
+						})}
+						errText={errors.comment && "Макс. кол-во символов 250"}
+					/>
 				</StyledAdditionallyBody>
 			</StyledAdditionally>
 			<StyledOrderConfirmation>
-				<Button fw>Подтвердить заказ</Button>
+				<Button fw showLoader={isSubmitting}>
+					Подтвердить заказ
+				</Button>
 				<StyledOrderConfirmationText>
 					Нажимая «Подтвердить заказ», вы соглашаетесь c{" "}
 					<span>условиями обработки персональных данных</span>.
 				</StyledOrderConfirmationText>
 			</StyledOrderConfirmation>
-		</StyledCartForm>
+		</StyledOrderingForm>
 	);
 };
 
-const StyledCartForm = styled.form`
+const StyledOrderingForm = styled.form`
 	@media ${({ theme }) => theme.media.mediumDevices} {
 		max-width: 392px;
 	}
@@ -290,10 +377,10 @@ const StyledOptionText = styled.div`
 	line-height: 21px;
 	color: rgba(0, 0, 0, 0.6);
 	transition: all 0.4s ease 0s;
-	span {
-		display: block;
-		font-weight: 700;
-	}
+`;
+
+const StyledOptionPrice = styled(StyledOptionText)`
+	font-weight: 700;
 `;
 
 const StyledHiddenRadio = styled.input`
@@ -391,4 +478,4 @@ const StyledOrderConfirmationText = styled.div`
 	}
 `;
 
-export default CartForm;
+export default OrderingForm;

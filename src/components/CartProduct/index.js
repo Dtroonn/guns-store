@@ -45,14 +45,17 @@ const CartProduct = ({
 					<StyledCategory to={`/products/${category.slug}`}>
 						{category.name}
 					</StyledCategory>
-					<StyledRemainingCount>
-						Осталось {count} штук
+					<StyledRemainingCount
+						red={count === 0 || count === 1}
+						yellow={count > 1 && count <= 10}
+					>
+						{count === 1 ? "Осталась" : "Осталось"} {count} шт.
 					</StyledRemainingCount>
 				</StyledInfo>
 			</StyledLeft>
 			<StyledRight>
 				<Counter
-					initialCount={totalCountInCart}
+					countInCart={totalCountInCart}
 					maxCount={count}
 					itemId={_id}
 					onSubmit={onAddButtonClick}
@@ -171,8 +174,6 @@ const StyledCross = styled.div`
 
 const StyledImageWrapper = styled.div`
 	flex: 0 0 184px;
-	border: 1px solid #e9e9e9;
-	border-radius: 6px;
 	margin: 0 24px 0 0;
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
 		flex: 0 0 144px;
@@ -183,6 +184,8 @@ const StyledImageWrapper = styled.div`
 
 const StyledImage = styled.img`
 	max-width: 100%;
+	border-radius: 6px;
+	border: 1px solid #e9e9e9;
 `;
 
 const StyledInfo = styled.div`
@@ -224,10 +227,16 @@ const StyledRemainingCount = styled.div`
 		font-size: 14px;
 		margin: 12px 0 0 0;
 	}
+
 	${({ red }) =>
 		red &&
 		css`
 			color: #f00;
+		`}
+	${({ yellow }) =>
+		yellow &&
+		css`
+			color: #f5cb42;
 		`}
 `;
 

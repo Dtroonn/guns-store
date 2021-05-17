@@ -34,6 +34,8 @@ import {
 } from "../redux/actions/favorites";
 import { addToCart } from "../redux/actions/cart";
 
+import { setTextPopup } from "../redux/actions/popups";
+
 import { selectFavoritesItemsIds } from "../selectors/favorites";
 import {
 	selectFilterbarFilters,
@@ -187,7 +189,7 @@ const Products = () => {
 		return dispatch(removeFromFavorites(id));
 	};
 
-	const handleProductCartButtonClick = (id) => {
+	const handleProductCartButtonClick = async (id) => {
 		return dispatch(addToCart(id));
 	};
 

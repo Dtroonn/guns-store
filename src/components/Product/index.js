@@ -66,6 +66,7 @@ const Product = ({
 						{count > 1 && count <= 10 && (
 							<StyledTag yellow>заканчивается</StyledTag>
 						)}
+						{count === 0 && <StyledTag red>закончился</StyledTag>}
 					</StyledTags>
 					<StyledFavoritesButton
 						disable={isDisabledFavoritesButton}
@@ -101,6 +102,7 @@ const Product = ({
 						<Button
 							onClick={handleCartButtonClick}
 							showLoader={showCartButtonLoader}
+							disable={!Boolean(count)}
 						>
 							<CartIcon white />
 						</Button>

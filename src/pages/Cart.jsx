@@ -1,42 +1,74 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
-import { Container, Title, CartProduct, CartForm } from "../components";
+import {
+	Container,
+	Title,
+	CartProduct,
+	OrderingForm,
+	EmptyCartBlock,
+} from "../components";
+import { Button } from "../components/forms";
 
 import { removeFromCart, addToCart } from "../redux/actions/cart";
 
 import {
 	selectCartItems,
-	selectInitialPrice,
-	selectTotalPrice,
-	selectTotalDiscount,
-	selectTotalCount,
+	selectInitialPriceCart,
+	selectTotalPriceCart,
+	selectTotalCartDiscount,
+	selectTotalCountCartItems,
 } from "../selectors/cart";
+
+import {
+	selectReceiOptions,
+	selectPayOptions,
+	selectActiveReceiOption,
+	selectActivePayOption,
+	selectTotalOrderPrice,
+} from "../selectors/ordering";
 
 const Cart = () => {
 	const dispatch = useDispatch();
 	const {
 		items,
-		totalCount,
-		totalPriceItems,
-		initialPriceItems,
-		totalDiscountOnItems,
-	} = useSelector((state) => ({
-		items: selectCartItems(state),
-		totalCount: selectTotalCount(state),
-		totalPriceItems: selectTotalPrice(state),
-		initialPriceItems: selectInitialPrice(state),
-		totalDiscountOnItems: selectTotalDiscount(state),
-	}));
+		totalCountCartItems,
+		totalPriceCart,
+		initialPriceCart,
+		totalCartDiscount,
+		receiOptions,
+		payOptions,
+		activeReceiOption,
+		activePayOption,
+		totalOrderPrice,
+	} = useSelector(
+		(state) => ({
+			items: selectCartItems(state),
+			totalCountCartItems: selectTotalCountCartItems(state),
+			totalPriceCart: selectTotalPriceCart(state),
+			initialPriceCart: selectInitialPriceCart(state),
+			totalCartDiscount: selectTotalCartDiscount(state),
+			receiOptions: selectReceiOptions(state),
+			payOptions: selectPayOptions(state),
+			activeReceiOption: selectActiveReceiOption(state),
+			activePayOption: selectActivePayOption(state),
+			totalOrderPrice: selectTotalOrderPrice(state),
+		}),
+		shallowEqual
+	);
 
 	const onDeleteItemFromCartClick = (id) => {
 		return dispatch(removeFromCart(id));
 	};
 
 	const onAddItemToCartClick = (id, count) => {
-		return dispatch(addToCart(id, count));
+		return dispatch(addToCart(id, count, true));
 	};
+
+	if (totalCountCartItems === 0) {
+		return <EmptyCartBlock />;
+	}
 
 	return (
 		<StyledCart>
@@ -44,7 +76,7 @@ const Cart = () => {
 				<Title>оформление заказа</Title>
 				<StyledProducts>
 					<Title medium>
-						Моя корзина <span>{totalCount}</span>
+						Моя корзина <span>{totalCountCartItems}</span>
 					</Title>
 					<StyledProductsBody>
 						{items.length > 0 &&
@@ -63,24 +95,30 @@ const Cart = () => {
 					<StyledTotalProductsCost>
 						<Title extraSmall>Товаров на сумму:</Title>
 						<StyledTotalProductsCostPrice>
-							{totalPriceItems} руб.
+							{totalPriceCart} руб.
 						</StyledTotalProductsCostPrice>
 					</StyledTotalProductsCost>
 				</StyledProducts>
 				<StyledFormAndTotal>
 					<StyledFormAndTotalColumn>
-						<CartForm />
+						<OrderingForm
+							receiOptions={receiOptions}
+							payOptions={payOptions}
+							activeReceiOption={activeReceiOption}
+							activePayOption={activePayOption}
+							dispatch={dispatch}
+						/>
 					</StyledFormAndTotalColumn>
 					<StyledFormAndTotalColumn>
 						<StyledTotalBlock>
 							<StyledTotalBlockBody>
 								<StyledTotalItem>
 									<StyledTotalItemLabel>
-										Товары ({totalCount})
+										Товары ({totalCountCartItems})
 									</StyledTotalItemLabel>
 									<StyledTotalItemLine></StyledTotalItemLine>
 									<StyledTotalItemPrice>
-										{initialPriceItems} руб.
+										{initialPriceCart} руб.
 									</StyledTotalItemPrice>
 								</StyledTotalItem>
 								<StyledTotalItem>
@@ -89,31 +127,33 @@ const Cart = () => {
 									</StyledTotalItemLabel>
 									<StyledTotalItemLine></StyledTotalItemLine>
 									<StyledTotalItemPrice red>
-										- {totalDiscountOnItems} руб.
+										- {totalCartDiscount} руб.
 									</StyledTotalItemPrice>
 								</StyledTotalItem>
 								<StyledTotalItem>
 									<StyledTotalItemLabel>
-										Доставка трансп. комп.
+										{activeReceiOption.title}
 									</StyledTotalItemLabel>
 									<StyledTotalItemLine></StyledTotalItemLine>
 									<StyledTotalItemPrice>
-										800 руб.
+										{activeReceiOption.price} руб.
 									</StyledTotalItemPrice>
 								</StyledTotalItem>
 								<StyledTotalItem>
 									<StyledTotalItemLabel>
-										В кредит
+										Оплата
 									</StyledTotalItemLabel>
 									<StyledTotalItemLine></StyledTotalItemLine>
-									<StyledTotalItemPrice gray>
-										от 2500 руб. / мес.
-									</StyledTotalItemPrice>
+									<StyledTotalItemRightText>
+										{activePayOption.title}
+									</StyledTotalItemRightText>
 								</StyledTotalItem>
 							</StyledTotalBlockBody>
 							<StyledTotal>
 								<StyledTotalText>итого:</StyledTotalText>
-								<StyledTotalPrice>25 550 руб.</StyledTotalPrice>
+								<StyledTotalPrice>
+									{totalOrderPrice} руб.
+								</StyledTotalPrice>
 							</StyledTotal>
 						</StyledTotalBlock>
 					</StyledFormAndTotalColumn>
@@ -262,11 +302,10 @@ const StyledTotalItemPrice = styled.div`
 		css`
 			color: #f00;
 		`}
-	${({ gray }) =>
-		gray &&
-		css`
-			color: rgba(0, 0, 0, 0.4);
-		`}
+`;
+
+const StyledTotalItemRightText = styled(StyledTotalItemPrice)`
+	text-transform: lowercase;
 `;
 
 const StyledTotal = styled.div`

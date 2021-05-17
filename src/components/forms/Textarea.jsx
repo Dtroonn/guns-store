@@ -1,14 +1,26 @@
 import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-const Textarea = React.forwardRef((props, ref) => {
+import { ErrorText } from "../forms";
+
+const Textarea = React.forwardRef(({ errText, ...props }, ref) => {
 	return (
 		<StyledBody>
 			{props.label && (
 				<StyledLabel htmlFor={props.name}>{props.label}</StyledLabel>
 			)}
-			<StyledTextarea id={props.name} ref={ref} {...props} />
+			<StyledTextarea
+				id={props.name}
+				ref={ref}
+				{...props}
+				err={errText}
+			/>
+			{errText && (
+				<ErrorText small margin="7px 0 0 ">
+					{errText}
+				</ErrorText>
+			)}
 		</StyledBody>
 	);
 });
@@ -25,6 +37,14 @@ const StyledTextarea = styled(TextareaAutosize)`
 	padding: 14px 16px;
 	font-size: 16px;
 	line-height: 19px;
+	${({ err }) =>
+		err &&
+		css`
+			border-color: #f00;
+			&::placeholder {
+				color: #f00;
+			}
+		`}
 	&::placeholder {
 		color: rgba(0, 0, 0, 0.2);
 	}

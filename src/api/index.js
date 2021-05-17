@@ -85,3 +85,25 @@ export const cartApi = {
 
 	async clear() {},
 };
+
+export const receiOptionsApi = {
+	async get() {
+		return axiosInstance.get("recei-options");
+	},
+
+	async add(id, count) {},
+};
+
+export const payOptionsApi = {
+	async get() {
+		return axiosInstance.get("pay-options");
+	},
+
+	async add(id, count) {},
+};
+
+export const ordersApi = {
+	async add(data) {
+		return axiosInstance.post("orders", data);
+	},
+};

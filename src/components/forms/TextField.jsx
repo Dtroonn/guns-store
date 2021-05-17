@@ -1,14 +1,25 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+import { ErrorText } from "../forms";
+
 const TextField = React.forwardRef((props, ref) => {
 	return (
 		<StyledTextField>
 			{props.label && (
-				<StyledLabel htmlFor={props.name}>{props.label}</StyledLabel>
+				<StyledLabel htmlFor={props.name || props.id}>
+					{props.label}
+				</StyledLabel>
 			)}
-			<StyledInput id={props.name} ref={ref} {...props} />
-			{props.hint && <StyledHint>{props.hint}</StyledHint>}
+			<StyledInput id={props.name || props.id} ref={ref} {...props} />
+			{props.hint && !props.errText && (
+				<StyledHint>{props.hint}</StyledHint>
+			)}
+			{props.errText && (
+				<ErrorText small margin="7px 0 0 ">
+					{props.errText}
+				</ErrorText>
+			)}
 		</StyledTextField>
 	);
 });
@@ -46,6 +57,15 @@ const StyledInput = styled.input`
 			font-size: 0;
 		}
 	}
+
+	${({ errText }) =>
+		errText &&
+		css`
+			border-color: #f00;
+			&::placeholder {
+				color: #f00;
+			}
+		`}
 
 	${({ notAdaptive }) =>
 		notAdaptive &&

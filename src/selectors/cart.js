@@ -2,15 +2,15 @@ import { createSelector } from "reselect";
 
 export const selectCartItems = (state) => state.cart.items;
 
-export const selectTotalPrice = (state) => state.cart.totalPrice;
+export const selectTotalPriceCart = (state) => state.cart.totalPrice;
 
-export const selectTotalCount = (state) => state.cart.totalCount;
+export const selectTotalCountCartItems = (state) => state.cart.totalCount;
 
 export const selectCartItemsIds = createSelector(selectCartItems, (items) =>
 	items.map((item) => item.product._id)
 );
 
-export const selectInitialPrice = createSelector(selectCartItems, (items) =>
+export const selectInitialPriceCart = createSelector(selectCartItems, (items) =>
 	items.reduce(
 		(price, item) =>
 			price +
@@ -21,7 +21,7 @@ export const selectInitialPrice = createSelector(selectCartItems, (items) =>
 	)
 );
 
-export const selectTotalDiscount = createSelector(
-	[selectTotalPrice, selectInitialPrice],
+export const selectTotalCartDiscount = createSelector(
+	[selectTotalPriceCart, selectInitialPriceCart],
 	(totalPrice, initialPrice) => initialPrice - totalPrice
 );

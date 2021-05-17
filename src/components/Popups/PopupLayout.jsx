@@ -73,6 +73,9 @@ const StyledPopupLayout = styled.div`
 	background: rgba(0, 0, 0, 0.7);
 	padding: 25px;
 	overflow: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	${({ active }) =>
 		active &&
 		css`
@@ -88,7 +91,7 @@ const StyledContent = styled.div`
 	transition: all 0.4s ease 0s;
 	padding: 25px 40px 25px 40px;
 	margin: auto;
-	max-width: ${({ maxWidth }) => maxWidth || "200px"};
+	max-width: ${({ maxWidth }) => maxWidth || "500px"};
 	@media ${({ theme }) => theme.media.extraSmallDevices} {
 		padding: 20px 25px 20px 25px;
 	}
@@ -106,7 +109,7 @@ const StyledHeader = styled.div`
 `;
 
 const StyledCrossIcon = styled.div`
-	margin: 0 0 0 20px;
+	margin: 0 0 0 25px;
 `;
 
 export default PopupLayout;

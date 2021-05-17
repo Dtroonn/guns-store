@@ -3,7 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 
 const Button = React.forwardRef(({ showLoader, children, ...props }, ref) => {
 	return (
-		<StyledButton ref={ref} {...props} showLoader={showLoader}>
+		<StyledButton ref={ref} {...props} showloader={showLoader}>
 			{showLoader ? <StyledLoadingSpinner /> : children}
 		</StyledButton>
 	);
@@ -26,7 +26,7 @@ const StyledButton = styled.button`
 		font-size: 15px;
 		height: 40px;
 		min-width: 40px;
-		padding: 0 6px;
+		padding: ${({ padding }) => padding || "6px"};
 	}
 
 	&:hover {
@@ -74,8 +74,8 @@ const StyledButton = styled.button`
 			font-size: 14px !important;
 		`}
 
-	${({ showLoader }) =>
-		showLoader &&
+	${({ showloader }) =>
+		showloader &&
 		css`
 			pointer-events: none;
 		`}

@@ -52,6 +52,9 @@ const StyledTitle = styled.div`
 			@media ${({ theme }) => theme.media.mediumDevices} {
 				font-size: 20px;
 			}
+			@media ${({ theme }) => theme.media.extraSmallDevices} {
+				font-size: 18px;
+			}
 		`}
 
 	${({ small }) =>

@@ -5,12 +5,23 @@ import {
 	ACCEPT_ADD_TO_CART,
 	ACCEPT_REMOVE_FROM_CART,
 	EDIT_ITEM_IN_CART,
+	CLEAR_CART,
+	EDIT_ITEMS_IN_CART,
 } from "../types/cart";
 
 const initialState = {
 	items: [],
 	totalCount: 0,
 	totalPrice: 0,
+};
+
+const editItem = (draft, product) => {
+	let candidate = draft.items.find(
+		(item) => item.product._id === product._id
+	);
+	if (candidate) {
+		candidate.product.count = product.count;
+	}
 };
 
 const cart = (state = initialState, action) => {
@@ -48,14 +59,13 @@ const cart = (state = initialState, action) => {
 			}
 
 			case EDIT_ITEM_IN_CART: {
-				let candidate = draft.items.find(
-					(item) => item.product._id === payload._id
-				);
-				if (candidate) {
-					candidate.product.count = payload.count;
-				}
+				editItem(draft, payload);
 				break;
 			}
+
+			case EDIT_ITEMS_IN_CART:
+				payload.forEach((product) => editItem(draft, product));
+				break;
 
 			case ACCEPT_REMOVE_FROM_CART: {
 				const itemIndex = draft.items.findIndex(
@@ -66,6 +76,10 @@ const cart = (state = initialState, action) => {
 					draft.items[itemIndex].product.price.current *
 					draft.items[itemIndex].count;
 				draft.items.splice(itemIndex, 1);
+				break;
+			}
+			case CLEAR_CART: {
+				Object.assign(draft, initialState);
 				break;
 			}
 			default:
