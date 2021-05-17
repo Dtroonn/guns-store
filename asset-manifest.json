@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/guns-store/static/css/main.7476ae4e.chunk.css",
+    "main.js": "/guns-store/static/js/main.e4ff9b75.chunk.js",
+    "main.js.map": "/guns-store/static/js/main.e4ff9b75.chunk.js.map",
+    "runtime-main.js": "/guns-store/static/js/runtime-main.e2706b98.js",
+    "runtime-main.js.map": "/guns-store/static/js/runtime-main.e2706b98.js.map",
+    "static/css/2.7e46ab95.chunk.css": "/guns-store/static/css/2.7e46ab95.chunk.css",
+    "static/js/2.49df4283.chunk.js": "/guns-store/static/js/2.49df4283.chunk.js",
+    "static/js/2.49df4283.chunk.js.map": "/guns-store/static/js/2.49df4283.chunk.js.map",
+    "index.html": "/guns-store/index.html",
+    "static/css/2.7e46ab95.chunk.css.map": "/guns-store/static/css/2.7e46ab95.chunk.css.map",
+    "static/css/main.7476ae4e.chunk.css.map": "/guns-store/static/css/main.7476ae4e.chunk.css.map",
+    "static/js/2.49df4283.chunk.js.LICENSE.txt": "/guns-store/static/js/2.49df4283.chunk.js.LICENSE.txt",
+    "static/media/Logo.2ada78dc.svg": "/guns-store/static/media/Logo.2ada78dc.svg",
+    "static/media/background.e1a5c852.jpg": "/guns-store/static/media/background.e1a5c852.jpg",
+    "static/media/checkMark.3962e21a.svg": "/guns-store/static/media/checkMark.3962e21a.svg",
+    "static/media/instagram.b6e57d20.svg": "/guns-store/static/media/instagram.b6e57d20.svg",
+    "static/media/telegram.c13c7dd5.svg": "/guns-store/static/media/telegram.c13c7dd5.svg",
+    "static/media/vk.c0df8ac0.svg": "/guns-store/static/media/vk.c0df8ac0.svg",
+    "static/media/youtube.501e5bad.svg": "/guns-store/static/media/youtube.501e5bad.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e2706b98.js",
+    "static/css/2.7e46ab95.chunk.css",
+    "static/js/2.49df4283.chunk.js",
+    "static/css/main.7476ae4e.chunk.css",
+    "static/js/main.e4ff9b75.chunk.js"
+  ]
+}
