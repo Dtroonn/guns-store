@@ -51,6 +51,7 @@ export const makeOrder = (data) => async (dispatch) => {
 	} catch (e) {
 		console.log(e);
 		const { status, data } = e.response;
+		console.log(data);
 		if (data.errorCode === 2) {
 			dispatch(editItemsInCart(data.items));
 			dispatch(

@@ -69,7 +69,10 @@ const Menu = ({ categories, activeSearch }) => {
 						<StyledList>
 							{menuItems.map((item, index) => (
 								<StyledListItem key={index}>
-									<StyledMenuLink to={`/${item.slug}`}>
+									<StyledMenuLink
+										onClick={toggleIsOpenIconMenu}
+										to={`/${item.slug}`}
+									>
 										{item.name}
 									</StyledMenuLink>
 								</StyledListItem>
@@ -156,7 +159,6 @@ const StyledListItem = styled.li`
 		display: block;
 	}
 	@media ${({ theme }) => theme.media.mediumDevices} {
-		padding: 20px 0;
 		margin: 0;
 		position: relative;
 		z-index: 2;
@@ -171,9 +173,6 @@ const StyledListItem = styled.li`
 			background: #e9e9e9;
 			z-index: 2;
 		}
-	}
-	@media ${({ theme }) => theme.media.smallDevices} {
-		padding: 15px 0;
 	}
 `;
 const StyledMenuLink = styled(NavLink)`
@@ -190,7 +189,12 @@ const StyledMenuLink = styled(NavLink)`
 		}
 	}
 	@media ${({ theme }) => theme.media.mediumDevices} {
+		display: block;
 		font-size: 16px;
+		padding: 20px 0;
+	}
+	@media ${({ theme }) => theme.media.smallDevices} {
+		padding: 15px 0;
 	}
 `;
 

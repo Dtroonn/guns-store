@@ -10,6 +10,7 @@ import {
   Cart,
   Page404,
   DevelopingPage,
+  Home,
 } from "./pages";
 import { Header, Footer, MainPreloader, Popups } from "./components";
 
@@ -33,6 +34,7 @@ function App() {
       <Header />
       <main>
         <Switch>
+          <Route exact path="/" component={Home} />
           <Route exact path="/products/:category?" component={Products} />
           <Route exact path="/favorites" component={Favorites} />
           <Route exact path="/cart" component={Cart} />
