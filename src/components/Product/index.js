@@ -172,6 +172,7 @@ const StyledFavoritesButton = styled.div`
 	top: 0;
 	height: 24px;
 	cursor: pointer;
+	z-index: 5;
 	${({ disable }) =>
 		disable &&
 		css`

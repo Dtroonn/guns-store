@@ -31,6 +31,9 @@ const StyledText = styled.div`
 	line-height: 24px;
 	margin: 0 0 10px 0;
 	font-weight: 500;
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		font-size: 18px;
+	}
 `;
 
 export default OrderSuccessPopup;

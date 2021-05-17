@@ -29,6 +29,10 @@ const StyledSvg = styled.svg`
 		css`
 			width: 70px;
 			height: 70px;
+			@media ${({ theme }) => theme.media.extraSmallDevices} {
+				width: 60px;
+				height: 60px;
+			}
 		`}
 `;
 
