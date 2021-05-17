@@ -11,6 +11,8 @@ import {
 	RESET_ACTIVE_FILTERS,
 } from "../types/filters";
 
+import { setTextPopup } from "./popups";
+
 export const fetchCategories = () => async (dispatch) => {
 	try {
 		const response = await categoriesApi.get();
