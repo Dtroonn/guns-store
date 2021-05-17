@@ -10,11 +10,17 @@ import {
 	removeFromFavorites,
 } from "../redux/actions/favorites";
 
+import { addToCart } from "../redux/actions/cart";
+
 import { selectFavoritesItems } from "../selectors/favorites";
+import { selectCartItemsIds } from "../selectors/cart";
 
 const Favorites = () => {
 	const dispatch = useDispatch();
-	const items = useSelector(selectFavoritesItems);
+	const { items, cartItemsIds } = useSelector((state) => ({
+		items: selectFavoritesItems(state),
+		cartItemsIds: selectCartItemsIds(state),
+	}));
 
 	const handleCleansingBtnClick = (e) => {
 		const isConfirm = window.confirm(
@@ -27,6 +33,10 @@ const Favorites = () => {
 
 	const onRemoveItemFromFavoritesClick = (id) => {
 		return dispatch(removeFromFavorites(id));
+	};
+
+	const onAddItemToCartClick = async (id) => {
+		return dispatch(addToCart(id));
 	};
 
 	return (
@@ -55,7 +65,11 @@ const Favorites = () => {
 										onFavoritesButtonClick={
 											onRemoveItemFromFavoritesClick
 										}
+										onCartButtonClick={onAddItemToCartClick}
 										isFavorite={true}
+										isInCart={cartItemsIds.includes(
+											item._id
+										)}
 										{...item}
 									/>
 								</StyledColumn>

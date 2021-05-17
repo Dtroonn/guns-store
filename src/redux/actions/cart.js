@@ -17,6 +17,7 @@ export const fetchCart = () => async (dispatch) => {
 		dispatch(setCart(response.data.data));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 
@@ -45,7 +46,7 @@ export const addToCart = (id, count = 1, isFromCart) => async (dispatch) => {
 			);
 		}
 
-		window.alert(data.message);
+		dispatch(setTextPopup(true, data.message));
 	}
 };
 
@@ -74,6 +75,7 @@ export const removeFromCart = (id) => async (dispatch) => {
 		dispatch(acceptRemoveFromCart(id));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 

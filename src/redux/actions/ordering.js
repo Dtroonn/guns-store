@@ -20,7 +20,8 @@ export const fetchOptions = () => async (dispatch) => {
 			setOptions(receiOptionsRes.data.items, payOptionsRes.data.items)
 		);
 	} catch (e) {
-		window.alert(e.message);
+		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 
@@ -48,6 +49,7 @@ export const makeOrder = (data) => async (dispatch) => {
 		dispatch(setIsActiveOrderSuccessPopup(true));
 		dispatch(clearCart());
 	} catch (e) {
+		console.log(e);
 		const { status, data } = e.response;
 		if (data.errorCode === 2) {
 			dispatch(editItemsInCart(data.items));
@@ -57,6 +59,8 @@ export const makeOrder = (data) => async (dispatch) => {
 					"Извиняемся за неудобства! Некоторые товары, которые вы хотели приобрести, отсутствуют на складе"
 				)
 			);
+			return;
 		}
+		dispatch(setTextPopup(true));
 	}
 };

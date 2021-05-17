@@ -6,6 +6,8 @@ import {
 
 import { favoritesApi } from "../../api";
 
+import { setTextPopup } from "./popups";
+
 export const fetchFavorites = () => async (dispatch) => {
 	try {
 		const response = await favoritesApi.get();
@@ -13,6 +15,7 @@ export const fetchFavorites = () => async (dispatch) => {
 		dispatch(setFavorites(response.data.items));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 
@@ -21,12 +24,22 @@ const setFavorites = (items) => ({
 	payload: items,
 });
 
-export const addToFavorites = (id) => async (dispatch) => {
+export const addToFavorites = (id) => async (dispatch, getState) => {
 	try {
+		const items = getState().favorites.items;
+		if (items.length === 10) {
+			return dispatch(
+				setTextPopup(
+					true,
+					"Вы не можете добавить в избранное более 10 товаров"
+				)
+			);
+		}
 		const response = await favoritesApi.add(id);
 		dispatch(acceptToFavorites(response.data.data));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 
@@ -41,6 +54,7 @@ export const removeFromFavorites = (id) => async (dispatch) => {
 		dispatch(acceptRemoveFromFavorites(id));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 
@@ -55,5 +69,6 @@ export const clearFavorites = () => async (dispatch) => {
 		dispatch(setFavorites([]));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };

@@ -17,6 +17,7 @@ export const fetchCategories = () => async (dispatch) => {
 		dispatch(setCategories(response.data.items));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 
@@ -27,6 +28,7 @@ export const fetchFilterbarFilters = (category, search) => async (dispatch) => {
 		dispatch(setFilterbarFilters(response.data.filters));
 	} catch (e) {
 		console.log(e);
+		dispatch(setTextPopup(true));
 	}
 };
 
