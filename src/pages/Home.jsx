@@ -15,6 +15,7 @@ const Home = () => {
 					<StyledCategoriesRow>
 						{categories.map((category) => (
 							<StyledCategoriesColumn
+								key={category._id}
 								to={`/products/${category.slug}`}
 							>
 								<StyledCategoriesItem>

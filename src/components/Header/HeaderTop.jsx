@@ -48,6 +48,10 @@ const StyledLogoLink = styled(Link)`
 		margin: 0 0 0 34px;
 	}
 	@media ${({ theme }) => theme.media.smallDevices} {
+		flex: 0 1 120px;
+		margin: 0 0 0 24px;
+	}
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
 		flex: 0 1 96px;
 		margin: 0 0 0 10px;
 	}

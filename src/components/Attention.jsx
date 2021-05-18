@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import backgroundJpg from "../assets/background.jpg";
+import backgroundJpg from "./../assets/background.jpg";
 import { Container, AdaptiveImage } from "../components";
 
 const Attention = () => {

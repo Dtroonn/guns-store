@@ -37,6 +37,10 @@ const Favorite = (props) => {
 };
 
 const StyledSvg = styled.svg`
+	@media ${({ theme }) => theme.media.extraSmallDevices} {
+		width: 20px;
+		height: 20px;
+	}
 	path {
 		transition: all 0.4s ease 0s;
 	}

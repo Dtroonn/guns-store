@@ -60,7 +60,7 @@ const Favorites = () => {
 							</StyledCleansingBtn>
 						</StyledHeader>
 					)}
-					<StyledRow justifyCenter={!items.length}>
+					<StyledRow>
 						{items.length > 0 &&
 							items.map((item) => (
 								<StyledColumn key={item._id}>
@@ -77,14 +77,14 @@ const Favorites = () => {
 									/>
 								</StyledColumn>
 							))}
-						{!items.length && (
-							<StyledTextForEmptyFavorites>
-								У вас пока нет избранных товаров. Начните
-								собирать свою коллекцию желаний нажатием кнопки
-								в карточке продукта.
-							</StyledTextForEmptyFavorites>
-						)}
 					</StyledRow>
+					{!items.length && (
+						<StyledTextForEmptyFavorites>
+							У вас пока нет избранных товаров. Начните собирать
+							свою коллекцию желаний нажатием кнопки в карточке
+							продукта.
+						</StyledTextForEmptyFavorites>
+					)}
 				</Container>
 			</StyledFavorites>
 			<Attention />
@@ -156,11 +156,6 @@ const StyledRow = styled.div`
 	@media ${({ theme }) => theme.media.mediumDevices} {
 		margin: 0 -8px;
 	}
-	${({ justifyCenter }) =>
-		justifyCenter &&
-		css`
-			justify-content: center;
-		`}
 `;
 
 const StyledColumn = styled.div`
