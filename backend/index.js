@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongodb-session")(session);
+const path = require("path");
 
 const { MONGODB_URI, SESSION_SECRET } = require("./keys");
 
@@ -16,6 +17,8 @@ const store = MongoStore({
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static(path.join(__dirname, "../build")));
 
 app.enable("trust proxy");
 app.use(
@@ -46,6 +49,10 @@ app.use("/api/pay-options", require("./routes/payOptions"));
 app.use("/api/types", require("./routes/types"));
 app.use("/api/kinds", require("./routes/kinds"));
 app.use("/api/filters", require("./routes/filters"));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/../build/index.html"));
+});
 
 async function start() {
     try {
