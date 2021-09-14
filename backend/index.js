@@ -35,9 +35,9 @@ app.use(
     }),
 );
 
-app.get("/", async (req, res) => {
-    res.end("Hello, it is api for guns store. Example /api/products");
-});
+// app.get("/", async (req, res) => {
+//     res.end("Hello, it is api for guns store. Example /api/products");
+// });
 app.use("/api/products", require("./routes/products"));
 app.use("/api/categories", require("./routes/categories"));
 app.use("/api/auth", require("./routes/auth"));
@@ -50,7 +50,7 @@ app.use("/api/types", require("./routes/types"));
 app.use("/api/kinds", require("./routes/kinds"));
 app.use("/api/filters", require("./routes/filters"));
 
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/../build/index.html"));
 });
 
